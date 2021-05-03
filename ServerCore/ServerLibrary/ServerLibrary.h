@@ -1,4 +1,4 @@
 #pragma once
 #include "stdafx.h"
 
-#include "Network/Test.h"
+#include "Util/Singleton.h"
