@@ -16,4 +16,7 @@
       <Filter>PCH</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="config.xml" />
+  </ItemGroup>
 </Project>
