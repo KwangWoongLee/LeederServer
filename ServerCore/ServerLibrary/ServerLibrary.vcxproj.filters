@@ -18,12 +18,13 @@
     <ClInclude Include="ServerLibrary.h">
       <Filter>PCH</Filter>
     </ClInclude>
-    <ClInclude Include="Network\Test.h" />
+    <ClInclude Include="Util\Singleton.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
-    <ClCompile Include="Network\Test.cpp" />
   </ItemGroup>
 </Project>
