@@ -30,6 +30,8 @@
 
 #include <string>
 #include <tchar.h>
+#include <atlconv.h>
+#include <atlbase.h>
 
 #include <ctime>
 #include <random>
@@ -40,11 +42,14 @@
 #include <list>
 #include <array>
 
+//xml library
+#include "Util/tinyxml/tinyxml.h"
+
+
+#include "Util/Type.h"
+#include "Util/StringUtil.h"
+
+#include "Util/Config.h"
 
 #include "Util/Singleton.h"
 #include "Util/Logger.h"
-
-
-#include "Util/tinyxml/tinyxml.h"
-
-#include "Util/Type.h"

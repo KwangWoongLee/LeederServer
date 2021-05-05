@@ -27,12 +27,11 @@
     <ClInclude Include="Util\Logger.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Util\MemoryLeakDetector.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Util\tinyxml\tinystr.h" />
     <ClInclude Include="Util\tinyxml\tinyxml.h" />
     <ClInclude Include="Util\Type.h" />
+    <ClInclude Include="Util\Config.h" />
+    <ClInclude Include="Util\StringUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -45,5 +44,6 @@
     <ClCompile Include="Util\tinyxml\tinyxml.cpp" />
     <ClCompile Include="Util\tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="Util\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="Util\Config.cpp" />
   </ItemGroup>
 </Project>
