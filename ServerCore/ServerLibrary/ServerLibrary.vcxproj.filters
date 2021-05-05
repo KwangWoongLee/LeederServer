@@ -10,6 +10,9 @@
     <Filter Include="Network">
       <UniqueIdentifier>{f2e852ed-5c51-4e62-a20a-fa9370af82d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util\tinyXML">
+      <UniqueIdentifier>{c7a2e3d1-86ba-4c37-b3a4-9897f233d056}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -21,10 +24,26 @@
     <ClInclude Include="Util\Singleton.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Util\Logger.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\tinyxml\tinystr.h" />
+    <ClInclude Include="Util\tinyxml\tinyxml.h" />
+    <ClInclude Include="Util\Type.h" />
+    <ClInclude Include="Util\Config.h" />
+    <ClInclude Include="Util\StringUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
+    <ClCompile Include="Util\Logger.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\tinyxml\tinystr.cpp" />
+    <ClCompile Include="Util\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="Util\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="Util\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="Util\Config.cpp" />
   </ItemGroup>
 </Project>

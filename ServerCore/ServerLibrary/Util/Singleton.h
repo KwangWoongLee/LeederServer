@@ -25,10 +25,10 @@ class Singleton
 public:
 	static T& GetInstance()
 	{
-		static T m_pInstance;
+		static T mInstance;
 		volatile int dummy{};
 
-		return m_pInstance;
+		return mInstance;
 	}
 
 protected:
