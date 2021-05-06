@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <cstdint>
 
+#include <chrono>
+
 #include <assert.h> 
 #include <fcntl.h>
 #include <algorithm>  
@@ -34,7 +36,7 @@
 #include <atlconv.h>
 #include <atlbase.h>
 
-#include <ctime>
+
 #include <random>
 #include <typeinfo>    //typeinfo
 
@@ -52,6 +54,8 @@
 
 
 #include "Util/Singleton.h"
+#include "Util/Clock.h"
+
 #include "Util/Logger.h"
 
 #include "Util/Minidump.h"
