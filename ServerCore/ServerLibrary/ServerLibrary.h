@@ -4,6 +4,7 @@
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "mswsock.lib")
 #pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "dbghelp.lib")
 
 #include <Ws2tcpip.h>
 #include <winsock2.h>
@@ -49,7 +50,11 @@
 #include "Util/Type.h"
 #include "Util/StringUtil.h"
 
-#include "Util/Config.h"
 
 #include "Util/Singleton.h"
 #include "Util/Logger.h"
+
+#include "Util/Minidump.h"
+#include "Util/Assert.h"
+
+#include "Util/Config.h"

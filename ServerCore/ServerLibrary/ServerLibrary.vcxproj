@@ -168,8 +168,10 @@
   <ItemGroup>
     <ClInclude Include="ServerLibrary.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Util\Assert.h" />
     <ClInclude Include="Util\Config.h" />
     <ClInclude Include="Util\Logger.h" />
+    <ClInclude Include="Util\Minidump.h" />
     <ClInclude Include="Util\Singleton.h" />
     <ClInclude Include="Util\StringUtil.h" />
     <ClInclude Include="Util\tinyxml\tinystr.h" />
@@ -183,8 +185,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Util\Assert.cpp" />
     <ClCompile Include="Util\Config.cpp" />
     <ClCompile Include="Util\Logger.cpp" />
+    <ClCompile Include="Util\Minidump.cpp" />
     <ClCompile Include="Util\tinyxml\tinystr.cpp" />
     <ClCompile Include="Util\tinyxml\tinyxml.cpp" />
     <ClCompile Include="Util\tinyxml\tinyxmlerror.cpp" />

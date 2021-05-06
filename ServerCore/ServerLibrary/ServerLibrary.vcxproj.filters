@@ -32,6 +32,8 @@
     <ClInclude Include="Util\Type.h" />
     <ClInclude Include="Util\Config.h" />
     <ClInclude Include="Util\StringUtil.h" />
+    <ClInclude Include="Util\Minidump.h" />
+    <ClInclude Include="Util\Assert.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -45,5 +47,7 @@
     <ClCompile Include="Util\tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="Util\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="Util\Config.cpp" />
+    <ClCompile Include="Util\Minidump.cpp" />
+    <ClCompile Include="Util\Assert.cpp" />
   </ItemGroup>
 </Project>
