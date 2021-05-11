@@ -166,6 +166,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Network\IOCPServer.h" />
+    <ClInclude Include="Network\Server.h" />
     <ClInclude Include="ServerLibrary.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Util\Assert.h" />
@@ -184,6 +186,8 @@
     <ClInclude Include="vld.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Network\IOCPServer.cpp" />
+    <ClCompile Include="Network\Server.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

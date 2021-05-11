@@ -39,6 +39,8 @@
     <ClInclude Include="Util\Thread.h" />
     <ClInclude Include="vld.h" />
     <ClInclude Include="Util\ThreadSafeQueue.h" />
+    <ClInclude Include="Network\Server.h" />
+    <ClInclude Include="Network\IOCPServer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -56,5 +58,7 @@
     <ClCompile Include="Util\Assert.cpp" />
     <ClCompile Include="Util\Clock.cpp" />
     <ClCompile Include="Util\Thread.cpp" />
+    <ClCompile Include="Network\Server.cpp" />
+    <ClCompile Include="Network\IOCPServer.cpp" />
   </ItemGroup>
 </Project>
