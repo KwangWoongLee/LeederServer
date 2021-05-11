@@ -9,7 +9,7 @@ namespace leeder
 		Clock();
 		~Clock();
 
-		std::wstring GetTimeNowToWS() const;
+		std::wstring GetTimeNowToWS (const wchar_t* format = L"D%Y-%m-%dT%H-%M-%S");
 
 	private:
 		std::chrono::system_clock::time_point mServerStartTime;
