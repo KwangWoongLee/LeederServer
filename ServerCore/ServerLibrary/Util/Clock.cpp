@@ -14,7 +14,7 @@ namespace leeder
     {
     }
 
-    std::wstring Clock::GetTimeNowToWS() const
+    std::wstring Clock::GetTimeNowToWS(const wchar_t* format)
     {
         std::chrono::system_clock::time_point currentTimePoint = std::chrono::system_clock::now();
 
@@ -23,9 +23,9 @@ namespace leeder
 
         errno_t err = localtime_s(&tm, &currentTime);
 
-        std::array<WCHAR, 128> time;
+        std::array<wchar_t, 128> time;
 
-        wcsftime(time.data(), time.size(), L"D%Y-%m-%dT%H:%M:%S", &tm);
+        wcsftime(time.data(), time.size(), format, &tm);
 
 
         return time.data();

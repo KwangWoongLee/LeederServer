@@ -31,7 +31,6 @@ LogFile::~LogFile()
 
 
 	// log 파일인 경우
-	// TODO :: log 파일에 시간 작성
 	std::size_t found = mFilePath.find(L".log");
 	if (found == std::wstring::npos)  
 	{
@@ -39,8 +38,11 @@ LogFile::~LogFile()
 	}
 
 	std::wstring closeFileName = mFilePath.substr(0, found);
+	closeFileName += Clock::GetInstance().GetTimeNowToWS();
+	closeFileName += L".log";
 
-
+	// 파일 이름 변경
+	_wrename(mFilePath.c_str(), closeFileName.c_str());
 }
 
 void LogFile::Init(XMLDocument* config)
@@ -48,24 +50,25 @@ void LogFile::Init(XMLDocument* config)
 	XMLElement* root = config->FirstChildElement("App")->FirstChildElement("Log");
 
 	XMLElement* elem = root->FirstChildElement("Path");
-	std::wstring path = CA2W(elem->GetText());
+	
+	mFilePath = CA2W(elem->GetText());
 
 
 	// Log 디렉토리가 없을 경우 자동 생성 
-	std::size_t found = path.find_last_of(L"/");
+	std::size_t found = mFilePath.find_last_of(L"/");
 	if (found == std::wstring::npos)
 	{
 		return;
 	}
 
-	std::wstring foldername = path.substr(0, found);
+	std::wstring foldername = mFilePath.substr(0, found);
 
 	namespace fs = std::filesystem;
 	fs::path tmp(foldername);
 	if (!fs::exists(tmp))
 		fs::create_directory(tmp);
 
-	mFileStream.open(path, std::ios::out | std::ios::trunc);
+	mFileStream.open(mFilePath, std::ios::out | std::ios::trunc);
 
 	if (mFileStream.bad()) {
 		printf("Log File Open is Failed\n");
@@ -110,6 +113,7 @@ void LogWriter::Log(const wchar_t* fmt, va_list args)
 	std::wstring msg = L"";
 
 	msg += mPrefix;
+
 
 	std::array<WCHAR, 1024> logStr;
 	vswprintf_s(logStr.data(), logStr.size(), fmt, args);
