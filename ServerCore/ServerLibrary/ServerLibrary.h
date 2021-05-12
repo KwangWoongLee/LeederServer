@@ -72,9 +72,15 @@
 
 #include "Util/Thread.h"
 
+#include "Util/Socket.h"
+
 
 
 //Network
+
+#include "Network/Session.h"
+#include "Network/IOCPSession.h"
+#include "Network/SessionManager.h"
 
 #include "Network/Server.h"
 #include "Network/IOCPServer.h"

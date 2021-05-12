@@ -41,6 +41,10 @@
     <ClInclude Include="Util\ThreadSafeQueue.h" />
     <ClInclude Include="Network\Server.h" />
     <ClInclude Include="Network\IOCPServer.h" />
+    <ClInclude Include="Network\Session.h" />
+    <ClInclude Include="Util\Socket.h" />
+    <ClInclude Include="Network\SessionManager.h" />
+    <ClInclude Include="Network\IOCPSession.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -60,5 +64,9 @@
     <ClCompile Include="Util\Thread.cpp" />
     <ClCompile Include="Network\Server.cpp" />
     <ClCompile Include="Network\IOCPServer.cpp" />
+    <ClCompile Include="Network\Session.cpp" />
+    <ClCompile Include="Util\Socket.cpp" />
+    <ClCompile Include="Network\SessionManager.cpp" />
+    <ClCompile Include="Network\IOCPSession.cpp" />
   </ItemGroup>
 </Project>

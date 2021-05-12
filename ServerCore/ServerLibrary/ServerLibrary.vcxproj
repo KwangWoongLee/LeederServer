@@ -167,7 +167,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Network\IOCPServer.h" />
+    <ClInclude Include="Network\IOCPSession.h" />
     <ClInclude Include="Network\Server.h" />
+    <ClInclude Include="Network\Session.h" />
+    <ClInclude Include="Network\SessionManager.h" />
     <ClInclude Include="ServerLibrary.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Util\Assert.h" />
@@ -177,6 +180,7 @@
     <ClInclude Include="Util\MemoryLeakDetector.h" />
     <ClInclude Include="Util\Minidump.h" />
     <ClInclude Include="Util\Singleton.h" />
+    <ClInclude Include="Util\Socket.h" />
     <ClInclude Include="Util\StringUtil.h" />
     <ClInclude Include="Util\Thread.h" />
     <ClInclude Include="Util\ThreadSafeQueue.h" />
@@ -187,7 +191,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network\IOCPServer.cpp" />
+    <ClCompile Include="Network\IOCPSession.cpp" />
     <ClCompile Include="Network\Server.cpp" />
+    <ClCompile Include="Network\Session.cpp" />
+    <ClCompile Include="Network\SessionManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -199,6 +206,7 @@
     <ClCompile Include="Util\Config.cpp" />
     <ClCompile Include="Util\Logger.cpp" />
     <ClCompile Include="Util\Minidump.cpp" />
+    <ClCompile Include="Util\Socket.cpp" />
     <ClCompile Include="Util\Thread.cpp" />
     <ClCompile Include="Util\tinyxml\tinystr.cpp" />
     <ClCompile Include="Util\tinyxml\tinyxml.cpp" />

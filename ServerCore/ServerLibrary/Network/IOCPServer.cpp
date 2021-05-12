@@ -4,72 +4,78 @@
 namespace leeder
 {
 
-std::function < void()> ioThreadFunction = []() {
+std::function < void()> AcceptThreadFunction = []() {
+
+	SessionManager::GetInstance().AcceptSessions();
+
+};
+
+std::function < void()> ioWorkerThreadFunction = []() {
+
+
 };
 
 
 IOCPServer::IOCPServer()
 	:Server()
 	, mIOCP(NULL)
-	, mListenSocket(NULL)
 {
 	SysLogger::GetInstance().Log(L"Create IOCPServer");
 }
 
 IOCPServer::~IOCPServer()
 {
-	closesocket(mListenSocket);
 	CloseHandle(mIOCP);
 }
 
 
 void IOCPServer::Run()
 {
-	if (createListenSocket() == SOCKET_ERROR)
+	if (mListenSocket.Bind(GetIP().c_str(), GetPort()))
 	{
 		//俊矾贸府
 	}
+
+	if (mListenSocket.Listen())
+	{
+		//俊矾贸府
+	}
+
+	if (!mListenSocket.ReuseAddr(true))
+	{
+		//俊矾贸府
+	}
+
 
 	if (!createCompletionPort())
 	{
 		//俊矾贸府
 	}
 
-	if (!registCompletionPort(mListenSocket, (ULONG_PTR)0))
+	if (!registCompletionPort(mListenSocket.GetSocket(), (ULONG_PTR)0))
 	{
 		//俊矾贸府
 	}
 
 
 
+	mAcceptThread = std::make_unique<Thread>(AcceptThreadFunction);
+
 	for (size_t i = 0; i < GetThreadCount(); ++i) {
-		mWorkThreadPool.push_back(std::make_unique<Thread>(ioThreadFunction));
+		mWorkThreadPool.push_back(std::make_unique<Thread>(ioWorkerThreadFunction));
 	}
 
 
 	SetState(eServerState::RUN);
 
-}
-
-int IOCPServer::createListenSocket()
-{
-	mListenSocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
-
-	if (mListenSocket == INVALID_SOCKET)
+	while (true)
 	{
-		//俊矾贸府
+		printf("IOCPServer is running");
+		Sleep(10000);
 	}
 
-	this->bind();
-	// 俊矾贸府
-
-	this->listen();
-	// 俊矾贸府
-
-
-	return NO_ERROR;
-
 }
+
 
 bool IOCPServer::createCompletionPort()
 {
@@ -80,6 +86,7 @@ bool IOCPServer::createCompletionPort()
 
 	return true;
 }
+
 
 bool IOCPServer::registCompletionPort(SOCKET socket, ULONG_PTR completionKey)
 {
@@ -93,20 +100,5 @@ bool IOCPServer::registCompletionPort(SOCKET socket, ULONG_PTR completionKey)
 	}
 }
 
-bool IOCPServer::bind()
-{
-	SOCKADDR_IN serveraddr = { 0, };
-
-	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_port = htons(GetPort());
-	inet_pton(AF_INET, GetIP().c_str(), &(serveraddr.sin_addr));
-
-	return SOCKET_ERROR != ::bind(mListenSocket, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
-}
-
-int IOCPServer::listen(int inBackLog)
-{
-	return SOCKET_ERROR != ::listen(mListenSocket, SOMAXCONN);
-}
 
 }

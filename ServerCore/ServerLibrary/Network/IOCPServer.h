@@ -16,21 +16,15 @@ public:
 
 private:
 	//ÇïÆÛ ÇÔ¼ö
-	int				createListenSocket();
-
 	bool			createCompletionPort();
 	bool			registCompletionPort(SOCKET socket, ULONG_PTR completionKey);
 
 
-
-	bool			bind();
-	int				listen(int inBackLog = SOMAXCONN);
-
-
 private:
-	SOCKET				mListenSocket;
+	Socket				mListenSocket;
 	HANDLE				mIOCP;	
 	
+	std::unique_ptr<Thread>					mAcceptThread;
 	std::vector<std::unique_ptr<Thread>>	mWorkThreadPool;
 
 
