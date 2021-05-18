@@ -3,6 +3,8 @@
 
 namespace leeder
 {
+class Server;
+
 class SessionManager : public Singleton< SessionManager >
 {
 public:
@@ -10,21 +12,21 @@ public:
 	~SessionManager();
 
 	void	PrepareSessionPool();
-	void	AcceptSessions();
+	void	AcceptSessions(SOCKET listenSocket);
 
-	void	AllocSession(std::shared_ptr<Session>& session);
-	void	ReturnSession(std::shared_ptr<Session>& returnSession);
+	void	AllocSession(std::shared_ptr<IOCPSession>& session);
+	void	ReturnSession(std::shared_ptr<IOCPSession>& returnSession);
 
 	void	printSessionPool();
 	void	printSessionList();
 
-	bool	AddSession(const std::shared_ptr<Session>& session);
+	bool	AddSession(const std::shared_ptr<IOCPSession>& session);
 
 
 
 private:
-	std::list<std::shared_ptr<Session>>	mSessionPool;
-	std::list<std::shared_ptr<Session>>		mSessionList;
+	std::list<std::shared_ptr<IOCPSession>>		mSessionPool;
+	std::list<std::shared_ptr<IOCPSession>>		mSessionList;
 
 	std::mutex								mSessionPoolMutex;
 

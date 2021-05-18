@@ -10,31 +10,33 @@ SessionManager::SessionManager()
 {
 	PrepareSessionPool();
 
-	printSessionPool();
+	//printSessionPool();
 }
 
 SessionManager::~SessionManager()
 {
 	mSessionPool.clear();
+	mSessionList.clear();
 }
 
 void SessionManager::PrepareSessionPool()
 {
 	for (int i = 0; i < mMaxSessionCount; ++i)
 	{
-		mSessionPool.push_back(std::make_shared<Session>());
+		mSessionPool.push_back(std::make_shared<IOCPSession>());
 		mSessionCount++;
 	}
 }
 
-void SessionManager::AcceptSessions()
+void SessionManager::AcceptSessions(SOCKET listenSocket)
 {
 	{
 		std::unique_lock<std::mutex> lock(mSessionPoolMutex);
 
 		while (mIssueCount - mReturnCount < mMaxSessionCount)
 		{
-			std::shared_ptr<Session> session = mSessionPool.back();
+			std::shared_ptr<IOCPSession> session = mSessionPool.back();
+
 
 			session->SetID(mSessionIDSeed++);
 			mSessionList.push_back(session);
@@ -43,12 +45,12 @@ void SessionManager::AcceptSessions()
 
 			++mIssueCount;
 
-			//session->Accept();
+			session->Accept(listenSocket);
 		}
 	}
 }
 
-void SessionManager::AllocSession(std::shared_ptr<Session>& session)
+void SessionManager::AllocSession(std::shared_ptr<IOCPSession>& session)
 {
 	{
 		std::unique_lock<std::mutex> lock(mSessionPoolMutex);
@@ -65,7 +67,7 @@ void SessionManager::AllocSession(std::shared_ptr<Session>& session)
 
 
 
-void SessionManager::ReturnSession(std::shared_ptr<Session>& returnSession)
+void SessionManager::ReturnSession(std::shared_ptr<IOCPSession>& returnSession)
 {
 	{
 		std::unique_lock<std::mutex> lock(mSessionPoolMutex);
@@ -107,7 +109,7 @@ void SessionManager::printSessionList()
 	}
 }
 
-bool SessionManager::AddSession(const std::shared_ptr<Session>& session)
+bool SessionManager::AddSession(const std::shared_ptr<IOCPSession>& session)
 {
 	{
 		std::unique_lock<std::mutex> lock(mSessionPoolMutex);

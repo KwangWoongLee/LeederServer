@@ -45,6 +45,8 @@
     <ClInclude Include="Util\Socket.h" />
     <ClInclude Include="Network\SessionManager.h" />
     <ClInclude Include="Network\IOCPSession.h" />
+    <ClInclude Include="Network\Stream.h" />
+    <ClInclude Include="Network\Overlapped.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -68,5 +70,7 @@
     <ClCompile Include="Util\Socket.cpp" />
     <ClCompile Include="Network\SessionManager.cpp" />
     <ClCompile Include="Network\IOCPSession.cpp" />
+    <ClCompile Include="Network\Stream.cpp" />
+    <ClCompile Include="Network\Overlapped.cpp" />
   </ItemGroup>
 </Project>

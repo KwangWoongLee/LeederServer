@@ -17,7 +17,7 @@ namespace leeder
 			return;
 		}
 
-
+		mListenSocket = std::make_shared<Socket>();
 
 		XMLDocument config;
 

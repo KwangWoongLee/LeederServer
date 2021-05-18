@@ -1,28 +1,40 @@
 #include "stdafx.h"
 #include "Socket.h"
 
-leeder::Socket::Socket()
+namespace leeder
+{
+Socket::Socket()
 {
 	mSocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
 	ZeroMemory(&mAddrInfo, sizeof(mAddrInfo));
 
 	if (mSocket == INVALID_SOCKET)
 	{
-		//에러처리
+		printf("invalid socket %d" , WSAGetLastError());
+		//에러처;
 	}
 }
 
-leeder::Socket::~Socket()
+Socket::~Socket()
 {
 	closesocket(mSocket);
 }
 
-bool leeder::Socket::ReuseAddr(bool reuse)
+std::wstring Socket::GetClientAddress()
+{
+	std::array<char, 64> ip;
+	inet_ntop(AF_INET, &(mAddrInfo.sin_addr), ip.data(), ip.size());
+
+
+	return CA2W(ip.data());
+}
+
+bool Socket::ReuseAddr(bool reuse)
 {
 	return false;
 }
 
-bool leeder::Socket::SetLinger(bool lingerOn, int lingerTime)
+bool Socket::SetLinger(bool lingerOn, int lingerTime = 0)
 {
 	LINGER lingerOption;
 	lingerOption.l_onoff = lingerOn ? 1 : 0;
@@ -31,18 +43,18 @@ bool leeder::Socket::SetLinger(bool lingerOn, int lingerTime)
 	return SOCKET_ERROR != setsockopt(mSocket, SOL_SOCKET, SO_LINGER, (const char*)&lingerOption, sizeof(LINGER));
 }
 
-bool leeder::Socket::UpdateAcceptContext(Socket* s)
+bool Socket::UpdateAcceptContext(SOCKET& listenSocket)
 {
-	return SOCKET_ERROR != setsockopt(mSocket, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, (char*)&s->mSocket, sizeof(SOCKET));
+	return SOCKET_ERROR != setsockopt(mSocket, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, (char*)&listenSocket, sizeof(SOCKET));
 }
 
-bool leeder::Socket::SetNodelay(bool nodelay)
+bool Socket::SetNodelay(bool nodelay)
 {
 	int opt = nodelay ? 1 : 0;
 	return SOCKET_ERROR != setsockopt(mSocket, IPPROTO_TCP, TCP_NODELAY, (const char*)&opt, sizeof(int));
 }
 
-int leeder::Socket::Bind(const char* ip, uint16_t port)
+bool Socket::Bind(const char* ip, uint16_t port)
 {
 
 	mAddrInfo.sin_family = AF_INET;
@@ -53,7 +65,9 @@ int leeder::Socket::Bind(const char* ip, uint16_t port)
 
 }
 
-int leeder::Socket::Listen(int backLog)
+bool Socket::Listen(int backLog)
 {
 	return SOCKET_ERROR != ::listen(mSocket, backLog);
+}
+
 }

@@ -77,6 +77,8 @@
 
 
 //Network
+#include "Network/Stream.h"
+#include "Network/Overlapped.h"
 
 #include "Network/Session.h"
 #include "Network/IOCPSession.h"

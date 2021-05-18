@@ -13,18 +13,18 @@ public:
 
 	void Run() override; // 순수 가상함수 처리. 
 
+	HANDLE&		GetIOCP() { return mIOCP; }
+
+
+	bool			RegistCompletionPort(SOCKET socket, ULONG_PTR key);
+
+
 
 private:
-	//헬퍼 함수
 	bool			createCompletionPort();
-	bool			registCompletionPort(SOCKET socket, ULONG_PTR completionKey);
 
-
-private:
-	Socket				mListenSocket;
 	HANDLE				mIOCP;	
 	
-	std::unique_ptr<Thread>					mAcceptThread;
 	std::vector<std::unique_ptr<Thread>>	mWorkThreadPool;
 
 

@@ -5,19 +5,15 @@ namespace leeder
 {
 Session::Session()
 	:mType(eSessionType::CLIENT)
+	, mID(0)
 {
 }
 Session::~Session()
 {
 }
-void Session::Reset()
-{
-}
-void Session::OnAccept()
-{
-}
-void Session::OnClose()
-{
+
 
 }
-}
+
+
+

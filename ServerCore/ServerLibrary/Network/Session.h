@@ -10,7 +10,7 @@ enum class eSessionType
 };
 
 
-class Session : public std::enable_shared_from_this<Session>
+class Session 
 {
 public:
 	Session();
@@ -21,16 +21,11 @@ public:
 	int				GetID() const { return mID; }
 	void			SetID(std::atomic<int> id) { mID = id; }
 
-	void			Reset();
-
-	void			OnAccept();
-
-	void			OnClose();
-
-	std::shared_ptr<Session> GetThisSharedPtr() { return shared_from_this(); }
+	Socket&			GetSocket() { return mSocket; }
 
 
-private:
+
+protected:
 	Socket			mSocket;
 	eSessionType	mType;
 
