@@ -85,8 +85,13 @@ namespace leeder
 		RWIOData(eIOType type);
 		void Reset();
 
-		void	SetTotalByte();
+		bool	SetStreamToIOData(Stream& stream);
+
+		size_t	SetTotalByte();
 		bool	IsRemainToIO(size_t transffered);
+
+		size_t	GetTotalByte() { return mTotalByte; }
+		size_t	GetCurrentByte() { return mCurrentByte; }
 
 
 	private:

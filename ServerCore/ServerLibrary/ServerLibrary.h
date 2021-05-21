@@ -78,6 +78,13 @@
 
 //Network
 #include "Network/Stream.h"
+
+#include "Network/PacketType.h"
+#include "Network/Packet.h"
+
+#include "Network/PacketFactory.h"
+#include "Network/PacketAnalyzer.h"
+
 #include "Network/Overlapped.h"
 
 #include "Network/Session.h"

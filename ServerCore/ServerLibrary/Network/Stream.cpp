@@ -11,12 +11,8 @@ Stream::Stream()
 	, mHead(0)
 {}
 
-Stream::~Stream()
-{
-	std::free(mBuffer);
-}
 
-void Stream::ReallocBuffer(size_t size)
+void Stream::ReallocBuffer(uint32_t size)
 {
 	mBuffer = static_cast<char*>(std::realloc(mBuffer, size));
 
@@ -38,22 +34,23 @@ OutputStream::OutputStream()
 
 void OutputStream::write(const void* data, size_t size)
 {
-	size_t resultHead = mHead + size;
+	uint32_t resultHead = mHead + static_cast<uint32_t>(size);
 
 	if (resultHead > mCapacity)
 	{
 		ReallocBuffer((std::max)(mCapacity * 2, resultHead));
 	}
 
-	std::memcpy(mBuffer + mHead, data, size);
+	memcpy_s((void*)(mBuffer + mHead), resultHead - mHead, data, size);
 
 	mHead = resultHead;
+
 }
 
 
 
 
-InputStream::InputStream(char* buffer, size_t size)
+InputStream::InputStream(char* buffer, uint32_t size)
 	:Stream()
 {
 	mBuffer = buffer;
@@ -61,9 +58,9 @@ InputStream::InputStream(char* buffer, size_t size)
 	mHead = 0;
 }
 
-void InputStream::read(void* data, size_t size)
+void InputStream::read(void* data, uint32_t size)
 {
-	PACKET_SIZE resultHead = static_cast<PACKET_SIZE>(mHead + size);
+	uint32_t resultHead = mHead + size;
 	if (resultHead > mCapacity)
 	{
 		//에러처리

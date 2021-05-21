@@ -340,3 +340,4 @@ ASALocalRun/
 healthchecksdb
 /ServerCore/ServerLibrary/Util/MemoryLeakDetector.h
 /ServerCore/TemplateServer/config.xml
+/ServerCore/TemplateClient

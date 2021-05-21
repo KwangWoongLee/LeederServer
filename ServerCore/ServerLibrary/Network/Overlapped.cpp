@@ -24,14 +24,48 @@ void RWIOData::Reset()
 	memset(mBuffer, 0, sizeof(char) * BUF_SIZE);
 }
 
-void RWIOData::SetTotalByte()
+bool RWIOData::SetStreamToIOData(Stream& stream)
 {
-	PACKET_SIZE size = 0; 
-	if (mTotalByte == 0) {
-		memcpy((void*)size, (void*)mBuffer, sizeof(PACKET_SIZE));
+	this->Reset();
 
-		mTotalByte = (size_t)size;
+	if (BUF_SIZE < stream.GetLength() + sizeof(PACKET_SIZE))
+	{
+		//에러 처리
+		return false;
 	}
+
+	//패킷 총길이
+	PACKET_SIZE packetTotalLength = sizeof(PACKET_SIZE) + stream.GetLength();
+
+
+	size_t	offset = sizeof(PACKET_SIZE);
+
+	//패킷 총길이 입력
+	memcpy((void*)mBuffer, (void*)packetTotalLength, sizeof(PACKET_SIZE));
+
+	// 스트림 데이터 입력
+	memcpy((void*)(mBuffer + offset), (void*)stream.GetBuffer(), stream.GetLength());
+	
+	mTotalByte = packetTotalLength;
+
+	return true;
+
+}
+
+size_t RWIOData::SetTotalByte()
+{
+	size_t offset = 0;
+	PACKET_SIZE packetSize[1] = {0};
+
+	if (mTotalByte == 0) {
+		memcpy((void*)packetSize, (void*)mBuffer, sizeof(PACKET_SIZE));
+
+		mTotalByte = (size_t)packetSize[0];
+	}
+
+	offset += sizeof(PACKET_SIZE);
+
+	return offset;
 }
 
 bool RWIOData::IsRemainToIO(size_t transffered)

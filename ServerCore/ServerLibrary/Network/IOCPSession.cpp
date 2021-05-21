@@ -37,10 +37,22 @@ void IOCPSession::RecvStandBy()
 
 bool IOCPSession::isRemainToRecv(size_t transferred)
 {
-	//if (mReadIO.isNotCompleteIO(transferred)) {
-	//	this->recv(mReadIO.GetWSABuffer());
-	//	return true;
-	//}
+	if (mReadIO.IsRemainToIO(transferred)) {
+
+		mReadIO.SetType(eIOType::RECV);
+
+		Overlapped* RecvOverlapped = new Overlapped((void*)&mReadIO);
+
+
+		WSABUF wsaBuf;
+		wsaBuf.buf = mReadIO.GetBuffer() + mReadIO.GetCurrentByte();
+		wsaBuf.len = (ULONG)(mReadIO.GetTotalByte() - mReadIO.GetCurrentByte());
+
+		this->recv(RecvOverlapped, wsaBuf);
+
+		return true;
+	}
+
 	return false;
 }
 
@@ -102,7 +114,19 @@ void IOCPSession::OnRecv(DWORD transferSize)
 		return;
 	}
 
+	//패킷 가장 앞부분. 패킷 총길이를 가져오고 그만큼 offset 증가.
+	size_t offset = mReadIO.SetTotalByte();
 
+	if (this->isRemainToRecv(transferSize)) {
+		return;
+	}
+
+	Packet* packet = PacketAnalyzer::GetInstance().analyze(mReadIO.GetBuffer() + offset, mReadIO.GetTotalByte() - offset);
+
+	if (packet == nullptr) {
+
+		return;
+	}
 
 	this->RecvStandBy();
 }

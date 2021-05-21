@@ -3,27 +3,26 @@
 
 namespace leeder
 {
-
+using PACKET_SIZE = uint32_t;
 
 class Stream
 {
 public:
 	Stream();
-	virtual ~Stream();
 
 
 	const char* GetBuffer() { return mBuffer; }
-	size_t		GetLength() { return mHead; }
+	PACKET_SIZE	GetLength() { return mHead; }
 
 
 
 
 protected:
-	void	ReallocBuffer(size_t size);
+	void	ReallocBuffer(uint32_t size);
 
 	char*		mBuffer;
-	size_t		mHead;
-	size_t		mCapacity;
+	PACKET_SIZE	mHead;
+	uint32_t	mCapacity;
 
 
 };
@@ -36,10 +35,11 @@ public:
 	OutputStream();
 
 
+
 	template< typename T >
 	void operator << (const T& t)
 	{
-		this->write(T);
+		this->write(t);
 	}
 
 	template<>
@@ -56,20 +56,16 @@ public:
 		size_t size = string.size();
 
 		this->write(size);
-		for (auto c : string) {
-			this->write(c);
-		}
+		this->write(string.data(), sizeof(char) * size);
 	}
 
 	template<>
-	void operator << (const std::wstring& wstring)
+	void operator << (const std::wstring& wstr)
 	{
-		size_t size = wstring.size();
+		size_t size = wstr.size();
 
 		this->write(size);
-		for (auto c : wstring) {
-			this->write(c);
-		}
+		this->write(wstr.data(), sizeof(char) * size);
 	}
 
 	template< typename T >
@@ -107,13 +103,42 @@ private:
 class InputStream : public Stream
 {
 public:
-	InputStream(char* buffer, size_t size);
+	InputStream(char* buffer, uint32_t size);
 
 
 	template< typename T >
 	void operator >> (T& t)
 	{
-		this->read(T);
+		this->read(t);
+	}
+
+	template<>
+	void operator >> (std::string& str)
+	{
+		size_t size;
+		this->read(size);
+
+		str.resize(size);
+
+		for (auto& c : str)
+		{
+			this->read(c);
+		}
+
+	}
+
+	template<>
+	void operator >> (std::wstring& wstr)
+	{
+		size_t size;
+		this->read(size);
+
+		wstr.resize(size);
+
+		for (auto& c : wstr)
+		{
+			this->read(c);
+		}
 	}
 
 
@@ -135,7 +160,7 @@ public:
 
 
 private:
-	void		read(void* data, size_t size);
+	void		read(void* data, uint32_t size);
 
 
 	template< typename T > 

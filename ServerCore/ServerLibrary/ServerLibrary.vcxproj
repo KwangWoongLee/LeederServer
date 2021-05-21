@@ -169,6 +169,10 @@
     <ClInclude Include="Network\IOCPServer.h" />
     <ClInclude Include="Network\IOCPSession.h" />
     <ClInclude Include="Network\Overlapped.h" />
+    <ClInclude Include="Network\Packet.h" />
+    <ClInclude Include="Network\PacketAnalyzer.h" />
+    <ClInclude Include="Network\PacketFactory.h" />
+    <ClInclude Include="Network\PacketType.h" />
     <ClInclude Include="Network\Server.h" />
     <ClInclude Include="Network\Session.h" />
     <ClInclude Include="Network\SessionManager.h" />
@@ -195,6 +199,8 @@
     <ClCompile Include="Network\IOCPServer.cpp" />
     <ClCompile Include="Network\IOCPSession.cpp" />
     <ClCompile Include="Network\Overlapped.cpp" />
+    <ClCompile Include="Network\Packet.cpp" />
+    <ClCompile Include="Network\PacketAnalyzer.cpp" />
     <ClCompile Include="Network\Server.cpp" />
     <ClCompile Include="Network\Session.cpp" />
     <ClCompile Include="Network\SessionManager.cpp" />

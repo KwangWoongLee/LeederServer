@@ -13,6 +13,9 @@
     <Filter Include="Util\tinyXML">
       <UniqueIdentifier>{c7a2e3d1-86ba-4c37-b3a4-9897f233d056}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network\Packet">
+      <UniqueIdentifier>{c0437fc3-3f96-4128-a15d-7185a9886c55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -27,26 +30,78 @@
     <ClInclude Include="Util\Logger.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Util\tinyxml\tinystr.h" />
-    <ClInclude Include="Util\tinyxml\tinyxml.h" />
-    <ClInclude Include="Util\Type.h" />
-    <ClInclude Include="Util\Config.h" />
-    <ClInclude Include="Util\StringUtil.h" />
-    <ClInclude Include="Util\Minidump.h" />
-    <ClInclude Include="Util\Assert.h" />
-    <ClInclude Include="Util\Clock.h" />
-    <ClInclude Include="Util\MemoryLeakDetector.h" />
-    <ClInclude Include="Util\Thread.h" />
-    <ClInclude Include="vld.h" />
-    <ClInclude Include="Util\ThreadSafeQueue.h" />
-    <ClInclude Include="Network\Server.h" />
-    <ClInclude Include="Network\IOCPServer.h" />
-    <ClInclude Include="Network\Session.h" />
-    <ClInclude Include="Util\Socket.h" />
-    <ClInclude Include="Network\SessionManager.h" />
-    <ClInclude Include="Network\IOCPSession.h" />
-    <ClInclude Include="Network\Stream.h" />
-    <ClInclude Include="Network\Overlapped.h" />
+    <ClInclude Include="Util\Assert.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Clock.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Config.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\MemoryLeakDetector.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Minidump.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Type.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="vld.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\tinyxml\tinyxml.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\tinyxml\tinystr.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\ThreadSafeQueue.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Thread.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\StringUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Socket.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\IOCPServer.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\IOCPSession.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Overlapped.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Server.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Session.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\SessionManager.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Stream.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Packet.h">
+      <Filter>Network\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\PacketType.h">
+      <Filter>Network\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\PacketFactory.h">
+      <Filter>Network\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\PacketAnalyzer.h">
+      <Filter>Network\Packet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -55,22 +110,62 @@
     <ClCompile Include="Util\Logger.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Util\tinyxml\tinystr.cpp" />
-    <ClCompile Include="Util\tinyxml\tinyxml.cpp" />
-    <ClCompile Include="Util\tinyxml\tinyxmlerror.cpp" />
-    <ClCompile Include="Util\tinyxml\tinyxmlparser.cpp" />
-    <ClCompile Include="Util\Config.cpp" />
-    <ClCompile Include="Util\Minidump.cpp" />
-    <ClCompile Include="Util\Assert.cpp" />
-    <ClCompile Include="Util\Clock.cpp" />
-    <ClCompile Include="Util\Thread.cpp" />
-    <ClCompile Include="Network\Server.cpp" />
-    <ClCompile Include="Network\IOCPServer.cpp" />
-    <ClCompile Include="Network\Session.cpp" />
-    <ClCompile Include="Util\Socket.cpp" />
-    <ClCompile Include="Network\SessionManager.cpp" />
-    <ClCompile Include="Network\IOCPSession.cpp" />
-    <ClCompile Include="Network\Stream.cpp" />
-    <ClCompile Include="Network\Overlapped.cpp" />
+    <ClCompile Include="Util\Assert.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Clock.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Config.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Minidump.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\tinyxml\tinyxmlparser.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\tinyxml\tinyxmlerror.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\tinyxml\tinyxml.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\tinyxml\tinystr.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Thread.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Socket.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\IOCPServer.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\IOCPSession.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Overlapped.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Server.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Session.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\SessionManager.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Stream.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Packet.cpp">
+      <Filter>Network\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\PacketAnalyzer.cpp">
+      <Filter>Network\Packet</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,6 +15,7 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 		BOOL ret = GetQueuedCompletionStatus(server->GetIOCP(), &transferSize, (PULONG_PTR)&session, (LPOVERLAPPED*)&overlapped, INFINITE);
 
 		IOData* ioData = reinterpret_cast<IOData*>(overlapped->GetIOData());
+
 		session = (ioData == nullptr) ? nullptr : ioData->GetSession();
 
 		if (!ret)
@@ -32,7 +33,7 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 			//세션 종료
 			continue;
 		}
-		
+
 		switch (ioData->GetType())
 		{
 		case eIOType::ACCEPT: 
@@ -65,9 +66,9 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 			break;
 		}
 
-		
+		delete overlapped;
 
-		delete ioData;
+
 	}	
 
 };
