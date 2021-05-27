@@ -3,11 +3,12 @@
 
 namespace leeder
 {
-Overlapped::Overlapped(void* ioData)
+Overlapped::Overlapped(std::shared_ptr<IOData> ioData)
 {
 	SetIOData(ioData);
 	ZeroMemory(&mOverlapped, sizeof(mOverlapped));
 }
+
 
 
 RWIOData::RWIOData(eIOType type)

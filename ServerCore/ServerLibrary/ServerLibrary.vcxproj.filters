@@ -16,6 +16,9 @@
     <Filter Include="Network\Packet">
       <UniqueIdentifier>{c0437fc3-3f96-4128-a15d-7185a9886c55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{bc6e9c90-bf5e-4e09-a298-b675c38ab15e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -39,16 +42,10 @@
     <ClInclude Include="Util\Config.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Util\MemoryLeakDetector.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Util\Minidump.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\Type.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="vld.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\tinyxml\tinyxml.h">
@@ -101,6 +98,15 @@
     </ClInclude>
     <ClInclude Include="Network\PacketAnalyzer.h">
       <Filter>Network\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Package.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Contents\ContentsProcess.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerShutDown.h">
+      <Filter>PCH</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="Network\PacketAnalyzer.cpp">
       <Filter>Network\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Contents\ContentsProcess.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerShutDown.cpp">
+      <Filter>PCH</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

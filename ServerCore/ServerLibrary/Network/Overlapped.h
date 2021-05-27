@@ -26,22 +26,23 @@ namespace leeder
 	};
 
 	class IOCPSession;
+	class IOData;
 
 	class Overlapped
 	{
 
 	public:
 		Overlapped() = delete;
-		Overlapped(void* data);
+		Overlapped(std::shared_ptr<IOData> data);
 
 
 
-		void*				GetIOData() { return mIOData; }
-		void				SetIOData(void* data) { mIOData = data; }
+		std::shared_ptr<IOData>			GetIOData() { return mIOData; }
+		void							SetIOData(std::shared_ptr<IOData> data) { mIOData = data; }
 
 	private:
 		OVERLAPPED		mOverlapped;
-		void*			mIOData;
+		std::shared_ptr<IOData>			mIOData;
 	};
 
 	class IOData
@@ -61,6 +62,20 @@ namespace leeder
 		std::shared_ptr<IOCPSession>	mSession;
 
 		char						mBuffer[BUF_SIZE];
+	};
+
+	class DisconnectIOData : public IOData
+	{
+	public:
+		DisconnectIOData(eDisconnectReason& reason)
+			: IOData(eIOType::DISCONNECT)
+			, mReason(reason)
+		{};
+
+		eDisconnectReason&	GetReason() { return mReason; };
+
+	private:
+		eDisconnectReason mReason;
 	};
 
 	class AcceptIOData : public IOData

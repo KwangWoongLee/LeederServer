@@ -14,13 +14,9 @@ public:
 	void	PrepareSessionPool();
 	void	AcceptSessions(SOCKET listenSocket);
 
-	void	AllocSession(std::shared_ptr<IOCPSession>& session);
-	void	ReturnSession(std::shared_ptr<IOCPSession>& returnSession);
-
-	void	printSessionPool();
-	void	printSessionList();
 
 	bool	AddSession(const std::shared_ptr<IOCPSession>& session);
+	void	ReturnSession(std::shared_ptr<IOCPSession> returnSession);
 
 
 
@@ -38,8 +34,6 @@ private:
 
 
 	static std::atomic<int>					mSessionIDSeed;
-
-
 	
 };
 

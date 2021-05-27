@@ -10,7 +10,6 @@ SessionManager::SessionManager()
 {
 	PrepareSessionPool();
 
-	//printSessionPool();
 }
 
 SessionManager::~SessionManager()
@@ -37,8 +36,9 @@ void SessionManager::AcceptSessions(SOCKET listenSocket)
 		{
 			std::shared_ptr<IOCPSession> session = mSessionPool.back();
 
-
+			session->Init();
 			session->SetID(mSessionIDSeed++);
+
 			mSessionList.push_back(session);
 
 			mSessionPool.pop_back();
@@ -50,24 +50,8 @@ void SessionManager::AcceptSessions(SOCKET listenSocket)
 	}
 }
 
-void SessionManager::AllocSession(std::shared_ptr<IOCPSession>& session)
-{
-	{
-		std::unique_lock<std::mutex> lock(mSessionPoolMutex);
 
-		session = mSessionPool.back();
-
-		session->SetID(mSessionIDSeed++);
-		mSessionList.push_back(session);
-
-		mSessionPool.pop_back();
-
-	}
-}
-
-
-
-void SessionManager::ReturnSession(std::shared_ptr<IOCPSession>& returnSession)
+void SessionManager::ReturnSession(std::shared_ptr<IOCPSession> returnSession)
 {
 	{
 		std::unique_lock<std::mutex> lock(mSessionPoolMutex);
@@ -87,27 +71,6 @@ void SessionManager::ReturnSession(std::shared_ptr<IOCPSession>& returnSession)
 	}
 }
 
-
-void SessionManager::printSessionPool()
-{
-	printf("Session Pool Size : %d\n", mSessionPool.size());
-	int i = 0;
-	for (auto& session : mSessionPool)
-	{
-		printf("Session Pool count %d's use count : %d \n" , i, session.use_count() );
-		++i;
-	}
-}
-
-
-void SessionManager::printSessionList()
-{
-	printf("Session Pool Size : %d\n", mSessionList.size());
-	for (auto& session : mSessionList)
-	{
-		printf("Session List count %d's use count : %d \n", session->GetID(), session.use_count());
-	}
-}
 
 bool SessionManager::AddSession(const std::shared_ptr<IOCPSession>& session)
 {

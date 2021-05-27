@@ -15,6 +15,8 @@ public:
 	Socket();
 	virtual ~Socket();
 
+	void	Reset();
+
 	SOCKET& GetHandle() { return mSocket; }
 	std::wstring	GetClientAddress();
 	SOCKADDR_IN& GetSocketInfo() { return mAddrInfo; }
@@ -23,6 +25,7 @@ public:
 	bool	SetLinger(bool lingerOn, int lingerTime);
 	bool	UpdateAcceptContext(SOCKET& listenSocket);
 	bool	SetNodelay(bool nodelay);
+	bool	SetRecvBufferSize(int size);
 
 	bool	Bind(const char* ip, uint16_t port);
 	bool	Listen(int backLog = SOMAXCONN);

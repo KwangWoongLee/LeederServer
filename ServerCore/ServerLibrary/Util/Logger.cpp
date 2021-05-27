@@ -137,10 +137,10 @@ void LogWriter::SetLogger(eLogType eType, std::wstring prefix)
 	switch ((eLogType)eType)
 	{
 	case eLogType::PRINT:
-		mLogBase = std::shared_ptr<LogBase>(new LogPrint());
+		mLogBase = std::make_shared<LogPrint>();
 		break;
 	case eLogType::FILE:
-		mLogBase = std::shared_ptr<LogBase>(new LogFile());
+		mLogBase = std::make_shared<LogFile>();
 		break;
 	}
 

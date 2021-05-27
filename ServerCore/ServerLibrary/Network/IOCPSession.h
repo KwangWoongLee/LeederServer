@@ -12,14 +12,19 @@ public:
 	IOCPSession();
 	~IOCPSession();
 
+	void Init();
+
 	void	RecvStandBy();
 	bool	isRemainToRecv(size_t transferred);
 	void	Accept(SOCKET listenSocket);
+	void	RequestDisconnect(eDisconnectReason reason);
 
-
+	void	OnDisconnect(eDisconnectReason reason);
 	void	OnAccept(IOCPServer* server);
-	void	OnZeroRecv();
-	void    OnRecv(DWORD transferSize);
+
+	
+	void					 OnSend(DWORD transferSize);
+	std::shared_ptr<Package> OnRecv(DWORD transferSize);
 
 	void Reset();
 
@@ -35,8 +40,8 @@ private:
 
 	std::atomic<bool>		mConnected;
 
-	RWIOData	mReadIO;
-	RWIOData	mWriteIO;
+	std::shared_ptr<RWIOData>	mReadIO;
+	std::shared_ptr<RWIOData>	mWriteIO;
 
 };
 }

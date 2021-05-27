@@ -88,6 +88,7 @@
     <IntDir>OBJ\$(ConfigurationName)</IntDir>
     <TargetName>$(ProjectName)_64</TargetName>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Program Files (x86)\Visual Leak Detector\lib\Win64;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -166,9 +167,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Contents\ContentsProcess.h" />
     <ClInclude Include="Network\IOCPServer.h" />
     <ClInclude Include="Network\IOCPSession.h" />
     <ClInclude Include="Network\Overlapped.h" />
+    <ClInclude Include="Network\Package.h" />
     <ClInclude Include="Network\Packet.h" />
     <ClInclude Include="Network\PacketAnalyzer.h" />
     <ClInclude Include="Network\PacketFactory.h" />
@@ -178,12 +181,12 @@
     <ClInclude Include="Network\SessionManager.h" />
     <ClInclude Include="Network\Stream.h" />
     <ClInclude Include="ServerLibrary.h" />
+    <ClInclude Include="ServerShutDown.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Util\Assert.h" />
     <ClInclude Include="Util\Clock.h" />
     <ClInclude Include="Util\Config.h" />
     <ClInclude Include="Util\Logger.h" />
-    <ClInclude Include="Util\MemoryLeakDetector.h" />
     <ClInclude Include="Util\Minidump.h" />
     <ClInclude Include="Util\Singleton.h" />
     <ClInclude Include="Util\Socket.h" />
@@ -193,9 +196,9 @@
     <ClInclude Include="Util\tinyxml\tinystr.h" />
     <ClInclude Include="Util\tinyxml\tinyxml.h" />
     <ClInclude Include="Util\Type.h" />
-    <ClInclude Include="vld.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Contents\ContentsProcess.cpp" />
     <ClCompile Include="Network\IOCPServer.cpp" />
     <ClCompile Include="Network\IOCPSession.cpp" />
     <ClCompile Include="Network\Overlapped.cpp" />
@@ -205,6 +208,7 @@
     <ClCompile Include="Network\Session.cpp" />
     <ClCompile Include="Network\SessionManager.cpp" />
     <ClCompile Include="Network\Stream.cpp" />
+    <ClCompile Include="ServerShutDown.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

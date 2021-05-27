@@ -4,4 +4,5 @@
 //미리 컴파일된 헤더
 
 #include "ServerLibrary.h"
+#include "ChattingProcess.h"
 

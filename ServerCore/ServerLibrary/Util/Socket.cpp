@@ -20,6 +20,17 @@ Socket::~Socket()
 	closesocket(mSocket);
 }
 
+void Socket::Reset()
+{
+	SetLinger(true,0);
+
+	closesocket(mSocket);
+
+	mSocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
+	ZeroMemory(&mAddrInfo, sizeof(mAddrInfo));
+
+}
+
 std::wstring Socket::GetClientAddress()
 {
 	std::array<char, 64> ip;
@@ -46,6 +57,12 @@ bool Socket::SetLinger(bool lingerOn, int lingerTime = 0)
 bool Socket::UpdateAcceptContext(SOCKET& listenSocket)
 {
 	return SOCKET_ERROR != setsockopt(mSocket, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, (char*)&listenSocket, sizeof(SOCKET));
+}
+
+
+bool Socket::SetRecvBufferSize(int size)
+{
+	return SOCKET_ERROR != setsockopt(mSocket, SOL_SOCKET, SO_RCVBUF, (const char*)&size, sizeof(int));
 }
 
 bool Socket::SetNodelay(bool nodelay)

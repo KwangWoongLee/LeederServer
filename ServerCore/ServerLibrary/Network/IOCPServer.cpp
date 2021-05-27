@@ -6,7 +6,7 @@ namespace leeder
 
 std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* server) {
 
-	while (true) 
+	while (!bShutDown) 
 	{
 		Overlapped* overlapped = nullptr;
 		std::shared_ptr<IOCPSession> session = nullptr;
@@ -14,7 +14,7 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 
 		BOOL ret = GetQueuedCompletionStatus(server->GetIOCP(), &transferSize, (PULONG_PTR)&session, (LPOVERLAPPED*)&overlapped, INFINITE);
 
-		IOData* ioData = reinterpret_cast<IOData*>(overlapped->GetIOData());
+		std::shared_ptr<IOData> ioData = overlapped->GetIOData();
 
 		session = (ioData == nullptr) ? nullptr : ioData->GetSession();
 
@@ -30,44 +30,48 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 		if ( (ioData->GetType()==eIOType::RECV || ioData->GetType() == eIOType::SEND)
 			&& transferSize == 0) 
 		{
-			//세션 종료
+			printf("Session Already Not Exists");
+
+			session->RequestDisconnect(eDisconnectReason::COMPLETION_ERROR);
+
+			delete overlapped;
+
 			continue;
 		}
 
 		switch (ioData->GetType())
 		{
+		case eIOType::DISCONNECT:
+			session->OnDisconnect(static_pointer_cast<DisconnectIOData>(ioData)->GetReason());
+			break;
+
 		case eIOType::ACCEPT: 
 			session->OnAccept(server);
 			break;
 
-		case eIOType::RECV_ZERO:
-			session->OnZeroRecv();
-			break;
-
 		case eIOType::RECV: 
-			session->OnRecv(transferSize);
+		{
+			std::shared_ptr<Package> package = session->OnRecv(transferSize);
+
+			if (package)
+				server->PutPackage(std::move(package));
 			break;
+		}
 
 		case eIOType::SEND: 
-			//context->_event_type = 0;
-			//event->RemoveType(ET_WRITE);
-			//std::shared_ptr<RWSocket> rw_socket = std::dynamic_pointer_cast<RWSocket>(sock);
-			//if (bytes == 0) {
-			//	rw_socket->OnDisConnect(CEC_CLOSED);
-			//}
-			//else {
-			//	rw_socket->OnWrite(bytes);
-			//}
-
+			session->OnSend(transferSize);
 			break;
 
-		default:
+		case eIOType::NONE:
+			printf("IOData NONE");
+			continue;
 
+		default:
+			printf("Unknown Data Type");
 			break;
 		}
 
 		delete overlapped;
-
 
 	}	
 
@@ -78,15 +82,11 @@ LPFN_DISCONNECTEX	mFnDisconnectEx = nullptr;
 LPFN_CONNECTEX		mFnConnectEx = nullptr;
 
 
-IOCPServer::IOCPServer()
-	:Server()
+IOCPServer::IOCPServer(std::unique_ptr<ContentsProcess>&& contents)
+	:Server(std::move(contents))
 	, mIOCP(NULL)
 {
-
-
 	SysLogger::GetInstance().Log(L"Create IOCPServer");
-
-
 }
 
 IOCPServer::~IOCPServer()
@@ -157,7 +157,7 @@ void IOCPServer::Run()
 
 	SetState(eServerState::RUN);
 
-	while (true)
+	while (!bShutDown)
 	{
 		SessionManager::GetInstance().AcceptSessions(mListenSocket->GetHandle());
 		Sleep(100);

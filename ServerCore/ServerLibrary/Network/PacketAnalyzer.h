@@ -10,7 +10,7 @@ namespace leeder
 class PacketAnalyzer : public Singleton< PacketAnalyzer>
 {
 public:
-	Packet* analyze(const char* buffer, size_t size);
+	std::shared_ptr<Packet> analyze(const char* buffer, size_t size);
 	
 };
 

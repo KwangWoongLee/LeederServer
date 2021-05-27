@@ -27,7 +27,6 @@ namespace leeder
 		static std::atomic<int> mThreadIDSeed;
 	};
 
-	extern thread_local Thread* thisThread;
 
 	template<class Callable, class ...Args>
 	inline Thread::Thread(Callable&& func, Args && ...args)

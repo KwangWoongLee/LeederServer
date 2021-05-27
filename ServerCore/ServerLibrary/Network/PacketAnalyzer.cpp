@@ -3,7 +3,7 @@
 
 namespace leeder
 {
-Packet* PacketAnalyzer::analyze(const char* buffer, size_t size)
+std::shared_ptr<Packet> PacketAnalyzer::analyze(const char* buffer, size_t size)
 {
 	//패킷 타입을 가져오고 그만큼 offset 증가.
 	size_t offset = 0;
@@ -15,7 +15,8 @@ Packet* PacketAnalyzer::analyze(const char* buffer, size_t size)
 	if (type[0] == ePacketType::NONE)
 		return nullptr;
 
-	Packet* packet = PacketFactory::GetInstance().GetPacket(type[0]);
+	std::shared_ptr<Packet> packet = PacketFactory::GetInstance().GetPacket(type[0]);
+
 
 	if (packet)
 	{
@@ -27,8 +28,6 @@ Packet* PacketAnalyzer::analyze(const char* buffer, size_t size)
 	}
 
 	return packet;
-
-
 }
 
 }
