@@ -17,8 +17,9 @@ namespace leeder {
 
         T Pop() {
             std::unique_lock<std::mutex> lock(mQueueMutex);
-            mQueueEmptyCV.wait(mQueueMutex, [this]() {return !this->_queue.empty(); });
+            mQueueEmptyCV.wait(lock, [this]() { return !mQueue.empty(); });
 
+            
             auto ret = std::move(mQueue.front());
             mQueue.pop();
 

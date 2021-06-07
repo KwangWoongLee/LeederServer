@@ -14,9 +14,12 @@ LogFile::LogFile()
 {
 	XMLDocument config;
 
-	if (!loadConfig(&config)) {
+	const char* path = "./config.xml";
+
+	if (!loadConfig(&config, path))
+	{
 		printf("Log Config File Not Found\n");
-		exit(0);
+		ASSERT(false);
 		return;
 	}
 	this->Init(&config);
@@ -72,7 +75,7 @@ void LogFile::Init(XMLDocument* config)
 
 	if (mFileStream.bad()) {
 		printf("Log File Open is Failed\n");
-		assert(false);
+		ASSERT(false);
 	}
 }
 
@@ -137,10 +140,10 @@ void LogWriter::SetLogger(eLogType eType, std::wstring prefix)
 	switch ((eLogType)eType)
 	{
 	case eLogType::PRINT:
-		mLogBase = std::shared_ptr<LogBase>(new LogPrint());
+		mLogBase = std::make_shared<LogPrint>();
 		break;
 	case eLogType::FILE:
-		mLogBase = std::shared_ptr<LogBase>(new LogFile());
+		mLogBase = std::make_shared<LogFile>();
 		break;
 	}
 
@@ -150,7 +153,11 @@ SysLogger::SysLogger()
 {
 	XMLDocument config;
 
-	if (!loadConfig(&config)) {
+	//const char* path = "./config.xml";
+	const char* path = "./config.xml";
+
+	if (!loadConfig(&config, path))
+	{
 		printf("!!! have not config file\n");
 		exit(0);
 		return;

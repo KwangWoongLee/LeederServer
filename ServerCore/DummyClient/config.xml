@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<App>
+  <Name>DummyClient</Name>
+  <Server>
+    <IP>127.0.0.1</IP>
+    <Port>9990</Port>
+    <ThreadCount>5</ThreadCount>
+  </Server>
+  
+  <Contents>
+    <ThreadCount>5</ThreadCount>
+  </Contents>
+  
+  
+</App>

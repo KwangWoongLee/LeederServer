@@ -5,9 +5,9 @@
 namespace leeder
 {
 
-bool loadConfig(XMLDocument* config)
+bool loadConfig(XMLDocument* config, const char* path)
 {
-	if (!config->LoadFile("../TemplateServer/config.xml")) {
+	if (!config->LoadFile(path)) {
 		printf("config.xml cannot be found");
 		return false;
 	}

@@ -87,8 +87,9 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\Output\</OutDir>
     <IntDir>OBJ\$(ConfigurationName)</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\ServerLibrary;</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Visual Leak Detector\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);..\ServerLibrary</IncludePath>
     <TargetName>$(ProjectName)_Debug64</TargetName>
+    <LibraryPath>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -170,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DummyTestProcess.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -177,6 +179,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="User.cpp" />
+    <ClCompile Include="UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ServerLibrary\ServerLibrary.vcxproj">
@@ -184,7 +188,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DummyTestProcess.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="UserManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

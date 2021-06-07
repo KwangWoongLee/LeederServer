@@ -4,14 +4,12 @@
 namespace leeder
 {
 	std::atomic<int> Thread::mThreadIDSeed = 0;
-	thread_local Thread* thisThread = nullptr;
 
 
 	Thread::Thread(Thread&& rhs)
 		: mId(mThreadIDSeed++)
 		, mThread(std::move(rhs.mThread))
 	{
-		thisThread = this;
 	}
 
 	Thread& Thread::operator=(Thread&& rhs)
@@ -27,6 +25,7 @@ namespace leeder
 	{
 		if (mThread.joinable())
 			mThread.join();
+
 	}
 
 
