@@ -6,6 +6,8 @@
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "dbghelp.lib")
 
+#define NOMINMAX
+
 #include <Ws2tcpip.h>
 #include <winsock2.h>
 #include <mswsock.h>
@@ -58,8 +60,12 @@
 
 #include "Util/Type.h"
 #include "Util/StringUtil.h"
+#include "Util/RandomUtil.h"
+#include "Util/InputType.h"
+
 
 #include "Util/Singleton.h"
+
 #include "Util/Clock.h"
 
 #include "Util/Logger.h"
@@ -75,7 +81,7 @@
 
 #include "Util/Socket.h"
 
-
+#include "Util/GameObject.h"
 
 //Network
 #include "Network/Stream.h"

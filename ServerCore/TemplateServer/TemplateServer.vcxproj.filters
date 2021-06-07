@@ -5,7 +5,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
-    <ClCompile Include="ChattingProcess.cpp" />
+    <ClCompile Include="UserManager.cpp" />
+    <ClCompile Include="DummyTestProcess.cpp" />
+    <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="PCH">
@@ -16,7 +18,9 @@
     <ClInclude Include="stdafx.h">
       <Filter>PCH</Filter>
     </ClInclude>
-    <ClInclude Include="ChattingProcess.h" />
+    <ClInclude Include="UserManager.h" />
+    <ClInclude Include="DummyTestProcess.h" />
+    <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

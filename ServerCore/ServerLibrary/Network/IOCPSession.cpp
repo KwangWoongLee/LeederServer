@@ -5,7 +5,6 @@ namespace leeder
 {
 
 IOCPSession::IOCPSession()
-	:mConnected(false)
 {
 }
 
@@ -58,23 +57,46 @@ bool IOCPSession::isRemainToRecv(size_t transferred)
 	return false;
 }
 
-void IOCPSession::OnDisconnect(eDisconnectReason reason)
+void IOCPSession::SendPacket(Packet* packet)
 {
-	SessionManager::GetInstance().ReturnSession(shared_from_this());
+	OutputStream stream;
+	packet->Encode(stream);
+
+	mWriteIO->SetStreamToIOData(stream);
+
+	if (mWriteIO->GetSession() == nullptr)
+		mWriteIO->SetSession(shared_from_this());
+	
+
+	Overlapped* SendOverlapped = new Overlapped(mWriteIO);
+
+
+	WSABUF wsaBuf;
+	wsaBuf.buf = mWriteIO->GetBuffer();
+	wsaBuf.len = mWriteIO->GetTotalByte();
+
+	this->send(SendOverlapped, wsaBuf);
+}
+
+std::list<std::shared_ptr<IOCPSession>>::iterator IOCPSession::OnDisconnect(eDisconnectReason reason)
+{
+	return SessionManager::GetInstance().ReturnSession(shared_from_this());
 }
 
 void IOCPSession::OnAccept(IOCPServer* server)
 {
 	if (true == mConnected.exchange(true))
 	{
-		//俊矾贸府
+		SysLogger::GetInstance().Log(L"Session is already connected");
 		return;
 	}
 
+	UpdateHeartBeat();
 
 	if (!this->setSocketOption(server))
 	{
-		//俊矾贸府
+		SysLogger::GetInstance().Log(L"Socket Option Settion Error");
+		ASSERT(false);
 		return;
 	}
 
@@ -86,7 +108,8 @@ void IOCPSession::OnAccept(IOCPServer* server)
 
 	if (!server->RegistCompletionPort(mSocket.GetHandle(), (ULONG_PTR)this))
 	{
-		//俊矾贸府
+		SysLogger::GetInstance().Log(L"CompletionPort Registing Error");
+		ASSERT(false);
 		return;
 	}
 
@@ -112,7 +135,7 @@ void IOCPSession::OnSend(DWORD transferSize)
 		wsaBuf.len = (ULONG)(mWriteIO->GetTotalByte() - mWriteIO->GetCurrentByte());
 
 		this->send(SendOverlapped, wsaBuf);
-
+		
 	}
 }
 
@@ -135,7 +158,7 @@ std::shared_ptr<Package> IOCPSession::OnRecv(DWORD transferSize)
 
 
 	if (packet == nullptr) {
-		//俊矾贸府
+
 		return nullptr;
 	}
 
@@ -189,10 +212,13 @@ bool IOCPSession::setSocketOption(IOCPServer* server)
 		return false;
 	}
 
+
 	if (!mSocket.SetNodelay(true))
 	{
 		return false;
 	}
+
+
 
 	tcp_keepalive keepAliveSet = { 0 }, returned = { 0 };
 	keepAliveSet.onoff = 1;
@@ -225,29 +251,6 @@ void IOCPSession::Accept(SOCKET listenSocket)
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
 			delete acceptOverlapped;
-		}
-	}
-
-}
-
-void IOCPSession::RequestDisconnect(eDisconnectReason reason)
-{
-	if (!mConnected.load())
-		return;
-
-	DWORD bytes = 0;
-
-	std::shared_ptr<IOData> data = std::make_shared<DisconnectIOData>(reason);
-	data->SetSession(shared_from_this());
-
-
-	Overlapped* disconnectOverlapped = new Overlapped(data);
-
-	if (FALSE == mFnDisconnectEx(mSocket.GetHandle(), (LPOVERLAPPED)disconnectOverlapped, TF_REUSE_SOCKET,0))
-	{
-		if (WSAGetLastError() != WSA_IO_PENDING)
-		{
-			delete disconnectOverlapped;
 		}
 	}
 

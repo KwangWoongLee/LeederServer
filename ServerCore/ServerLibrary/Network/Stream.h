@@ -71,7 +71,7 @@ public:
 	template< typename T >
 	void operator << (const std::vector< T >& tVector)
 	{
-		uint32_t size = tVector.size();
+		size_t size = tVector.size();
 		this->write(size);
 		for (const T& element : tVector)
 		{
@@ -80,7 +80,10 @@ public:
 	}
 
 
+
+
 	//Class 객체를 받을 때는 해당 클래스를 특수화 할 것
+
 
 
 private:
@@ -94,6 +97,28 @@ private:
 			"Not Generic Data");
 
 			write(&value, sizeof(value));
+	}
+
+
+	template<>
+	void write(std::shared_ptr<GameObject> obj)
+	{
+		uint32_t networkID = obj->GetNetworkID();
+		write(networkID);
+
+		eObjectState state = obj->GetState();
+		write(state);
+
+		Position pos = obj->GetPosition();
+		write(pos);
+	}
+
+
+	template<>
+	void write(Position position)
+	{
+		write(position.mX);
+		write(position.mY);
 	}
 
 };
@@ -148,7 +173,7 @@ public:
 		size_t size;
 		this->read(size);
 		tVector.resize(size);
-		for (const T& element : tVector)
+		for (auto& element : tVector)
 		{
 			this->read(element);
 		}
@@ -172,6 +197,31 @@ private:
 
 		read(&data, sizeof(data));
 	}
+
+
+
+	template<>
+	void read(std::shared_ptr<GameObject>& obj)
+	{
+		obj = std::make_shared<GameObject>();
+		uint32_t& networkId = obj->GetNetworkID();
+		read(networkId);
+
+		eObjectState& state = obj->GetState();
+		read(state);
+
+		Position& pos = obj->GetPosition();
+		read(pos);
+	}
+
+
+	template<>
+	void read(Position& position)
+	{
+		read(position.mX);
+		read(position.mY);
+	}
+
 
 };
 

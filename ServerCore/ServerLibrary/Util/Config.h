@@ -3,5 +3,5 @@
 
 namespace leeder
 {
-	extern bool loadConfig(XMLDocument* config);
+	extern bool loadConfig(XMLDocument* config, const char* path);
 }

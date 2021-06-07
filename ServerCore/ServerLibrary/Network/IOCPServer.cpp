@@ -14,39 +14,28 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 
 		BOOL ret = GetQueuedCompletionStatus(server->GetIOCP(), &transferSize, (PULONG_PTR)&session, (LPOVERLAPPED*)&overlapped, INFINITE);
 
+		if (!ret)
+		{
+			continue;
+		}
+
 		std::shared_ptr<IOData> ioData = overlapped->GetIOData();
 
 		session = (ioData == nullptr) ? nullptr : ioData->GetSession();
 
-		if (!ret)
-			continue;
 
 		if (session == nullptr)
 		{
-			//俊矾贸府
+			SysLogger::GetInstance().Log(L"Invalid IOData");
+			ASSERT(false);
 			return;
-		}
-
-		if ( (ioData->GetType()==eIOType::RECV || ioData->GetType() == eIOType::SEND)
-			&& transferSize == 0) 
-		{
-			printf("Session Already Not Exists");
-
-			session->RequestDisconnect(eDisconnectReason::COMPLETION_ERROR);
-
-			delete overlapped;
-
-			continue;
 		}
 
 		switch (ioData->GetType())
 		{
-		case eIOType::DISCONNECT:
-			session->OnDisconnect(static_pointer_cast<DisconnectIOData>(ioData)->GetReason());
-			break;
-
 		case eIOType::ACCEPT: 
 			session->OnAccept(server);
+			printf("connect %d \n", session->GetID());
 			break;
 
 		case eIOType::RECV: 
@@ -63,7 +52,8 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 			break;
 
 		case eIOType::NONE:
-			printf("IOData NONE");
+			SysLogger::GetInstance().Log(L"Client Close by Client Error ");
+			session->OnDisconnect(eDisconnectReason::COMPLETION_ERROR);
 			continue;
 
 		default:
@@ -78,8 +68,6 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 };
 
 LPFN_ACCEPTEX		mFnAcceptEx = nullptr;
-LPFN_DISCONNECTEX	mFnDisconnectEx = nullptr;
-LPFN_CONNECTEX		mFnConnectEx = nullptr;
 
 
 IOCPServer::IOCPServer(std::unique_ptr<ContentsProcess>&& contents)
@@ -117,25 +105,11 @@ void IOCPServer::Run()
 	}
 
 
-
 	DWORD bytes = 0;
 
 	GUID guidAcceptEx = WSAID_ACCEPTEX;
 	if (SOCKET_ERROR == WSAIoctl(mListenSocket->GetHandle(), SIO_GET_EXTENSION_FUNCTION_POINTER,
 		&guidAcceptEx, sizeof(GUID), &mFnAcceptEx, sizeof(LPFN_ACCEPTEX), &bytes, NULL, NULL))
-		//俊矾贸府
-		printf("error");
-
-
-	GUID guidDisconnectEx = WSAID_DISCONNECTEX;
-	if (SOCKET_ERROR == WSAIoctl(mListenSocket->GetHandle(), SIO_GET_EXTENSION_FUNCTION_POINTER,
-		&guidDisconnectEx, sizeof(GUID), &mFnDisconnectEx, sizeof(LPFN_DISCONNECTEX), &bytes, NULL, NULL))
-		//俊矾贸府
-		printf("error");
-
-	GUID guidConnectEx = WSAID_CONNECTEX;
-	if (SOCKET_ERROR == WSAIoctl(mListenSocket->GetHandle(), SIO_GET_EXTENSION_FUNCTION_POINTER,
-		&guidConnectEx, sizeof(GUID), &mFnConnectEx, sizeof(LPFN_CONNECTEX), &bytes, NULL, NULL))
 		//俊矾贸府
 		printf("error");
 
@@ -149,6 +123,18 @@ void IOCPServer::Run()
 		//俊矾贸府
 	}
 
+	mAcceptThread = std::make_unique<Thread>([&]() { 
+		
+		while (!bShutDown)
+		{
+			SessionManager::GetInstance().AcceptSessions(mListenSocket->GetHandle());
+
+			SessionManager::GetInstance().CheckHeartBeat();
+
+			Sleep(100);
+		}
+		
+		});
 
 	for (size_t i = 0; i < GetThreadCount(); ++i) {
 		mWorkThreadPool.push_back(std::make_unique<Thread>(ioWorkerThreadFunction, this));
@@ -157,11 +143,7 @@ void IOCPServer::Run()
 
 	SetState(eServerState::RUN);
 
-	while (!bShutDown)
-	{
-		SessionManager::GetInstance().AcceptSessions(mListenSocket->GetHandle());
-		Sleep(100);
-	}
+
 }
 
 

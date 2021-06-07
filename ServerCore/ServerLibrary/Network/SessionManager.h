@@ -5,9 +5,13 @@ namespace leeder
 {
 class Server;
 
+constexpr int LifeTime = 15;
+
 class SessionManager : public Singleton< SessionManager >
 {
 public:
+
+
 	SessionManager();
 	~SessionManager();
 
@@ -16,7 +20,9 @@ public:
 
 
 	bool	AddSession(const std::shared_ptr<IOCPSession>& session);
-	void	ReturnSession(std::shared_ptr<IOCPSession> returnSession);
+	std::list<std::shared_ptr<IOCPSession>>::iterator	ReturnSession(std::shared_ptr<IOCPSession> returnSession);
+
+	void	CheckHeartBeat();
 
 
 

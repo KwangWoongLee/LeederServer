@@ -25,6 +25,7 @@ namespace leeder
 	{
 		if (mThread.joinable())
 			mThread.join();
+
 	}
 
 

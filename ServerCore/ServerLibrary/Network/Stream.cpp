@@ -16,9 +16,10 @@ void Stream::ReallocBuffer(uint32_t size)
 {
 	mBuffer = static_cast<char*>(std::realloc(mBuffer, size));
 
-	//俊矾贸府 
 	if (mBuffer == nullptr)
 	{
+		SysLogger::GetInstance().Log(L"Stream Buffer Allocation Error");
+		ASSERT(false);
 	}
 
 	mCapacity = size;
@@ -63,7 +64,8 @@ void InputStream::read(void* data, uint32_t size)
 	uint32_t resultHead = mHead + size;
 	if (resultHead > mCapacity)
 	{
-		//俊矾贸府
+		SysLogger::GetInstance().Log(L"Stream Buffer has to more memory");
+		ASSERT(false);
 	}
 
 	std::memcpy(data, mBuffer + mHead, size);

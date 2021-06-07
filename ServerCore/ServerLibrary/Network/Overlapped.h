@@ -9,11 +9,11 @@ namespace leeder
 	enum class eIOType
 	{
 		NONE,
-		DISCONNECT,
 		SEND,
 		RECV_ZERO,
 		RECV,
-		ACCEPT
+		ACCEPT,
+		CONNECT
 	};
 
 
@@ -21,8 +21,11 @@ namespace leeder
 	{
 		RECV_ZERO,
 		ACTIVE,
+		ALREADY_REGISTED,
+		UNREGISTED,
 		ONCONNECT_ERROR,
-		COMPLETION_ERROR
+		COMPLETION_ERROR,
+		DIE,
 	};
 
 	class IOCPSession;
@@ -64,19 +67,6 @@ namespace leeder
 		char						mBuffer[BUF_SIZE];
 	};
 
-	class DisconnectIOData : public IOData
-	{
-	public:
-		DisconnectIOData(eDisconnectReason& reason)
-			: IOData(eIOType::DISCONNECT)
-			, mReason(reason)
-		{};
-
-		eDisconnectReason&	GetReason() { return mReason; };
-
-	private:
-		eDisconnectReason mReason;
-	};
 
 	class AcceptIOData : public IOData
 	{

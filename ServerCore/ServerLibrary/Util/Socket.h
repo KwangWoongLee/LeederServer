@@ -3,8 +3,6 @@
 
 namespace leeder
 {
-
-extern LPFN_DISCONNECTEX	mFnDisconnectEx;
 extern LPFN_ACCEPTEX		mFnAcceptEx;
 extern LPFN_CONNECTEX		mFnConnectEx;
 

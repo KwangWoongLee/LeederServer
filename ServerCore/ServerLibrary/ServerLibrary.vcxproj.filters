@@ -108,6 +108,15 @@
     <ClInclude Include="ServerShutDown.h">
       <Filter>PCH</Filter>
     </ClInclude>
+    <ClInclude Include="Util\GameObject.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\RandomUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\InputType.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -178,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="ServerShutDown.cpp">
       <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\GameObject.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -8,7 +8,8 @@ bool bShutDown = false;
 
 void ShutDownServer()
 {
-	//SysLogger::GetInstance().Log(L"Server Shutdown");
+	SysLogger::GetInstance().Log(L"Server Shutdown");
+	bShutDown = true;
 }
 }
 

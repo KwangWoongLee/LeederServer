@@ -16,15 +16,18 @@ public:
 
 	void	RecvStandBy();
 	bool	isRemainToRecv(size_t transferred);
+
+	void	SendPacket(Packet* packet);
+
 	void	Accept(SOCKET listenSocket);
-	void	RequestDisconnect(eDisconnectReason reason);
 
-	void	OnDisconnect(eDisconnectReason reason);
+
+	std::list<std::shared_ptr<IOCPSession>>::iterator	OnDisconnect(eDisconnectReason reason);
 	void	OnAccept(IOCPServer* server);
-
 	
 	void					 OnSend(DWORD transferSize);
 	std::shared_ptr<Package> OnRecv(DWORD transferSize);
+
 
 	void Reset();
 
@@ -38,7 +41,7 @@ private:
 	void	checkIOError(DWORD error);
 
 
-	std::atomic<bool>		mConnected;
+
 
 	std::shared_ptr<RWIOData>	mReadIO;
 	std::shared_ptr<RWIOData>	mWriteIO;

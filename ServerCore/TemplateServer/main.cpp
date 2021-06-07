@@ -1,25 +1,28 @@
 #include "stdafx.h"
 #include <crtdbg.h>
 
-void a()
-{};
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-
-
-
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	//_CrtSetBreakAlloc(660);
+	//_CrtSetBreakAlloc(1726);
 
 	using namespace leeder;
 
-	std::unique_ptr<IOCPServer> loginServer = std::make_unique<IOCPServer>(std::make_unique<ChattingProcess>());
+	std::unique_ptr<IOCPServer> DummyTestServer = std::make_unique<IOCPServer>(std::make_unique<DummyTestProcess>());
 
-	loginServer->Run();
+	DummyTestServer->Run();
+
+	while (true)
+	{
+		UserManager::GetInstance().UpdateUsers();
+
+		UserManager::GetInstance().Replication();
+
+		Sleep(100);
+	}
 
 
-
-	return 1;
+	return 0;
 }

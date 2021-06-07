@@ -6,7 +6,7 @@ namespace leeder
 std::atomic<int> SessionManager::mSessionIDSeed = 0;
 
 SessionManager::SessionManager()
-	: mMaxSessionCount(5)
+	: mMaxSessionCount(5000)
 {
 	PrepareSessionPool();
 
@@ -51,7 +51,7 @@ void SessionManager::AcceptSessions(SOCKET listenSocket)
 }
 
 
-void SessionManager::ReturnSession(std::shared_ptr<IOCPSession> returnSession)
+std::list<std::shared_ptr<IOCPSession>>::iterator SessionManager::ReturnSession(std::shared_ptr<IOCPSession> returnSession)
 {
 	{
 		std::unique_lock<std::mutex> lock(mSessionPoolMutex);
@@ -61,13 +61,36 @@ void SessionManager::ReturnSession(std::shared_ptr<IOCPSession> returnSession)
 		auto iter = std::find(mSessionList.begin(), mSessionList.end(), returnSession);
 		if (iter != mSessionList.end())
 		{
-			mSessionList.erase(iter);
+			iter = mSessionList.erase(iter);
 		}
 
 		mSessionPool.push_back(std::move(returnSession));
 		
 		++mReturnCount;
 
+		return iter;
+
+	}
+}
+
+void SessionManager::CheckHeartBeat()
+{
+	std::time_t now = Clock::GetInstance().GetSystemTick();
+
+	auto iter = mSessionList.begin();
+	auto iterEnd = mSessionList.end();
+	
+	for (; iter != iterEnd;) {
+		if ((*iter)->IsConnected())
+		{
+			std::time_t lastTick = (*iter)->GetLastHeartBeat();
+			if (now - lastTick > LifeTime) {
+				SysLogger::GetInstance().Log(L"Session %d is Not HeartBeat", (*iter)->GetID());
+				iter = (*iter)->OnDisconnect(eDisconnectReason::DIE);
+				continue;
+			}
+		}
+		++iter;
 	}
 }
 

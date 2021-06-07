@@ -23,7 +23,10 @@ Server::Server(std::unique_ptr<ContentsProcess>&& contents)
 
 	XMLDocument config;
 
-	if (!loadConfig(&config)) {
+	const char* path = "./config.xml";
+
+	if (!loadConfig(&config, path)) 
+	{
 		printf("Server Config Reading is failed\n");
 		exit(0);
 		return;

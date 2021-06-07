@@ -24,11 +24,11 @@ public:
 
 protected:
 	void RegistFunction(ePacketType type, func func);
-
 	
 private:
 	void	RegistDefaultFunction();
-	void	TestPacketFunction(std::shared_ptr<Session>& session , std::shared_ptr<Packet>& packet);
+	void	HeartBeatPacketFunction(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet);
+
 
 	ThreadSafeQueue<std::shared_ptr<Package>>	mPackageQueue;
 	std::vector<std::unique_ptr<Thread>>		mProcessThreadPool;

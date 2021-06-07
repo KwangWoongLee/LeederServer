@@ -7,7 +7,6 @@ namespace leeder
 
 std::function < void(ContentsProcess*)> processThreadFunction = [](ContentsProcess* process) {
 
-	int i = 0;
 	while (!bShutDown)
 	{
 		std::shared_ptr<Package> package = nullptr;
@@ -18,10 +17,7 @@ std::function < void(ContentsProcess*)> processThreadFunction = [](ContentsProce
 
 
 		process->ProcessPackage(package);
-
 	}
-
-
 };
 
 
@@ -29,7 +25,10 @@ ContentsProcess::ContentsProcess()
 {
 	XMLDocument config;
 
-	if (!loadConfig(&config)) {
+	const char* path = "./config.xml";
+
+	if (!loadConfig(&config, path))
+	{
 		printf("ContentsProcess Config Reading is failed\n");
 		exit(0);
 		return;
@@ -99,16 +98,12 @@ void ContentsProcess::RegistFunction(ePacketType type,func func)
 
 void ContentsProcess::RegistDefaultFunction()
 {
-	RegistFunction(ePacketType::TEST, std::bind(&ContentsProcess::TestPacketFunction,this,std::placeholders::_1, std::placeholders::_2));
-
-	//RegistFunction(ePacketType::TEST, [](auto& ,auto&) {
-	//	printf("\nTEST PACKET FUNCTION\n");
-	//	});
+	RegistFunction(ePacketType::CS_NOTIFY_HEARTBEAT, std::bind(&ContentsProcess::HeartBeatPacketFunction, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ContentsProcess::TestPacketFunction(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
+void ContentsProcess::HeartBeatPacketFunction(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
 {
-	printf("\nTEST PACKET FUNCTION\n");
+	session->UpdateHeartBeat();
 }
 
 }

@@ -25,6 +25,7 @@ private:
 
 	HANDLE				mIOCP;	
 	
+	std::unique_ptr<Thread>					mAcceptThread;
 	std::vector<std::unique_ptr<Thread>>	mWorkThreadPool;
 
 

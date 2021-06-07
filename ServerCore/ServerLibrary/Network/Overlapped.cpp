@@ -36,7 +36,7 @@ bool RWIOData::SetStreamToIOData(Stream& stream)
 	}
 
 	//패킷 총길이
-	PACKET_SIZE packetTotalLength = sizeof(PACKET_SIZE) + stream.GetLength();
+	PACKET_SIZE packetTotalLength[1] = { sizeof(PACKET_SIZE) + stream.GetLength() };
 
 
 	size_t	offset = sizeof(PACKET_SIZE);
@@ -47,7 +47,7 @@ bool RWIOData::SetStreamToIOData(Stream& stream)
 	// 스트림 데이터 입력
 	memcpy((void*)(mBuffer + offset), (void*)stream.GetBuffer(), stream.GetLength());
 	
-	mTotalByte = packetTotalLength;
+	mTotalByte = packetTotalLength[0];
 
 	return true;
 

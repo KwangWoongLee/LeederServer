@@ -10,8 +10,7 @@ Socket::Socket()
 
 	if (mSocket == INVALID_SOCKET)
 	{
-		printf("invalid socket %d" , WSAGetLastError());
-		//¿¡·¯Ã³;
+		SysLogger::GetInstance().Log(L"Invalid socket error : %d" , WSAGetLastError());
 	}
 }
 
@@ -35,7 +34,6 @@ std::wstring Socket::GetClientAddress()
 {
 	std::array<char, 64> ip;
 	inet_ntop(AF_INET, &(mAddrInfo.sin_addr), ip.data(), ip.size());
-
 
 	return CA2W(ip.data());
 }
