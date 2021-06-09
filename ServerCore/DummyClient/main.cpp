@@ -13,13 +13,15 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 
+
 	std::unique_ptr<IOCPClient> DummyTestClient = std::make_unique<IOCPClient>(std::make_unique<DummyTestClientProcess>());
 
-	DummyTestClient->Run();
-
 	std::vector<std::shared_ptr<Client>> clients;
-	for(int i = 0; i< 10 ; ++i)
+	for (int i = 0; i < 5000; ++i)
 		clients.push_back(DummyTestClient->CreateClient());
+
+
+	DummyTestClient->Run();
 
 
 	for (auto client : clients)
@@ -27,7 +29,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		client->Connect();
 	}
 
-	Sleep(1000);
+
 
 	auto mThread = Thread([&]() {
 		while (true)
@@ -40,10 +42,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 					client->SendHeartBeat();
 
-					//client->SendRequestReplication();
 				}
 			}
-			Sleep(100);
 		}
 		
 		});

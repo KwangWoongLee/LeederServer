@@ -15,6 +15,7 @@ void User::Update()
 {
 	while (!mInputQueue.Empty())
 	{
+		SetState(eObjectState::ACTION);
 		auto input = mInputQueue.Pop();
 
 		switch ((input))

@@ -34,7 +34,6 @@ namespace leeder
 			{
 			case eClientIOType::CONNECT:
 				client->OnConnect();
-
 				break;
 
 			case eClientIOType::RECV:
@@ -42,6 +41,7 @@ namespace leeder
 				if (transferSize == 0)
 				{
 					client->Disconnect();
+					delete overlapped;
 					continue;
 				}
 
@@ -57,6 +57,7 @@ namespace leeder
 				if (transferSize == 0)
 				{
 					client->Disconnect();
+					delete overlapped;
 					continue;
 				}
 
@@ -74,6 +75,9 @@ namespace leeder
 				break;
 			
 			}
+
+
+			delete overlapped;
 
 		}
 		

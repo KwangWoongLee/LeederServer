@@ -9,8 +9,7 @@ DummyTestProcess::DummyTestProcess()
 	RegistFunction(ePacketType::CS_REQ_HELLO, std::bind(&DummyTestProcess::CS_REQ_HELLO, this, std::placeholders::_1, std::placeholders::_2));
 	RegistFunction(ePacketType::CS_SEND_INPUTLIST, std::bind(&DummyTestProcess::CS_SEND_INPUTLIST, this, std::placeholders::_1, std::placeholders::_2));
 	RegistFunction(ePacketType::CS_REQ_EXIT, std::bind(&DummyTestProcess::CS_REQ_EXIT, this, std::placeholders::_1, std::placeholders::_2));
-	RegistFunction(ePacketType::CS_REQ_REPLICATION_STATE, std::bind(&DummyTestProcess::CS_REQ_REPLICATION_STATE, this, std::placeholders::_1, std::placeholders::_2));
-
+	
 	UserManager::GetInstance().mNetworkIDSeed = 0;
 }
 
@@ -49,19 +48,10 @@ void DummyTestProcess::CS_SEND_INPUTLIST(std::shared_ptr<Session>& session, std:
 	
 	auto& inputList = inputPacket->GetInputList();
 
-	printf("%d Input \n", session->GetID());
 
 	UserManager::GetInstance().InputUpdate(session->GetID(), inputList);
 
 }
-
-void DummyTestProcess::CS_REQ_REPLICATION_STATE(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
-{
-	PK_SC_REPLICATION_STATE resPacket;
-	
-
-}
-
 
 
 void DummyTestProcess::CS_REQ_EXIT(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)

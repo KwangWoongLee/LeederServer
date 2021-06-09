@@ -76,12 +76,12 @@ void PK_CS_REQ_HELLO::Decode(InputStream& stream)
 void PK_SC_REPLICATION_STATE::Encode(OutputStream& stream)
 {
 	stream << GetTypeToInt();
-	stream << mGameObjects;
+	stream << mNetworkIDToState;
 }
 
 void PK_SC_REPLICATION_STATE::Decode(InputStream& stream)
 {
-	stream >> mGameObjects;
+	stream >> mNetworkIDToState;
 }
 
 void PK_CS_SEND_INPUTLIST::Encode(OutputStream& stream)

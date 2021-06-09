@@ -35,11 +35,17 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 		{
 		case eIOType::ACCEPT: 
 			session->OnAccept(server);
-			printf("connect %d \n", session->GetID());
 			break;
 
 		case eIOType::RECV: 
 		{
+			if (transferSize == 0)
+			{
+				session->OnDisconnect(eDisconnectReason::COMPLETION_ERROR);
+				delete overlapped;
+				continue;
+			}
+
 			std::shared_ptr<Package> package = session->OnRecv(transferSize);
 
 			if (package)
@@ -48,6 +54,13 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 		}
 
 		case eIOType::SEND: 
+			if (transferSize == 0)
+			{
+				session->OnDisconnect(eDisconnectReason::COMPLETION_ERROR);
+				delete overlapped;
+				continue;
+			}
+
 			session->OnSend(transferSize);
 			break;
 

@@ -83,6 +83,20 @@ public:
 
 
 	//Class 객체를 받을 때는 해당 클래스를 특수화 할 것
+	template<>
+	void operator << (const std::unordered_map<uint32_t, eObjectState>& map)
+	{
+		size_t size = map.size();
+
+		this->write(size);
+
+		for (auto element : map)
+		{
+			this->write(element.first);
+			this->write(element.second);
+
+		}
+	}
 
 
 
@@ -101,16 +115,22 @@ private:
 
 
 	template<>
-	void write(std::shared_ptr<GameObject> obj)
+	void write(eObjectState type)
 	{
-		uint32_t networkID = obj->GetNetworkID();
-		write(networkID);
+		this->write(&type, sizeof(type));
 
-		eObjectState state = obj->GetState();
-		write(state);
+		switch (type)
+		{
+		case eObjectState::CREATE:
+		case eObjectState::ACTION:
 
-		Position pos = obj->GetPosition();
-		write(pos);
+		case eObjectState::DESTROY:
+			break;
+
+
+		default:
+			break;
+		}
 	}
 
 
@@ -181,7 +201,23 @@ public:
 
 
 	//Class 객체를 받을 때는 해당 클래스를 특수화 할 것
+	template<>
+	void operator >> (std::unordered_map<uint32_t, eObjectState>& map)
+	{
+		size_t size;
+		this->read(size);
 
+		for(int i=0 ; i< size; ++i)
+		{
+			uint32_t networkID;
+			this->read(networkID);
+
+			eObjectState state;
+			this->read(state);
+
+			map[networkID] = state;
+		}
+	}
 
 
 private:
@@ -199,19 +235,21 @@ private:
 	}
 
 
-
 	template<>
-	void read(std::shared_ptr<GameObject>& obj)
+	void read(eObjectState& type)
 	{
-		obj = std::make_shared<GameObject>();
-		uint32_t& networkId = obj->GetNetworkID();
-		read(networkId);
+		this->read(&type, sizeof(type));
 
-		eObjectState& state = obj->GetState();
-		read(state);
+		switch (type)
+		{
+		case eObjectState::CREATE:
+		case eObjectState::ACTION:
 
-		Position& pos = obj->GetPosition();
-		read(pos);
+		case eObjectState::DESTROY:
+			break;
+
+
+		}
 	}
 
 

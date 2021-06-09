@@ -104,12 +104,12 @@ public:
 	void Encode(OutputStream& stream) override;
 	void Decode(InputStream& stream) override;
 
-	std::vector<std::shared_ptr<GameObject>>&	GetGameObjects() { return mGameObjects; };
-	void						SetGameObjects(std::vector<std::shared_ptr<GameObject>>& gameObjects) { mGameObjects = gameObjects; }
+	std::unordered_map<uint32_t, eObjectState>&	GetState() { return mNetworkIDToState; };
+	void						SetState(std::unordered_map<uint32_t, eObjectState>& networkIDToState) { mNetworkIDToState = networkIDToState; }
 
 
 private:
-	std::vector<std::shared_ptr<GameObject>>	mGameObjects;
+	std::unordered_map<uint32_t, eObjectState> mNetworkIDToState;
 };
 
 class PK_CS_SEND_INPUTLIST : public Packet

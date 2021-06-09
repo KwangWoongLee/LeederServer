@@ -76,6 +76,7 @@ void IOCPSession::SendPacket(Packet* packet)
 	wsaBuf.len = mWriteIO->GetTotalByte();
 
 	this->send(SendOverlapped, wsaBuf);
+	this->RecvStandBy();
 }
 
 std::list<std::shared_ptr<IOCPSession>>::iterator IOCPSession::OnDisconnect(eDisconnectReason reason)
@@ -137,6 +138,7 @@ void IOCPSession::OnSend(DWORD transferSize)
 		this->send(SendOverlapped, wsaBuf);
 		
 	}
+
 }
 
 std::shared_ptr<Package> IOCPSession::OnRecv(DWORD transferSize)
@@ -261,6 +263,13 @@ void IOCPSession::checkIOError(DWORD error)
 {
 	if (error == SOCKET_ERROR
 		&& (WSAGetLastError() != WSA_IO_PENDING)) {
+
+		if (WSAGetLastError() == WSAECONNRESET)
+			return;
+
+		if (!mConnected.load())
+			return;
+
 		SysLogger::GetInstance().Log(L"! socket error: %d", WSAGetLastError());
 	}
 }

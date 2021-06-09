@@ -71,7 +71,8 @@ namespace leeder
 		uint16_t		mRandomActionCount;
 
 		uint16_t		mLastHelloTime;
-		uint16_t		mLastPacketSendTime;
+		uint16_t		mLastPacketInputTime;
+		uint16_t		mLastHeartBeatTime;
 
 
 		std::shared_ptr<ClientRWIOData>	mReadIO;
