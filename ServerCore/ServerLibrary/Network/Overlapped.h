@@ -6,6 +6,7 @@ namespace leeder
 
 	constexpr auto BUF_SIZE = 1024 * 10;
 
+
 	enum class eIOType
 	{
 		NONE,
@@ -31,7 +32,7 @@ namespace leeder
 	class IOCPSession;
 	class IOData;
 
-	class Overlapped
+	class Overlapped : public ObjectPool<Overlapped>
 	{
 
 	public:
@@ -43,10 +44,12 @@ namespace leeder
 		std::shared_ptr<IOData>			GetIOData() { return mIOData; }
 		void							SetIOData(std::shared_ptr<IOData> data) { mIOData = data; }
 
+		static std::mutex		mLock;
 	private:
 		OVERLAPPED		mOverlapped;
 		std::shared_ptr<IOData>			mIOData;
 	};
+
 
 	class IOData
 	{
@@ -95,6 +98,7 @@ namespace leeder
 		size_t	SetTotalByte();
 		bool	IsRemainToIO(size_t transffered);
 
+
 		size_t	GetTotalByte() { return mTotalByte; }
 		size_t	GetCurrentByte() { return mCurrentByte; }
 
@@ -102,6 +106,7 @@ namespace leeder
 	private:
 		size_t	mTotalByte;
 		size_t	mCurrentByte;
+		float	mRecvTime;
 
 	};
 

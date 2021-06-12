@@ -117,6 +117,12 @@
     <ClInclude Include="Util\InputType.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Util\ObjectPool.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\CircularBuffer.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -189,6 +195,9 @@
       <Filter>PCH</Filter>
     </ClCompile>
     <ClCompile Include="Util\GameObject.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\CircularBuffer.cpp">
       <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>

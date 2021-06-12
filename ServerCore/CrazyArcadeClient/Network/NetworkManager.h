@@ -47,6 +47,7 @@ public:
 
 
 	std::shared_ptr<Packet> SendHelloPacket();
+	std::shared_ptr<Packet> SendInputPacket();
 	void SendHeartBeat();
 	void SendReqExitPacket();
 
@@ -76,9 +77,9 @@ private:
 
 
 
-	uint16_t		mLastHelloTime;
-	uint16_t		mLastPacketSendTime;
-	uint16_t		mLastHeartBeatTime;
+	float			mLastHelloTime;
+	float			mLastPacketSendTime;
+	float			mLastHeartBeatTime;
 
 
 

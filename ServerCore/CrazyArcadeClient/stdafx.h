@@ -14,24 +14,7 @@
 #include <SDL_image.h>
 #include <SDL_scancode.h>
 
-#include "ServerLibrary.h"
-
-using leeder::Singleton;
-using leeder::Thread;
-using leeder::ThreadSafeQueue;
-
-using leeder::eInputType;
-using leeder::GameObject;
-using leeder::Packet;
-using leeder::ePacketType;
-
-
-using leeder::XMLDocument;
-using leeder::XMLElement;
-using leeder::BUF_SIZE;
-
-using leeder::loadConfig;
-
+#include "Common.h"
 
 
 //#include "ClientShutDown.h"
@@ -43,6 +26,14 @@ using leeder::loadConfig;
 #include "Network/NetworkManager.h"
 
 using leeder::NetworkManager;
+
+#include "Graphics/RenderManager.h"
+#include "Graphics/TextureManager.h"
+
+#include "Components/SpriteComponent.h"
+#include "Components/TileMapComponent.h"
+#include "Components/AnimationComponent.h"
+
 
 
 

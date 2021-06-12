@@ -4,7 +4,7 @@
 
 namespace leeder
 {
-Server::Server(std::unique_ptr<ContentsProcess>&& contents)
+Server::Server(std::shared_ptr<ContentsProcess>&& contents)
 	:mListenSocket(nullptr)
 	, mContentsProcess(std::move(contents))
 {

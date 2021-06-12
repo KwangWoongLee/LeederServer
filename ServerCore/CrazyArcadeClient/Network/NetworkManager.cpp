@@ -171,12 +171,12 @@ void NetworkManager::SendPacketProcess()
 {
 	std::shared_ptr<Packet> packet = nullptr;
 
+	auto time = Clock::GetInstance().GetSystemTimeFloat();
+
 	if (mState == eClientState::READY)
 	{
-		// Hello Packet의 중복 방지
-		auto time = SDL_GetTicks();
 
-		if (time > mLastHelloTime + 300)
+		if (time > mLastHelloTime )
 		{
 			packet = SendHelloPacket();
 			mLastHelloTime = time;
@@ -185,12 +185,14 @@ void NetworkManager::SendPacketProcess()
 
 	else if (mState == eClientState::WELCOMED)
 	{
-		//Input Packet의 과도한 중복 방지
-		auto time = SDL_GetTicks();
-
+		if (time > mLastPacketSendTime + 0.0000003f)
+		{
+			packet = SendInputPacket();
+			mLastPacketSendTime = time;
+		}
 
 		//HeartBeat 패킷 전송
-		if (time > mLastHeartBeatTime + 3000)
+		if (time > mLastHeartBeatTime + 0.003f)
 		{
 			SendHeartBeat();
 			mLastHeartBeatTime = time;
@@ -221,6 +223,32 @@ std::shared_ptr<Packet> NetworkManager::SendHelloPacket()
 
 	return packet;
 }
+
+
+std::shared_ptr<Packet> NetworkManager::SendInputPacket()
+{
+	std::deque<Input>& inputList = ::InputManager::GetInstance().GetInputList();
+
+	if (inputList.empty())
+		return nullptr;
+
+	std::shared_ptr<PK_CS_SEND_INPUTLIST> packet = std::make_shared<PK_CS_SEND_INPUTLIST>();
+
+	int loopSize = std::min((int)inputList.size(), 3);
+
+	int startIndex = loopSize < 3 ?  0 : (int)inputList.size() - 3;
+
+	for (int i = startIndex; i < inputList.size(); ++i)
+	{
+		packet->PushInputType(inputList[i]);
+	}
+
+	inputList.clear();
+
+	return packet;
+}
+
+
 
 void NetworkManager::SendHeartBeat()
 {
@@ -270,11 +298,18 @@ void NetworkManager::RecvPacket()
 	char buf[10240];
 
 	recv(mSocket, buf, 10240, 0);
-
+	size_t offset = 0;
 	size_t size[1] = { 0 };
 	memcpy(size, buf, sizeof(PACKET_SIZE));
 
-	std::shared_ptr<Packet> packet = PacketAnalyzer::GetInstance().analyze(buf + sizeof(PACKET_SIZE), size[0] - sizeof(PACKET_SIZE));
+	offset += sizeof(PACKET_SIZE);
+
+	float packetRecvTime[1] = { 0 };
+	memcpy(packetRecvTime, buf + offset, sizeof(float));
+
+	offset += sizeof(float);
+
+	std::shared_ptr<Packet> packet = PacketAnalyzer::GetInstance().analyze(buf + offset, size[0] - offset);
 
 	if (packet == nullptr) {
 		if (mState == eClientState::TERMINATE)
@@ -303,11 +338,18 @@ void NetworkManager::SendPacket(std::shared_ptr<Packet> packet)
 
 	size_t offset = 0;
 
-	PACKET_SIZE packetLength[1] = { sizeof(PACKET_SIZE) + stream.GetLength() };
+	PACKET_SIZE packetLength[1] = { sizeof(PACKET_SIZE) + sizeof(float) +  stream.GetLength() };
 
 	memcpy(mBuffer, packetLength, sizeof(PACKET_SIZE));
 
 	offset += sizeof(PACKET_SIZE);
+
+	float packetSendTime[1] = { Clock::GetInstance().GetSystemTimeFloat() };
+
+	memcpy(mBuffer + offset, packetSendTime, sizeof(float));
+
+	offset += sizeof(float);
+
 
 	memcpy(mBuffer + offset, stream.GetBuffer(), stream.GetLength());
 

@@ -95,9 +95,9 @@ void PK_CS_SEND_INPUTLIST::Decode(InputStream& stream)
 	stream >> mInputList;
 }
 
-void PK_CS_SEND_INPUTLIST::PushInputType(eInputType type)
+void PK_CS_SEND_INPUTLIST::PushInputType(Input input)
 {
-	mInputList.push_back(type);
+	mInputList.push_back(input);
 }
 
 void PK_CS_REQ_REPLICATION_STATE::Encode(OutputStream& stream)

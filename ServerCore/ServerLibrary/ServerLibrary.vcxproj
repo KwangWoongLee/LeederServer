@@ -184,12 +184,14 @@
     <ClInclude Include="ServerShutDown.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Util\Assert.h" />
+    <ClInclude Include="Util\CircularBuffer.h" />
     <ClInclude Include="Util\Clock.h" />
     <ClInclude Include="Util\Config.h" />
     <ClInclude Include="Util\GameObject.h" />
     <ClInclude Include="Util\InputType.h" />
     <ClInclude Include="Util\Logger.h" />
     <ClInclude Include="Util\Minidump.h" />
+    <ClInclude Include="Util\ObjectPool.h" />
     <ClInclude Include="Util\RandomUtil.h" />
     <ClInclude Include="Util\Singleton.h" />
     <ClInclude Include="Util\Socket.h" />
@@ -219,6 +221,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Util\Assert.cpp" />
+    <ClCompile Include="Util\CircularBuffer.cpp" />
     <ClCompile Include="Util\Clock.cpp" />
     <ClCompile Include="Util\Config.cpp" />
     <ClCompile Include="Util\GameObject.cpp" />

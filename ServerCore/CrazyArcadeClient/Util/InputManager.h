@@ -11,14 +11,11 @@ public:
 
 	void HandleInput(const class KeyboardState& keyState);
 
-	std::list<eInputType>& GetInputList() { return mInputList; }
-	eInputType	PopInputList();
-
-	int inputCount;
-
+	std::deque<Input>& GetInputList() { return mInputList; }
+	void	RemoveProcessInput(float serverLastProcessTime);
 
 private:
 	KeyboardState mKeyboardState;
-	std::list<eInputType> mInputList;
+	std::deque<Input> mInputList;
 
 };

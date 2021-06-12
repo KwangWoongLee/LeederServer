@@ -151,16 +151,17 @@ std::shared_ptr<Package> IOCPSession::OnRecv(DWORD transferSize)
 	//패킷 가장 앞부분. 패킷 총길이를 가져오고 그만큼 offset 증가.
 	size_t offset = mReadIO->SetTotalByte();
 
+
 	if (this->isRemainToRecv(transferSize)) {
 		return nullptr;
 	}
-
 
 	std::shared_ptr<Packet> packet = PacketAnalyzer::GetInstance().analyze(mReadIO->GetBuffer() + offset, mReadIO->GetTotalByte() - offset);
 
 
 	if (packet == nullptr) {
 
+		this->RecvStandBy();
 		return nullptr;
 	}
 

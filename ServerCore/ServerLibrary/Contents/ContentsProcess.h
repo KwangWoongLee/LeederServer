@@ -15,6 +15,8 @@ public:
 
 	void Init(XMLDocument* config);
 
+	ThreadSafeQueue<std::shared_ptr<Package>>& GetPackageQueue() { return mPackageQueue; }
+
 	void	PutPackage(std::shared_ptr<Package>&& package);
 	std::shared_ptr<Package> GetPackage();
 
@@ -31,7 +33,7 @@ private:
 
 
 	ThreadSafeQueue<std::shared_ptr<Package>>	mPackageQueue;
-	std::vector<std::unique_ptr<Thread>>		mProcessThreadPool;
+	//std::vector<std::unique_ptr<Thread>>		mProcessThreadPool;
 	size_t										mThreadCount;
 	std::unordered_map<ePacketType, func>		mProcessFunctionMap;
 

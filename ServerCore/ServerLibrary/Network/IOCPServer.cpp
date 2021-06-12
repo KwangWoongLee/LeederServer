@@ -16,6 +16,7 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 
 		if (!ret)
 		{
+			delete overlapped;
 			continue;
 		}
 
@@ -36,6 +37,7 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 		case eIOType::ACCEPT: 
 			session->OnAccept(server);
 			break;
+
 
 		case eIOType::RECV: 
 		{
@@ -83,7 +85,7 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 LPFN_ACCEPTEX		mFnAcceptEx = nullptr;
 
 
-IOCPServer::IOCPServer(std::unique_ptr<ContentsProcess>&& contents)
+IOCPServer::IOCPServer(std::shared_ptr<ContentsProcess>&& contents)
 	:Server(std::move(contents))
 	, mIOCP(NULL)
 {
@@ -145,6 +147,7 @@ void IOCPServer::Run()
 			SessionManager::GetInstance().CheckHeartBeat();
 
 			Sleep(100);
+
 		}
 		
 		});
@@ -155,7 +158,6 @@ void IOCPServer::Run()
 
 
 	SetState(eServerState::RUN);
-
 
 }
 

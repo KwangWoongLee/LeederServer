@@ -5,18 +5,36 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
-    <ClCompile Include="GameProcess.cpp" />
+    <ClCompile Include="NetworkManager.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="GameProcess.cpp">
+      <Filter>ContentsProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="PCH">
       <UniqueIdentifier>{4cafbee6-6eda-4f79-ba05-d3f6cf20220c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{eee84bb9-cbe0-4b2f-bbfb-1e9d33f326cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ContentsProcess">
+      <UniqueIdentifier>{e4671e18-881d-4be2-b374-03b764b1891a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>PCH</Filter>
     </ClInclude>
-    <ClInclude Include="GameProcess.h" />
+    <ClInclude Include="NetworkManager.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="GameProcess.h">
+      <Filter>ContentsProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

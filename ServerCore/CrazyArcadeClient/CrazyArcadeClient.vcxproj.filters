@@ -16,6 +16,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{67787f15-be5b-4a01-8497-6d553dce0713}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{11440f11-8568-4db4-97ae-644869a614df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -33,7 +36,21 @@
     <ClInclude Include="Util\Input.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Component.h" />
+    <ClInclude Include="Components\SpriteComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TextureManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TileMapComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\AnimationComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,7 +71,21 @@
     <ClCompile Include="Util\Input.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Components\Component.cpp" />
+    <ClCompile Include="Components\SpriteComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\RenderManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\TextureManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\TileMapComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\AnimationComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

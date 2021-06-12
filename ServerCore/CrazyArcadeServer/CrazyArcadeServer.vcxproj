@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);..\ServerLibrary</IncludePath>
+    <IncludePath>..\CrazyArcadeCommon;..\ServerLibrary;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -148,21 +148,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServerLibrary\ServerLibrary.vcxproj">
-      <Project>{961dcc00-5ea4-40f5-8023-8ad306b73b99}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="GameProcess.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameProcess.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrazyArcadeCommon\CrazyArcadeCommon.vcxproj">
+      <Project>{e1dd2544-8fb4-4a2d-b3eb-e8ec9b377141}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

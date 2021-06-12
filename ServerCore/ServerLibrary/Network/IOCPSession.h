@@ -25,8 +25,8 @@ public:
 	std::list<std::shared_ptr<IOCPSession>>::iterator	OnDisconnect(eDisconnectReason reason);
 	void	OnAccept(IOCPServer* server);
 	
-	void					 OnSend(DWORD transferSize);
-	std::shared_ptr<Package> OnRecv(DWORD transferSize);
+	void						OnSend(DWORD transferSize);
+	std::shared_ptr<Package>	OnRecv(DWORD transferSize);
 
 
 	void Reset();

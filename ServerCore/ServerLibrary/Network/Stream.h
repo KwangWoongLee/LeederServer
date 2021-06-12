@@ -113,6 +113,14 @@ private:
 			write(&value, sizeof(value));
 	}
 
+	template<>
+	void write(Input input)
+	{
+		write(input.GetType());
+		write(input.GetTimeStamp());
+		
+	}
+
 
 	template<>
 	void write(eObjectState type)
@@ -233,6 +241,21 @@ private:
 
 		read(&data, sizeof(data));
 	}
+
+	template<>
+	void read(Input& input)
+	{
+		eInputType type;
+
+		read(type);
+
+		float timeStamp;
+		read(timeStamp);
+
+		input.SetType(type);
+		input.SetTimeStamp(timeStamp);
+	}
+
 
 
 	template<>

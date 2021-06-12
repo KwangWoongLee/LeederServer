@@ -36,7 +36,7 @@ bool RWIOData::SetStreamToIOData(Stream& stream)
 	}
 
 	//패킷 총길이
-	PACKET_SIZE packetTotalLength[1] = { sizeof(PACKET_SIZE) + stream.GetLength() };
+	PACKET_SIZE packetTotalLength[1] = { sizeof(PACKET_SIZE) + sizeof(float) + stream.GetLength() };
 
 
 	size_t	offset = sizeof(PACKET_SIZE);
@@ -44,10 +44,16 @@ bool RWIOData::SetStreamToIOData(Stream& stream)
 	//패킷 총길이 입력
 	memcpy((void*)mBuffer, (void*)packetTotalLength, sizeof(PACKET_SIZE));
 
+	float time = Clock::GetInstance().GetSystemTimeFloat();
+	memcpy((void*)(mBuffer + offset), &time, sizeof(float));
+
+	offset += sizeof(float);
+
 	// 스트림 데이터 입력
 	memcpy((void*)(mBuffer + offset), (void*)stream.GetBuffer(), stream.GetLength());
 	
 	mTotalByte = packetTotalLength[0];
+
 
 	return true;
 
@@ -66,6 +72,13 @@ size_t RWIOData::SetTotalByte()
 
 	offset += sizeof(PACKET_SIZE);
 
+	float recvTime[1] = { 0 };
+	memcpy((void*)recvTime, mBuffer + offset, sizeof(float));
+	mRecvTime = recvTime[0];
+
+	offset += sizeof(float);
+
+
 	return offset;
 }
 
@@ -78,10 +91,12 @@ bool RWIOData::IsRemainToIO(size_t transffered)
 	return false;
 }
 
-
 IOData::IOData(eIOType type)
 	:mType(type)
 {
 }
 
+
+
+std::mutex Overlapped::mLock;
 }

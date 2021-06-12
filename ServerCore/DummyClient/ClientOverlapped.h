@@ -7,6 +7,7 @@ namespace leeder
 	{
 		NONE,
 		SEND,
+		RECV_ZERO,
 		RECV,
 		CONNECT
 	};

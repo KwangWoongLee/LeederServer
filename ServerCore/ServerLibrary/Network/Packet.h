@@ -112,6 +112,8 @@ private:
 	std::unordered_map<uint32_t, eObjectState> mNetworkIDToState;
 };
 
+class Input;
+
 class PK_CS_SEND_INPUTLIST : public Packet
 {
 public:
@@ -124,12 +126,12 @@ public:
 	void Encode(OutputStream& stream) override;
 	void Decode(InputStream& stream) override;
 
-	std::vector<eInputType>&	GetInputList() { return mInputList; };
-	void						PushInputType(eInputType type);
+	std::vector<Input>&	GetInputList() { return mInputList; };
+	void				PushInputType(Input input);
 
 
 private:
-	std::vector<eInputType>	mInputList;
+	std::vector<Input>	mInputList;
 
 
 };

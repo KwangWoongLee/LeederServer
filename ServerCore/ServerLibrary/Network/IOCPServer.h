@@ -6,7 +6,7 @@ namespace leeder
 class IOCPServer : public Server
 {
 public:
-	IOCPServer(std::unique_ptr<ContentsProcess>&& contents);
+	IOCPServer(std::shared_ptr<ContentsProcess>&& contents);
 	~IOCPServer();
 
 

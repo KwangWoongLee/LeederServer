@@ -10,7 +10,10 @@ Client::Client()
 
 Client::~Client()
 {
-
+	if (mRenderer != nullptr)
+	{
+		SDL_DestroyRenderer(mRenderer);
+	}
 }
 
 
@@ -37,6 +40,12 @@ bool Client::Init()
 		return false;
 	}
 
+	if (IMG_Init(IMG_INIT_PNG) == 0)
+	{
+		SDL_Log("Unable to initialize SDL_image: %s", SDL_GetError());
+		return false;
+	}
+
 	// SDL 윈도우 생성
 	mWindow = SDL_CreateWindow("2d Game Client", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 512, 0);
 	//384,192
@@ -47,12 +56,13 @@ bool Client::Init()
 	}
 
 	//SDL 렌더러 생성 , 수직동기화 및 그래픽 하드웨어 사용
-	mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
+	mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (!mRenderer)
 	{
 		printf("SDL Renderer init Error");
 		return false;
 	}
+
 
 	mTickCount = SDL_GetTicks();
 
@@ -130,29 +140,14 @@ void Client::updateGame()
 
 void Client::generateOutput()
 {
-	SDL_Rect rect;
-	rect.h = 2;
-	rect.w = 2;
-
-
-
+	//후면버퍼(게임) 초기화
 	//그리기 색상 지정
 	SDL_SetRenderDrawColor(mRenderer, 220, 220, 220, 255);
 	//현재 그리기 색상으로 초기화
 	SDL_RenderClear(mRenderer);
 
+	RenderManager::GetInstance().Render(mRenderer);
 
-	for (auto object : NetworkManager::GetInstance().mNetworkIDToGameObjectMap)
-	{
-		SDL_SetRenderDrawColor(mRenderer, (object.first + 1) * 40, (object.first + 1) * 40, 0, 255);
-
-		rect.x = object.second->GetPosition().mX;
-		rect.y = object.second->GetPosition().mY;
-
-		int re = SDL_RenderFillRect(mRenderer, &rect);
-
-
-	}
 
 	//전면버퍼(디스플레이)와 후면버퍼 교체
 	SDL_RenderPresent(mRenderer);
@@ -161,7 +156,16 @@ void Client::generateOutput()
 
 void Client::loadData()
 {
-	readTileMap("");
+	TextureManager::GetInstance().PutTexture(mRenderer, "BackGround", "./Assets/bg.bmp");
+
+
+	auto BackGround = std::make_shared<GameObject>();
+	BackGround->SetPosition({512.f, 256.f});
+	BackGround->SetScale(1.0f);
+
+	SpriteComponent* bgComponent = new SpriteComponent(std::move(BackGround));
+	bgComponent->SetTexture(TextureManager::GetInstance().GetTexture("BackGround"));
+
 }
 
 bool Client::readTileMap(const std::string& fileName)

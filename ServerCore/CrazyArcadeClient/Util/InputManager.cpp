@@ -9,7 +9,6 @@ bool InputManager::Init()
 	memset(mKeyboardState.mPrevState, 0,
 		SDL_NUM_SCANCODES);
 
-	inputCount = 0;
 
 	return true;
 }
@@ -23,18 +22,19 @@ void InputManager::PrepareForUpdate()
 
 void InputManager::HandleInput(const class KeyboardState& keyState)
 {
-	auto type = InputFactory::GetInstance().GetInputType(keyState);
-
-	//auto type = (eInputType)(GetRandomInt()%6);
+	eInputType type = InputFactory::GetInstance().GetInputType(keyState);
 
 	if (type != eInputType::NONE)
-		mInputList.push_back(type);
+		mInputList.push_back(Input(type));
 }
 
-eInputType InputManager::PopInputList()
+void InputManager::RemoveProcessInput(float serverLastProcessTime)
 {
-	auto type = mInputList.front();
-	mInputList.pop_front();
-	return type;
+	while (!mInputList.empty() && mInputList.front().GetTimeStamp() <= serverLastProcessTime)
+	{
+		mInputList.pop_front();
+	}
+
+
 }
 
