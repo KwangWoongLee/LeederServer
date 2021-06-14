@@ -4,7 +4,8 @@
 namespace leeder
 {
 GameObject::GameObject()
-	:mState(eObjectState::NONE)
+	: mState(eObjectState::NONE)
+	, mType(eObjectType::NONE)
 {
 	mPosition = { 0.f, 0.f };
 }

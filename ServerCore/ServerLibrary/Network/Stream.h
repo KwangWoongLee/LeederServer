@@ -83,7 +83,35 @@ public:
 
 
 	//Class 객체를 받을 때는 해당 클래스를 특수화 할 것
+	template<>
+	void operator << (const std::unordered_map<uint32_t, ObjectInfo>& map)
+	{
+		size_t size = map.size();
 
+		this->write(size);
+
+		for (auto element : map)
+		{
+			this->write(element.first);
+			this->write(element.second);
+
+		}
+	}
+
+	template<>
+	void operator << (const std::unordered_map<uint32_t, GameObject>& map)
+	{
+		size_t size = map.size();
+
+		this->write(size);
+
+		for (auto element : map)
+		{
+			this->write(element.first);
+			this->write(element.second);
+
+		}
+	}
 
 
 private:
@@ -99,18 +127,39 @@ private:
 			write(&value, sizeof(value));
 	}
 
+	template<>
+	void write(Input input)
+	{
+		write(input.GetType());
+		write(input.GetTimeStamp());
+		
+	}
+
 
 	template<>
-	void write(std::shared_ptr<GameObject> obj)
+	void write(ObjectInfo info)
 	{
-		uint32_t networkID = obj->GetNetworkID();
-		write(networkID);
+		this->write(&info.mState, sizeof(info.mState));
 
-		eObjectState state = obj->GetState();
-		write(state);
+		switch (info.mState)
+		{
+		case eObjectState::CREATE:
+			this->write(info.mType);
+			this->write(info.mPos);
+		case eObjectState::ACTION:
+			this->write(info.mPos);
 
-		Position pos = obj->GetPosition();
-		write(pos);
+		default:
+			break;
+		}
+	}
+
+
+	template<>
+	void write(GameObject obj)
+	{
+		this->write(obj.GetType());
+		this->write(obj.GetPosition());
 	}
 
 
@@ -181,8 +230,41 @@ public:
 
 
 	//Class 객체를 받을 때는 해당 클래스를 특수화 할 것
+	template<>
+	void operator >> (std::unordered_map<uint32_t, ObjectInfo>& map)
+	{
+		size_t size;
+		this->read(size);
 
+		for(int i=0 ; i< size; ++i)
+		{
+			uint32_t networkID;
+			this->read(networkID);
 
+			ObjectInfo info;
+			this->read(info);
+
+			map[networkID] = info;
+		}
+	}
+
+	template<>
+	void operator >> (std::unordered_map<uint32_t, GameObject>& map)
+	{
+		size_t size;
+		this->read(size);
+
+		for (int i = 0; i < size; ++i)
+		{
+			uint32_t networkID;
+			this->read(networkID);
+
+			GameObject obj;
+			this->read(obj);
+
+			map[networkID] = obj;
+		}
+	}
 
 private:
 	void		read(void* data, uint32_t size);
@@ -198,20 +280,50 @@ private:
 		read(&data, sizeof(data));
 	}
 
+	template<>
+	void read(Input& input)
+	{
+		eInputType type;
+
+		read(type);
+
+		float timeStamp;
+		read(timeStamp);
+
+		input.SetType(type);
+		input.SetTimeStamp(timeStamp);
+	}
+
 
 
 	template<>
-	void read(std::shared_ptr<GameObject>& obj)
+	void read(ObjectInfo& info)
 	{
-		obj = std::make_shared<GameObject>();
-		uint32_t& networkId = obj->GetNetworkID();
-		read(networkId);
+		this->read(&info.mState, sizeof(info.mState));
 
-		eObjectState& state = obj->GetState();
-		read(state);
+		switch (info.mState)
+		{
+		case eObjectState::CREATE:
+			this->read(info.mType);
+			this->read(info.mPos);
+			break;
 
-		Position& pos = obj->GetPosition();
-		read(pos);
+		case eObjectState::ACTION:
+			this->read(info.mPos);
+			break;
+
+		default:
+			break;
+
+		}
+	}
+
+	template<>
+	void read(GameObject& obj)
+	{
+		this->read(obj.GetType());
+		this->read(obj.GetPosition());
+
 	}
 
 

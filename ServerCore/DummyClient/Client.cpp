@@ -8,6 +8,8 @@ namespace leeder
 		: mServerIP(serverIP)
 		, mServerPort(serverPort)
 		, mLastHelloTime(0.f)
+		, mLastPacketInputTime(0.f)
+		, mLastHeartBeatTime(0.f)
 		, mState(eClientState::UNCONNECT)
 		, mRandomActionCount(GetRandomInt())
 	{
@@ -72,7 +74,7 @@ namespace leeder
 		}
 
 		setsockopt(mSocket, SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, NULL, 0);
-
+		
 		return true;
 	}
 
@@ -84,7 +86,6 @@ namespace leeder
 
 		mState = eClientState::HELLO;
 
-		this->RecvStandBy();
 
 		SendHelloPacket();
 
@@ -134,8 +135,17 @@ namespace leeder
 
 	void Client::SendHeartBeat()
 	{
-		std::shared_ptr<PK_CS_NOTIFY_HEARTBEAT> packet = std::make_shared<PK_CS_NOTIFY_HEARTBEAT>();
-		SendPacket(std::move(packet));
+		auto time = SDL_GetTicks();
+		
+		if (time > mLastHeartBeatTime + 3000)
+		{
+			std::shared_ptr<PK_CS_NOTIFY_HEARTBEAT> packet = std::make_shared<PK_CS_NOTIFY_HEARTBEAT>();
+			SendPacket(std::move(packet));
+
+			mLastHeartBeatTime = time;
+		}
+
+
 	}
 
 	void Client::SendRequestReplication()
@@ -146,23 +156,32 @@ namespace leeder
 
 	void Client::Action()
 	{
-		////랜덤하게 action 하고 종료
-		//if (!mRandomActionCount)
-		//{
-		//	SendReqExitPacket();
-		//	return;
-		//}
-		for (int i = 0; i < 3; ++i)
+		auto time = SDL_GetTicks();
+
+		if(time > mLastPacketInputTime + 300)
 		{
-			auto type = (eInputType)(GetRandomInt() % 6);
+			//랜덤하게 action 하고 종료
+			if (!mRandomActionCount)
+			{
+				SendReqExitPacket();
+				return;
+			}
 
-			if (type != eInputType::NONE)
-				mInputList.push_back(type);
+			for (int i = 0; i < 3; ++i)
+			{
+				auto type = (eInputType)(GetRandomInt() % 6);
+
+				if (type != eInputType::NONE)
+					mInputList.push_back(type);
+			}
+
+			SendInputPacket();
+
+			--mRandomActionCount;
+
+
+			mLastPacketInputTime = time;
 		}
-
-		SendInputPacket();
-		
-		--mRandomActionCount;
 
 		
 	}
@@ -173,7 +192,7 @@ namespace leeder
 
 		SendPacket(std::move(packet));
 
-		SetState(eClientState::READY_TO_TERMINATE);
+		SetState(eClientState::TERMINATE);
 	}
 
 	void Client::RecvStandBy()
@@ -233,7 +252,9 @@ namespace leeder
 		wsaBuf.buf = mWriteIO->GetBuffer();
 		wsaBuf.len = mWriteIO->GetTotalByte();
 
+
 		this->send(SendOverlapped, wsaBuf);
+		this->RecvStandBy();
 	}
 
 	void Client::OnSend(DWORD transferSize)

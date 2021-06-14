@@ -15,7 +15,7 @@ namespace leeder
 	{
 	public:
 		Server() = delete;
-		Server(std::unique_ptr<ContentsProcess>&& contents);
+		Server(std::shared_ptr<ContentsProcess>&& contents);
 		virtual ~Server();
 
 		void Init(XMLDocument* config);
@@ -23,6 +23,8 @@ namespace leeder
 		virtual void Run() = 0; // 순수 가상함수 처리. 
 
 		void					PutPackage(std::shared_ptr<Package>&& package);
+
+		std::shared_ptr<ContentsProcess>& GetProcess() { return mContentsProcess; }
 
 		std::shared_ptr<Socket>	GetSocket() { return mListenSocket; }
 
@@ -51,7 +53,7 @@ namespace leeder
 		std::string		mIP;
 		uint16_t		mPort;
 		size_t			mThreadCount;
-		std::unique_ptr<ContentsProcess>	mContentsProcess;
+		std::shared_ptr<ContentsProcess>	mContentsProcess;
 
 	};
 

@@ -13,4 +13,30 @@ enum class eInputType : int
 	W,
 };
 
+
+
+class Input
+{
+public:
+	Input(eInputType type)
+		: mType(type)
+	{
+		mTimeStamp = Clock::GetInstance().GetSystemTimeFloat();
+	};
+
+	Input() {};
+	~Input() {};
+
+
+	eInputType	GetType() { return mType; }
+	void		SetType(eInputType type) { mType = type; }
+
+	float		GetTimeStamp() { return mTimeStamp; }
+	void		SetTimeStamp(float timeStamp) { mTimeStamp = timeStamp; }
+
+private:
+	eInputType	mType;
+	float		mTimeStamp;
+};
+
 };

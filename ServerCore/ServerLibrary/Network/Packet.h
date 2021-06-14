@@ -82,6 +82,14 @@ public:
 		:Packet(ePacketType::SC_RES_WELCOME) {};
 
 	void Encode(OutputStream& stream) override;
+	void Decode(InputStream& stream) override;
+
+	std::unordered_map<uint32_t, GameObject>& GetState() { return mNetworkIDToState; };
+	void						SetState(std::unordered_map<uint32_t, std::shared_ptr<GameObject>>& networkIDToGameObject);
+
+
+private:
+	std::unordered_map<uint32_t, GameObject> mNetworkIDToState;
 
 };
 
@@ -104,13 +112,15 @@ public:
 	void Encode(OutputStream& stream) override;
 	void Decode(InputStream& stream) override;
 
-	std::vector<std::shared_ptr<GameObject>>&	GetGameObjects() { return mGameObjects; };
-	void						SetGameObjects(std::vector<std::shared_ptr<GameObject>>& gameObjects) { mGameObjects = gameObjects; }
+	std::unordered_map<uint32_t, ObjectInfo>&	GetInfo() { return mNetworkIDToInfo; };
+	void						SetInfo(std::unordered_map<uint32_t, ObjectInfo>& networkIDToInfo) { mNetworkIDToInfo = networkIDToInfo; }
 
 
 private:
-	std::vector<std::shared_ptr<GameObject>>	mGameObjects;
+	std::unordered_map<uint32_t, ObjectInfo> mNetworkIDToInfo;
 };
+
+class Input;
 
 class PK_CS_SEND_INPUTLIST : public Packet
 {
@@ -124,12 +134,12 @@ public:
 	void Encode(OutputStream& stream) override;
 	void Decode(InputStream& stream) override;
 
-	std::vector<eInputType>&	GetInputList() { return mInputList; };
-	void						PushInputType(eInputType type);
+	std::vector<Input>&	GetInputList() { return mInputList; };
+	void				PushInputType(Input input);
 
 
 private:
-	std::vector<eInputType>	mInputList;
+	std::vector<Input>	mInputList;
 
 
 };

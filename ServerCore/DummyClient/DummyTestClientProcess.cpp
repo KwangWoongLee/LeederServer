@@ -16,37 +16,42 @@ namespace leeder
 	{
 		client->SetState(eClientState::WELCOMED);
 
-		client->RecvStandBy();
 
 	}
 
 	void DummyTestClientProcess::SC_REPLICATION_STATE(std::shared_ptr<Client>& client, std::shared_ptr<Packet>& packet)
 	{
+
 		std::shared_ptr<PK_SC_REPLICATION_STATE> typePacket = std::static_pointer_cast<PK_SC_REPLICATION_STATE>(packet);
 
-		auto objects = typePacket->GetGameObjects();
+		auto networkIDToState = typePacket->GetState();
 
-		for (auto object : objects)
+		printf("Repl");
+		for (auto object : networkIDToState)
 		{
-			auto netid = object->GetNetworkID();
-			printf("id : %d \n", netid);
+			auto netid = object.first;
+			auto state = object.second;
 
-			//if (object->GetState() == eObjectState::CREATE)
-			//{
-			//	mNetworkIDToGameObjectMap.insert(std::make_pair(netid, object));
-			//}
+			printf("id : %d - ", netid);
 
-			//else if (object->GetState() == eObjectState::ACTION)
-			//{
-			//	mNetworkIDToGameObjectMap[netid] = object;
-			//}
+			switch ((state))
+			{
+			case eObjectState::CREATE:
+				printf("CREATE\n");
+				break;
+			case eObjectState::ACTION:
+				printf("ACTION\n");
+				break;
+			case eObjectState::DESTROY:
+				printf("DESTROY\n");
+				break;
 
-			//else if (object->GetState() == eObjectState::DESTROY)
-			//{
-			//	mNetworkIDToGameObjectMap.erase(netid);
-			//}
+			default:
+				break;
+			}
 
 		}
+
 
 	}
 

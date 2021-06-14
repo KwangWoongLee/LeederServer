@@ -59,9 +59,9 @@ void ContentsProcess::Init(XMLDocument* config)
 
 	RegistDefaultFunction();
 
-	for (size_t i = 0; i < GetThreadCount(); ++i) {
-		mProcessThreadPool.push_back(std::make_unique<Thread>(processThreadFunction, this));
-	}
+	//for (size_t i = 0; i < GetThreadCount(); ++i) {
+	//	mProcessThreadPool.push_back(std::make_unique<Thread>(processThreadFunction, this));
+	//}
 
 }
 
@@ -78,7 +78,7 @@ std::shared_ptr<Package> ContentsProcess::GetPackage()
 void ContentsProcess::ProcessPackage(std::shared_ptr<Package>& package)
 {
 	std::shared_ptr<Packet> packet = package->GetPacket();
-	ePacketType type = packet->GetType();
+	ePacketType type = static_cast<ePacketType>(packet->GetTypeToInt());
 
 	auto iter = mProcessFunctionMap.find(type);
 	if (iter == mProcessFunctionMap.end()) {
@@ -101,7 +101,7 @@ void ContentsProcess::RegistDefaultFunction()
 	RegistFunction(ePacketType::CS_NOTIFY_HEARTBEAT, std::bind(&ContentsProcess::HeartBeatPacketFunction, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ContentsProcess::HeartBeatPacketFunction(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
+void ContentsProcess::HeartBeatPacketFunction(IOCPSession* session, std::shared_ptr<Packet>& packet)
 {
 	session->UpdateHeartBeat();
 }

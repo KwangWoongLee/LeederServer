@@ -16,12 +16,12 @@ public:
 
 	std::atomic<int>			mNetworkIDSeed;
 
-	std::vector<std::shared_ptr<GameObject>>	GetUsers();
 	void Replication();
 
 
 private:
 	std::unordered_map<uint32_t , std::shared_ptr<User>> mUserMap;
+	std::unordered_map<uint32_t, eObjectState> mNetworkIDToState;
 	std::mutex		mUserManagerMutex;
 
 };

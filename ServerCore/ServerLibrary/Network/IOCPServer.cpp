@@ -9,19 +9,19 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 	while (!bShutDown) 
 	{
 		Overlapped* overlapped = nullptr;
-		std::shared_ptr<IOCPSession> session = nullptr;
+		IOCPSession* session = nullptr;
 		DWORD			transferSize;
 
 		BOOL ret = GetQueuedCompletionStatus(server->GetIOCP(), &transferSize, (PULONG_PTR)&session, (LPOVERLAPPED*)&overlapped, INFINITE);
 
 		if (!ret)
 		{
+			delete overlapped;
 			continue;
 		}
 
-		std::shared_ptr<IOData> ioData = overlapped->GetIOData();
 
-		session = (ioData == nullptr) ? nullptr : ioData->GetSession();
+		session = (overlapped == nullptr) ? nullptr : overlapped->GetSession();
 
 
 		if (session == nullptr)
@@ -31,23 +31,43 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 			return;
 		}
 
-		switch (ioData->GetType())
+		switch (overlapped->GetType())
 		{
 		case eIOType::ACCEPT: 
 			session->OnAccept(server);
-			printf("connect %d \n", session->GetID());
 			break;
+
+		case eIOType::RECV_ZERO:
+		{
+			printf("recvzero\n");
+			session->OnZeroRecv();
+		}
+
 
 		case eIOType::RECV: 
 		{
-			std::shared_ptr<Package> package = session->OnRecv(transferSize);
+			
+			if (transferSize == 0)
+			{
+				printf("recv0\n");
+				delete overlapped;
+				continue;
+			}
 
+			std::shared_ptr<Package> package = session->OnRecv(transferSize);
+			printf("recv%d\n" , transferSize);
 			if (package)
 				server->PutPackage(std::move(package));
 			break;
 		}
 
 		case eIOType::SEND: 
+			if (transferSize == 0)
+			{
+				delete overlapped;
+				continue;
+			}
+
 			session->OnSend(transferSize);
 			break;
 
@@ -70,7 +90,7 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 LPFN_ACCEPTEX		mFnAcceptEx = nullptr;
 
 
-IOCPServer::IOCPServer(std::unique_ptr<ContentsProcess>&& contents)
+IOCPServer::IOCPServer(std::shared_ptr<ContentsProcess>&& contents)
 	:Server(std::move(contents))
 	, mIOCP(NULL)
 {
@@ -132,6 +152,7 @@ void IOCPServer::Run()
 			SessionManager::GetInstance().CheckHeartBeat();
 
 			Sleep(100);
+
 		}
 		
 		});
@@ -142,7 +163,6 @@ void IOCPServer::Run()
 
 
 	SetState(eServerState::RUN);
-
 
 }
 

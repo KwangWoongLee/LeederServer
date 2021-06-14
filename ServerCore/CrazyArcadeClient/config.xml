@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<App>
+  <Name>CrazyArcadeClient</Name>
+  <Server>
+    <!--<IP>192.168.0.15</IP>-->
+    <IP>127.0.0.1</IP>
+    <Port>9990</Port>
+  </Server>
+
+
+</App>

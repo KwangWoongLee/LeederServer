@@ -11,7 +11,9 @@ void UserManager::Put(std::shared_ptr<User> user)
 	uint32_t sessionID = user->GetSession()->GetID();
 	user->SetNetworkID(sessionID);
 	user->SetPosition({ GetRandomFloat() * 1024, GetRandomFloat() * 512});
+	user->SetState(eObjectState::CREATE);
 
+	mNetworkIDToState.insert(std::make_pair(sessionID, eObjectState::CREATE));
 
 	mUserMap.insert(make_pair(sessionID, user));
 
@@ -20,7 +22,8 @@ void UserManager::Put(std::shared_ptr<User> user)
 void UserManager::Remove(uint32_t sessionID)
 {
 	std::unique_lock<std::mutex> lock(mUserManagerMutex);
-
+	
+	mNetworkIDToState[sessionID] = eObjectState::DESTROY;
 	mUserMap.erase(sessionID);
 }
 
@@ -41,10 +44,10 @@ void UserManager::InputUpdate(uint32_t sessionID, std::vector<eInputType>& input
 
 	auto iter = mUserMap.find(sessionID);
 	if (iter != mUserMap.end()) {
+		mNetworkIDToState[sessionID] = eObjectState::ACTION;
 		for (auto input : inputList)
 		{
 			(*iter).second->PushInput(input);
-			printf("%d", input);
 		}
 
 	}
@@ -54,25 +57,24 @@ void UserManager::UpdateUsers()
 {
 	std::unique_lock<std::mutex> lock(mUserManagerMutex);
 
-	for (auto user : mUserMap)
-		user.second->Update();
-}
+	auto iter = mUserMap.begin();
+	auto iterEnd = mUserMap.end();
 
-std::vector<std::shared_ptr<GameObject>> UserManager::GetUsers()
-{
-	std::unique_lock<std::mutex> lock(mUserManagerMutex);
+	for (; iter != iterEnd;)
+	{	
+		auto session = iter->second->GetSession();
+		if (!session->IsConnected())
+		{
+			mNetworkIDToState[session->GetID()] = eObjectState::DESTROY;
+			iter = mUserMap.erase(iter);
+			continue;
+		}
 
-	std::vector<std::shared_ptr<GameObject>> userVector;
-	userVector.reserve(mUserMap.size());
-
-	for (auto user : mUserMap)
-	{
-		auto obj = std::static_pointer_cast<GameObject>(user.second);
-		userVector.push_back(obj);
+		iter->second->Update();
+		++iter;
 	}
-
-	return userVector;
 }
+
 
 void UserManager::Replication()
 {
@@ -80,17 +82,6 @@ void UserManager::Replication()
 
 	PK_SC_REPLICATION_STATE resPacket;
 
-	std::vector<std::shared_ptr<GameObject>> userVector;
-	userVector.reserve(mUserMap.size());
-
-	for (auto user : mUserMap)
-	{
-		auto obj = std::static_pointer_cast<GameObject>(user.second);
-		userVector.push_back(obj);
-	}
-
-	resPacket.SetGameObjects(userVector);
-	
 	for (auto user : mUserMap)
 	{
 		auto iocpSession = std::static_pointer_cast<IOCPSession>(user.second->GetSession());
