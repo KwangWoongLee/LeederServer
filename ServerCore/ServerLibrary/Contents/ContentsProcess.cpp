@@ -101,7 +101,7 @@ void ContentsProcess::RegistDefaultFunction()
 	RegistFunction(ePacketType::CS_NOTIFY_HEARTBEAT, std::bind(&ContentsProcess::HeartBeatPacketFunction, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ContentsProcess::HeartBeatPacketFunction(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
+void ContentsProcess::HeartBeatPacketFunction(IOCPSession* session, std::shared_ptr<Packet>& packet)
 {
 	session->UpdateHeartBeat();
 }

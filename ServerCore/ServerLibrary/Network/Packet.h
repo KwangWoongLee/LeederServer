@@ -82,6 +82,14 @@ public:
 		:Packet(ePacketType::SC_RES_WELCOME) {};
 
 	void Encode(OutputStream& stream) override;
+	void Decode(InputStream& stream) override;
+
+	std::unordered_map<uint32_t, GameObject>& GetState() { return mNetworkIDToState; };
+	void						SetState(std::unordered_map<uint32_t, std::shared_ptr<GameObject>>& networkIDToGameObject);
+
+
+private:
+	std::unordered_map<uint32_t, GameObject> mNetworkIDToState;
 
 };
 
@@ -104,12 +112,12 @@ public:
 	void Encode(OutputStream& stream) override;
 	void Decode(InputStream& stream) override;
 
-	std::unordered_map<uint32_t, eObjectState>&	GetState() { return mNetworkIDToState; };
-	void						SetState(std::unordered_map<uint32_t, eObjectState>& networkIDToState) { mNetworkIDToState = networkIDToState; }
+	std::unordered_map<uint32_t, ObjectInfo>&	GetInfo() { return mNetworkIDToInfo; };
+	void						SetInfo(std::unordered_map<uint32_t, ObjectInfo>& networkIDToInfo) { mNetworkIDToInfo = networkIDToInfo; }
 
 
 private:
-	std::unordered_map<uint32_t, eObjectState> mNetworkIDToState;
+	std::unordered_map<uint32_t, ObjectInfo> mNetworkIDToInfo;
 };
 
 class Input;

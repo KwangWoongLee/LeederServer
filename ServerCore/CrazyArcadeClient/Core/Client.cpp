@@ -136,6 +136,10 @@ void Client::updateGame()
 	//	deltaTime = 0.05f;
 	//}
 
+
+	World::GetInstance().Update();
+
+
 }
 
 void Client::generateOutput()
@@ -157,13 +161,13 @@ void Client::generateOutput()
 void Client::loadData()
 {
 	TextureManager::GetInstance().PutTexture(mRenderer, "BackGround", "./Assets/bg.bmp");
+	TextureManager::GetInstance().PutTexture(mRenderer, "BazzyIdle", "./Assets/idle.bmp");
 
+	GameObject BackGround;
+	BackGround.SetPosition({512.f, 256.f});
+	BackGround.SetScale(2.0f);
 
-	auto BackGround = std::make_shared<GameObject>();
-	BackGround->SetPosition({512.f, 256.f});
-	BackGround->SetScale(1.0f);
-
-	SpriteComponent* bgComponent = new SpriteComponent(std::move(BackGround));
+	SpriteComponent* bgComponent = new SpriteComponent(&BackGround);
 	bgComponent->SetTexture(TextureManager::GetInstance().GetTexture("BackGround"));
 
 }

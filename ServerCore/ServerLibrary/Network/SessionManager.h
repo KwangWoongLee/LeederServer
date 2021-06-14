@@ -19,16 +19,16 @@ public:
 	void	AcceptSessions(SOCKET listenSocket);
 
 
-	bool	AddSession(const std::shared_ptr<IOCPSession>& session);
-	std::list<std::shared_ptr<IOCPSession>>::iterator	ReturnSession(std::shared_ptr<IOCPSession> returnSession);
+	bool	AddSession(IOCPSession* session);
+	std::list<IOCPSession*>::iterator	ReturnSession(IOCPSession* returnSession);
 
 	void	CheckHeartBeat();
 
-
+	char									mAcceptBuffer[64];
 
 private:
-	std::list<std::shared_ptr<IOCPSession>>		mSessionPool;
-	std::list<std::shared_ptr<IOCPSession>>		mSessionList;
+	std::list<IOCPSession*>		mSessionPool;
+	std::list<IOCPSession*>		mSessionList;
 
 	std::mutex								mSessionPoolMutex;
 
@@ -40,6 +40,8 @@ private:
 
 
 	static std::atomic<int>					mSessionIDSeed;
+
+
 	
 };
 

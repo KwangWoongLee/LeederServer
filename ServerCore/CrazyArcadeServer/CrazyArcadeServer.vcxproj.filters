@@ -12,6 +12,7 @@
       <Filter>ContentsProcess</Filter>
     </ClCompile>
     <ClCompile Include="User.cpp" />
+    <ClCompile Include="PlayerServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="PCH">
@@ -35,6 +36,7 @@
       <Filter>ContentsProcess</Filter>
     </ClInclude>
     <ClInclude Include="User.h" />
+    <ClInclude Include="PlayerServer.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

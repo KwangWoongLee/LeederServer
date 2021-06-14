@@ -29,7 +29,7 @@ void NetworkManager::Replication()
 		SendReplicationPacket(user->GetSession());
 	}
 
-	mNetworkIDToState.clear();
+	mNetworkIDToInfo.clear();
 }
 
 void NetworkManager::HandleNewClient(std::shared_ptr<User> user)
@@ -63,19 +63,25 @@ void NetworkManager::RemoveGameObjectToNetwork(std::shared_ptr<GameObject>& obj)
 
 void NetworkManager::SetObjectState(std::shared_ptr<GameObject> obj)
 {
-	mNetworkIDToState[obj->GetNetworkID()] = obj->GetState();
+	ObjectInfo info(obj->GetState(), obj->GetType(), obj->GetPosition());
+	mNetworkIDToInfo[obj->GetNetworkID()] = info;
 }
 
-void NetworkManager::SendReplicationPacket(const std::shared_ptr<Session>& session)
+void NetworkManager::SendReplicationPacket(IOCPSession* session)
 {
+	if (mNetworkIDToInfo.size() == 0)
+		return;
+
 	using leeder::PK_SC_REPLICATION_STATE;
 
-	auto iocpSession = std::static_pointer_cast<IOCPSession>(session);
+	auto iocpSession = session;
 
 	PK_SC_REPLICATION_STATE replicationPacket;
 
-	replicationPacket.SetState(mNetworkIDToState);
-	
+	replicationPacket.SetInfo(mNetworkIDToInfo);
+
+
+
 	iocpSession->SendPacket(&replicationPacket);
 }
 

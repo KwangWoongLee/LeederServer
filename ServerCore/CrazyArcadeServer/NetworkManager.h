@@ -16,7 +16,9 @@ public:
 
 	void SetObjectState(std::shared_ptr<GameObject> obj);
 
-	void SendReplicationPacket(const std::shared_ptr<Session>& session);
+	void SendReplicationPacket(IOCPSession* session);
+
+	std::unordered_map<uint32_t, std::shared_ptr<GameObject>>& GetNetworkState() { return mNetworkIDToGameObject; }
 
 	std::shared_ptr<User>	FindUserToSessionID(uint32_t sessionID);
 
@@ -26,7 +28,7 @@ private:
 
 	uint32_t													mNetworkIDSeed;
 	std::unordered_map<uint32_t, std::shared_ptr<GameObject>>	mNetworkIDToGameObject;
-	std::unordered_map<uint32_t, eObjectState>					mNetworkIDToState;
+	std::unordered_map<uint32_t, ObjectInfo>					mNetworkIDToInfo;
 
 };
 

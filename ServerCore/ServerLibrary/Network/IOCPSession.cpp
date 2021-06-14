@@ -5,83 +5,91 @@ namespace leeder
 {
 
 IOCPSession::IOCPSession()
+	: mBuffer(BUF_SIZE)
 {
 }
 
 IOCPSession::~IOCPSession()
 {
 }
-void IOCPSession::Init()
-{
-	mReadIO = std::make_shared<RWIOData>(eIOType::RECV);
-	mWriteIO = std::make_shared<RWIOData>(eIOType::SEND);
-}
 
 void IOCPSession::RecvStandBy()
 {
-	mReadIO->Reset();
-
-	if (mReadIO->GetSession() == nullptr)
-		mReadIO->SetSession(shared_from_this());
+	if (!IsConnected())
+		return;
 
 
-	mReadIO->SetType(eIOType::RECV);
-	
-	Overlapped* RecvOverlapped = new Overlapped(mReadIO);
+	std::unique_lock<std::mutex> lock(mBufferMutex);
 
+	Overlapped* RecvOverlapped = new Overlapped(this);
+	RecvOverlapped->SetType(eIOType::RECV);
+	RecvOverlapped->SetSession(this);
 
-	WSABUF wsaBuf;
-	wsaBuf.buf = mReadIO->GetBuffer();
-	wsaBuf.len = BUF_SIZE;
+	auto wsaBuf = RecvOverlapped->GetWSABuf();
+
+	wsaBuf.buf = mBuffer.GetBuffer();
+	wsaBuf.len = (ULONG)mBuffer.GetFreeSpaceSize();
 
 	this->recv(RecvOverlapped, wsaBuf);
 
 }
 
-bool IOCPSession::isRemainToRecv(size_t transferred)
-{
-	if (mReadIO->IsRemainToIO(transferred)) {
-
-		Overlapped* RecvOverlapped = new Overlapped(mReadIO);
-
-
-		WSABUF wsaBuf;
-		wsaBuf.buf = mReadIO->GetBuffer() + mReadIO->GetCurrentByte();
-		wsaBuf.len = (ULONG)(mReadIO->GetTotalByte() - mReadIO->GetCurrentByte());
-
-		this->recv(RecvOverlapped, wsaBuf);
-
-		return true;
-	}
-
-	return false;
-}
 
 void IOCPSession::SendPacket(Packet* packet)
 {
 	OutputStream stream;
 	packet->Encode(stream);
 
-	mWriteIO->SetStreamToIOData(stream);
 
-	if (mWriteIO->GetSession() == nullptr)
-		mWriteIO->SetSession(shared_from_this());
+	if (!IsConnected())
+	{
+		return;
+	}
+
+	//std::unique_lock<std::mutex> lock(mBufferMutex);
+
+	//if (0 == mBuffer.GetContiguiousBytes())
+	//{
+	//	return;
+
+	//}
 	
 
-	Overlapped* SendOverlapped = new Overlapped(mWriteIO);
+	//패킷 총길이
+	PACKET_SIZE packetTotalLength[1] = { sizeof(PACKET_SIZE) + sizeof(float) + stream.GetLength() };
 
 
-	WSABUF wsaBuf;
-	wsaBuf.buf = mWriteIO->GetBuffer();
-	wsaBuf.len = mWriteIO->GetTotalByte();
+	size_t	offset = sizeof(PACKET_SIZE);
 
-	this->send(SendOverlapped, wsaBuf);
-	this->RecvStandBy();
+	//패킷 총길이 입력
+	memcpy((void*)mSendBuffer, (void*)packetTotalLength, sizeof(PACKET_SIZE));
+
+	float time = Clock::GetInstance().GetSystemTimeFloat();
+	memcpy((void*)(mSendBuffer + offset), &time, sizeof(float));
+
+	offset += sizeof(float);
+
+	// 스트림 데이터 입력
+	memcpy((void*)(mSendBuffer + offset), (void*)stream.GetBuffer(), stream.GetLength());
+
+
+
+	Overlapped* sendOverlapped = new Overlapped(this);
+	sendOverlapped->SetType(eIOType::SEND);
+
+
+	auto wsaBuf = sendOverlapped->GetWSABuf();
+	wsaBuf.len = (ULONG)packetTotalLength[0];
+	wsaBuf.buf = mSendBuffer;
+
+
+	this->send(sendOverlapped, wsaBuf);
+
 }
 
-std::list<std::shared_ptr<IOCPSession>>::iterator IOCPSession::OnDisconnect(eDisconnectReason reason)
+std::list<IOCPSession*>::iterator IOCPSession::OnDisconnect(eDisconnectReason reason)
 {
-	return SessionManager::GetInstance().ReturnSession(shared_from_this());
+	return SessionManager::GetInstance().ReturnSession(this);
 }
 
 void IOCPSession::OnAccept(IOCPServer* server)
@@ -114,60 +122,65 @@ void IOCPSession::OnAccept(IOCPServer* server)
 		return;
 	}
 
-	this->RecvStandBy();
+	this->ZeroRecv();
 
+}
+
+void IOCPSession::OnZeroRecv()
+{
+	this->RecvStandBy();
 }
 
 
 void IOCPSession::OnSend(DWORD transferSize)
 {
-	if (!mConnected.load())
-	{
-		return;
-	}
+	//std::unique_lock<std::mutex> lock(mBufferMutex);
 
-	if (mWriteIO->IsRemainToIO(transferSize))
-	{
-		Overlapped* SendOverlapped = new Overlapped(mWriteIO);
+	//mBuffer.Remove(transferSize);
+	ZeroMemory(mSendBuffer, sizeof(BUF_SIZE) * sizeof(char));
 
-
-		WSABUF wsaBuf;
-		wsaBuf.buf = mWriteIO->GetBuffer() + mWriteIO->GetCurrentByte();
-		wsaBuf.len = (ULONG)(mWriteIO->GetTotalByte() - mWriteIO->GetCurrentByte());
-
-		this->send(SendOverlapped, wsaBuf);
-		
-	}
-
+	//printf("%d\n", transferSize);
 }
 
 std::shared_ptr<Package> IOCPSession::OnRecv(DWORD transferSize)
 {
-	if (!mConnected.load())
-	{
+	if (!IsConnected())
 		return nullptr;
-	}
 
-	//패킷 가장 앞부분. 패킷 총길이를 가져오고 그만큼 offset 증가.
-	size_t offset = mReadIO->SetTotalByte();
+	std::unique_lock<std::mutex> lock(mBufferMutex);
 
-
-	if (this->isRemainToRecv(transferSize)) {
+	if (0 == mBuffer.GetFreeSpaceSize())
 		return nullptr;
-	}
 
-	std::shared_ptr<Packet> packet = PacketAnalyzer::GetInstance().analyze(mReadIO->GetBuffer() + offset, mReadIO->GetTotalByte() - offset);
+	size_t offset = 0;
+	PACKET_SIZE packetSize[1] = { 0 };
+
+	memcpy((void*)packetSize, (void*)mBuffer.GetBuffer(), sizeof(PACKET_SIZE));
+
+	offset += sizeof(PACKET_SIZE);
+
+	float recvTime[1] = { 0 };
+	memcpy((void*)recvTime, (void*)(mBuffer.GetBuffer() + offset), sizeof(float));
+
+	offset += sizeof(float);
+
+
+	std::shared_ptr<Packet> packet = PacketAnalyzer::GetInstance().analyze(mBuffer.GetBuffer() + offset, packetSize[0] - offset);
+
+
+	mBuffer.Commit(transferSize);
+
+	mBuffer.Remove(transferSize);
 
 
 	if (packet == nullptr) {
 
-		this->RecvStandBy();
 		return nullptr;
 	}
 
-	this->RecvStandBy();
+	this->ZeroRecv();
 
-	std::shared_ptr<Package> package = std::make_shared<Package>(shared_from_this(), packet);
+	std::shared_ptr<Package> package = std::make_shared<Package>(this, packet);
 
 	return std::move(package);
 
@@ -177,8 +190,6 @@ void IOCPSession::Reset()
 {
 	mConnected.store(false);
 
-	mReadIO->Reset();
-	mWriteIO->Reset();
 
 	mSocket.Reset();
 }
@@ -221,6 +232,11 @@ bool IOCPSession::setSocketOption(IOCPServer* server)
 		return false;
 	}
 
+	if (!mSocket.SetRecvBufferSize(0))
+	{
+		return false;
+	}
+
 
 
 	tcp_keepalive keepAliveSet = { 0 }, returned = { 0 };
@@ -240,15 +256,15 @@ bool IOCPSession::setSocketOption(IOCPServer* server)
 void IOCPSession::Accept(SOCKET listenSocket)
 {
 	DWORD bytes = 0;
-	
-	std::shared_ptr<IOData> data = std::make_shared<AcceptIOData>();
-	data->SetSession(shared_from_this());
 
 
-	Overlapped* acceptOverlapped = new Overlapped(data);
+	Overlapped* acceptOverlapped = new Overlapped(this);
+	acceptOverlapped->SetType(eIOType::ACCEPT);
+	auto wsabuf = acceptOverlapped->GetWSABuf();
+	wsabuf.len = 0;
+	wsabuf.buf = nullptr;
 
-
-	if (FALSE == mFnAcceptEx(listenSocket, mSocket.GetHandle(), data->GetBuffer(), 0,
+	if (FALSE == mFnAcceptEx(listenSocket, mSocket.GetHandle(), SessionManager::GetInstance().mAcceptBuffer, 0,
 		sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, &bytes, (LPOVERLAPPED)acceptOverlapped))
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
@@ -259,19 +275,50 @@ void IOCPSession::Accept(SOCKET listenSocket)
 
 }
 
+void IOCPSession::ZeroRecv()
+{
+	if (!IsConnected())
+		return ;
 
-void IOCPSession::checkIOError(DWORD error)
+	Overlapped* ZeroRecvOverlapped = new Overlapped(this);
+	ZeroRecvOverlapped->SetSession(this);
+	ZeroRecvOverlapped->SetType(eIOType::RECV_ZERO);
+	auto wsabuf = ZeroRecvOverlapped->GetWSABuf();
+	wsabuf.len = 0;
+	wsabuf.buf = nullptr;
+
+	DWORD recvbytes = 0;
+	DWORD flags = 0;
+
+	/// start async recv
+	if (SOCKET_ERROR == WSARecv(mSocket.GetHandle(), &wsabuf ,1, &recvbytes, &flags, (LPWSAOVERLAPPED)ZeroRecvOverlapped, NULL))
+	{
+		if (WSAGetLastError() != WSA_IO_PENDING)
+		{
+			delete ZeroRecvOverlapped;
+		}
+	}
+
+}
+
+
+bool IOCPSession::checkIOError(DWORD error)
 {
 	if (error == SOCKET_ERROR
 		&& (WSAGetLastError() != WSA_IO_PENDING)) {
 
+
 		if (WSAGetLastError() == WSAECONNRESET)
-			return;
+			return false;
 
 		if (!mConnected.load())
-			return;
+			return false;
 
 		SysLogger::GetInstance().Log(L"! socket error: %d", WSAGetLastError());
+
+		return false;
 	}
+
+	return true;
 }
 }

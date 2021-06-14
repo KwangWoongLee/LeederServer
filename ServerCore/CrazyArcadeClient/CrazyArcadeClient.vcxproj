@@ -158,6 +158,7 @@
     <ClInclude Include="Graphics\RenderManager.h" />
     <ClInclude Include="Graphics\TextureManager.h" />
     <ClInclude Include="Network\NetworkManager.h" />
+    <ClInclude Include="Object\PlayerClient.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Util\Input.h" />
     <ClInclude Include="Util\InputManager.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Graphics\RenderManager.cpp" />
     <ClCompile Include="Graphics\TextureManager.cpp" />
     <ClCompile Include="Network\NetworkManager.cpp" />
+    <ClCompile Include="Object\PlayerClient.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

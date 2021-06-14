@@ -52,6 +52,9 @@ public:
 	void SendReqExitPacket();
 
 
+	void AddGameObjectToNetwork(std::shared_ptr<GameObject> obj);
+
+
 private:
 	// ÇïÆÛ ÇÔ¼ö
 	bool createSocket();
@@ -91,6 +94,8 @@ private:
 
 	std::unordered_map<ePacketType, std::function<void(std::shared_ptr<Packet>&)>> mPacketToFunctionMap;
 
+
+	std::unordered_map<uint32_t, std::shared_ptr<GameObject>>	mNetworkIDToGameObject;
 };
 
 };

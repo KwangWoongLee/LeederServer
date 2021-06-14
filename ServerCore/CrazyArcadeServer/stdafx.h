@@ -5,6 +5,7 @@
 
 #include "Common.h"
 
+#include "PlayerServer.h"
 #include "User.h"
 
 #include "GameProcess.h"

@@ -103,6 +103,21 @@ void NetworkManager::Run()
 void NetworkManager::registPacketFunction()
 {
 	mPacketToFunctionMap.insert(std::make_pair(ePacketType::SC_RES_WELCOME, [&](const auto& packet) {
+
+		std::shared_ptr<PK_SC_RES_WELCOME> typePacket = std::static_pointer_cast<PK_SC_RES_WELCOME>(packet);
+
+		auto map = typePacket->GetState();
+
+		for (auto element : map)
+		{
+			auto netid = element.first;
+			auto obj = element.second;
+			obj.SetNetworkID(netid);
+
+			auto  obj2 = std::make_shared<PlayerClient>(obj);
+			AddGameObjectToNetwork(obj2);
+		}
+
 		mState = eClientState::WELCOMED;
 		}));
 
@@ -119,22 +134,42 @@ void NetworkManager::registPacketFunction()
 
 		std::shared_ptr<PK_SC_REPLICATION_STATE> typePacket = std::static_pointer_cast<PK_SC_REPLICATION_STATE>(packet);
 
-		auto networkIDToState = typePacket->GetState();
+		auto networkIDToInfo = typePacket->GetInfo();
 
-		for (auto object : networkIDToState)
+		for (auto object : networkIDToInfo)
 		{
 			auto netid = object.first;
-			auto state = object.second;
+			auto info = object.second;
 
 			printf("id : %d - ", netid);
+			auto iter = mNetworkIDToGameObject.find(netid);
+			if (iter == mNetworkIDToGameObject.end() && info.mState != eObjectState::CREATE)
+				continue;
 
-			switch ((state))
+		
+			switch (info.mState)
 			{
 			case eObjectState::CREATE:
-				printf("CREATE\n");
+			{
+				printf("CREATE : ");
+				std::shared_ptr<GameObject> obj;
+
+				if (info.mType == eObjectType::PLAYER)
+				{
+					obj = std::make_shared<PlayerClient>();
+
+				}
+				obj->SetNetworkID(netid);
+				obj->SetPosition(info.mPos);
+
+				AddGameObjectToNetwork(obj);
+
 				break;
+			}
+
 			case eObjectState::ACTION:
 				printf("ACTION\n");
+				iter->second->SetPosition(info.mPos);
 				break;
 			case eObjectState::DESTROY:
 				printf("DESTROY\n");
@@ -176,10 +211,11 @@ void NetworkManager::SendPacketProcess()
 	if (mState == eClientState::READY)
 	{
 
-		if (time > mLastHelloTime )
+		if (time > mLastHelloTime + 0.3f)
 		{
 			packet = SendHelloPacket();
 			mLastHelloTime = time;
+			printf("hello");
 		}
 	}
 
@@ -189,6 +225,7 @@ void NetworkManager::SendPacketProcess()
 		{
 			packet = SendInputPacket();
 			mLastPacketSendTime = time;
+
 		}
 
 		//HeartBeat 패킷 전송
@@ -369,5 +406,11 @@ std::shared_ptr<Packet> NetworkManager::GetRecvPacket()
 {
 	return mRecvPacketQueue.Pop();
 }
+
+}
+
+void NetworkManager::AddGameObjectToNetwork(std::shared_ptr<GameObject> obj)
+{
+	mNetworkIDToGameObject[obj->GetNetworkID()] = obj;
 
 }

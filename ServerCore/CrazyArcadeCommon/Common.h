@@ -13,11 +13,15 @@ using leeder::IOCPSession;
 using leeder::eInputType;
 using leeder::Input;
 
+
+using leeder::eObjectState;
+using leeder::eObjectType;
+using leeder::ObjectInfo;
+
 using leeder::GameObject;
 using leeder::Packet;
 using leeder::ePacketType;
 
-using leeder::eObjectState;
 
 using leeder::Package;
 

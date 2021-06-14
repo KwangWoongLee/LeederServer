@@ -12,12 +12,24 @@ enum class eObjectState
 	DESTROY
 };
 
+enum class eObjectType
+{
+	NONE,
+	PLAYER,
+};
+
 struct Position
 {
 	float mX;
 	float mY;
 };
 
+struct ObjectInfo
+{
+	eObjectState mState;
+	eObjectType mType;
+	Position mPos;
+};
 
 class GameObject
 {
@@ -36,18 +48,23 @@ public:
 	eObjectState& GetState() { return mState; }
 	void		SetState(eObjectState state) { mState = state; }
 
+	eObjectType& GetType() { return mType; }
+	void		SetType(eObjectType type) { mType = type; }
+
 	float		GetScale() { return mScale; }
 	void		SetScale(float scale) { mScale = scale; }
 
 	void	SetIndex(int index) { mIndex = index; }
 	int		GetIndex()		const { return mIndex; }
 
-private:
+protected:
 	uint32_t					mNetworkID;
 	Position					mPosition;
 	eObjectState				mState;
+	eObjectType					mType;
 	float						mScale;
 	uint32_t					mIndex;
+	
 
 };
 

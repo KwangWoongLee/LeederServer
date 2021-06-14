@@ -3,8 +3,8 @@
 
 
 
-SpriteComponent::SpriteComponent(std::shared_ptr<GameObject>&& owner)
-	: mOwner(std::move(owner))
+SpriteComponent::SpriteComponent(GameObject* owner)
+	: mOwner(owner)
 	,mTexture(nullptr)
 	, mTextureHeight(0)
 	, mTextureWidth(0)

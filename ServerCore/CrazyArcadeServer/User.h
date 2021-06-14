@@ -4,26 +4,26 @@
 class User
 {
 public:
-	User(std::shared_ptr<Session> session, const std::string& name, std::shared_ptr<Player>&& player);
+	User(IOCPSession* session, const std::string& name, std::shared_ptr<PlayerServer>&& player);
 
-	const std::shared_ptr<Session>& GetSession() const { return mSession; }
+	IOCPSession* GetSession()  { return mSession; }
 
 	uint32_t							GetSessionID()	const { return mSessionID; }
 	const	std::string& GetName()		const { return mName; }
 
-	std::shared_ptr<Player> GetGameObject() { return mGameObject; }
+	std::shared_ptr<PlayerServer> GetGameObject() { return mGameObject; }
 
 
 	void	AddInput(Input input);
 
 
 private:
-	std::shared_ptr<Session>	mSession;
+	IOCPSession*				mSession;
 	uint32_t					mSessionID;
 
 	std::string					mName;
 
-	std::shared_ptr<Player>		mGameObject;
+	std::shared_ptr<PlayerServer>		mGameObject;
 
 };
 

@@ -84,7 +84,7 @@ public:
 
 	//Class 객체를 받을 때는 해당 클래스를 특수화 할 것
 	template<>
-	void operator << (const std::unordered_map<uint32_t, eObjectState>& map)
+	void operator << (const std::unordered_map<uint32_t, ObjectInfo>& map)
 	{
 		size_t size = map.size();
 
@@ -98,6 +98,20 @@ public:
 		}
 	}
 
+	template<>
+	void operator << (const std::unordered_map<uint32_t, GameObject>& map)
+	{
+		size_t size = map.size();
+
+		this->write(size);
+
+		for (auto element : map)
+		{
+			this->write(element.first);
+			this->write(element.second);
+
+		}
+	}
 
 
 private:
@@ -123,22 +137,29 @@ private:
 
 
 	template<>
-	void write(eObjectState type)
+	void write(ObjectInfo info)
 	{
-		this->write(&type, sizeof(type));
+		this->write(&info.mState, sizeof(info.mState));
 
-		switch (type)
+		switch (info.mState)
 		{
 		case eObjectState::CREATE:
+			this->write(info.mType);
+			this->write(info.mPos);
 		case eObjectState::ACTION:
-
-		case eObjectState::DESTROY:
-			break;
-
+			this->write(info.mPos);
 
 		default:
 			break;
 		}
+	}
+
+
+	template<>
+	void write(GameObject obj)
+	{
+		this->write(obj.GetType());
+		this->write(obj.GetPosition());
 	}
 
 
@@ -210,7 +231,7 @@ public:
 
 	//Class 객체를 받을 때는 해당 클래스를 특수화 할 것
 	template<>
-	void operator >> (std::unordered_map<uint32_t, eObjectState>& map)
+	void operator >> (std::unordered_map<uint32_t, ObjectInfo>& map)
 	{
 		size_t size;
 		this->read(size);
@@ -220,13 +241,30 @@ public:
 			uint32_t networkID;
 			this->read(networkID);
 
-			eObjectState state;
-			this->read(state);
+			ObjectInfo info;
+			this->read(info);
 
-			map[networkID] = state;
+			map[networkID] = info;
 		}
 	}
 
+	template<>
+	void operator >> (std::unordered_map<uint32_t, GameObject>& map)
+	{
+		size_t size;
+		this->read(size);
+
+		for (int i = 0; i < size; ++i)
+		{
+			uint32_t networkID;
+			this->read(networkID);
+
+			GameObject obj;
+			this->read(obj);
+
+			map[networkID] = obj;
+		}
+	}
 
 private:
 	void		read(void* data, uint32_t size);
@@ -259,20 +297,33 @@ private:
 
 
 	template<>
-	void read(eObjectState& type)
+	void read(ObjectInfo& info)
 	{
-		this->read(&type, sizeof(type));
+		this->read(&info.mState, sizeof(info.mState));
 
-		switch (type)
+		switch (info.mState)
 		{
 		case eObjectState::CREATE:
-		case eObjectState::ACTION:
-
-		case eObjectState::DESTROY:
+			this->read(info.mType);
+			this->read(info.mPos);
 			break;
 
+		case eObjectState::ACTION:
+			this->read(info.mPos);
+			break;
+
+		default:
+			break;
 
 		}
+	}
+
+	template<>
+	void read(GameObject& obj)
+	{
+		this->read(obj.GetType());
+		this->read(obj.GetPosition());
+
 	}
 
 

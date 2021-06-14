@@ -1,10 +1,10 @@
 #pragma once
 #include "stdafx.h"
 
-class SpriteComponent : public std::enable_shared_from_this<SpriteComponent>
+class SpriteComponent
 {
 public:
-	SpriteComponent(std::shared_ptr<GameObject>&& owner);
+	SpriteComponent(GameObject* owner);
 	~SpriteComponent();
 
 	virtual void Draw(SDL_Renderer* renderer);
@@ -20,7 +20,7 @@ public:
 protected:
 	//스프라이트에 종속된 Texture 변수
 
-	std::shared_ptr<GameObject> mOwner;
+	GameObject*		mOwner;
 	SDL_Texture*	mTexture;
 	int				mTextureHeight;
 	int				mTextureWidth;

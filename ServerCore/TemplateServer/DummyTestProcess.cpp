@@ -15,61 +15,59 @@ DummyTestProcess::DummyTestProcess()
 
 
 
-void DummyTestProcess::CS_REQ_HELLO(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
+void DummyTestProcess::CS_REQ_HELLO(IOCPSession* session, std::shared_ptr<Packet>& packet)
 {
 	auto reqPacket = std::static_pointer_cast<PK_CS_REQ_HELLO>(packet);
 
 	std::string clientID =reqPacket->GetID();
 
-	auto iocpSession = std::static_pointer_cast<IOCPSession>(session);
 
 	auto user = UserManager::GetInstance().At(session->GetID());
 
 	if (user != nullptr) {
 		SysLogger::GetInstance().Log(L"Already Registed User");
-		iocpSession->OnDisconnect(eDisconnectReason::ALREADY_REGISTED);
+		session->OnDisconnect(eDisconnectReason::ALREADY_REGISTED);
 		return;
 	}
 	
 
-	UserManager::GetInstance().Put(std::make_shared<User>(session, clientID));
+	//UserManager::GetInstance().Put(IOCPSession * session, clientID));
 
 	PK_SC_RES_WELCOME resPacket;
 
-	iocpSession->SendPacket(&resPacket);
+	session->SendPacket(&resPacket);
 
 
 }
 
 
-void DummyTestProcess::CS_SEND_INPUTLIST(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
+void DummyTestProcess::CS_SEND_INPUTLIST(IOCPSession* session, std::shared_ptr<Packet>& packet)
 {
 	auto inputPacket = std::static_pointer_cast<PK_CS_SEND_INPUTLIST>(packet);
 	
 	auto& inputList = inputPacket->GetInputList();
 
 
-	UserManager::GetInstance().InputUpdate(session->GetID(), inputList);
+	//UserManager::GetInstance().InputUpdate(session->GetID(), inputList);
 
 }
 
 
-void DummyTestProcess::CS_REQ_EXIT(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
+void DummyTestProcess::CS_REQ_EXIT(IOCPSession* session, std::shared_ptr<Packet>& packet)
 {
-	auto iocpSession = std::static_pointer_cast<IOCPSession>(session);
 
 	auto user = UserManager::GetInstance().At(session->GetID());
 	if (user == nullptr) {
 		SysLogger::GetInstance().Log(L"This user is not registed ");
-		iocpSession->OnDisconnect(eDisconnectReason::UNREGISTED);
+		session->OnDisconnect(eDisconnectReason::UNREGISTED);
 		return;
 	}
 
-	UserManager::GetInstance().Remove(session->GetID());
+	//UserManager::GetInstance().Remove(session->GetID());
 
 
 	PK_SC_RES_EXIT resPacket;
-	iocpSession->SendPacket(&resPacket);
+	session->SendPacket(&resPacket);
 
 }
 

@@ -13,7 +13,7 @@ GameProcess::GameProcess()
 
 
 
-void GameProcess::CS_REQ_HELLO(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
+void GameProcess::CS_REQ_HELLO(IOCPSession* session, std::shared_ptr<Packet>& packet)
 {
 	using leeder::PK_CS_REQ_HELLO;
 	using leeder::PK_SC_RES_WELCOME;
@@ -22,24 +22,28 @@ void GameProcess::CS_REQ_HELLO(std::shared_ptr<Session>& session, std::shared_pt
 
 	std::string clientName = reqPacket->GetID();
 
-	NetworkManager::GetInstance().HandleNewClient(std::make_shared<User>(session, clientName, std::make_shared<Player>(session->GetID())));
-
-	auto iocpSession = std::static_pointer_cast<IOCPSession>(session);
+	auto iocpSession = session;
 
 	PK_SC_RES_WELCOME resPacket;
 
+	resPacket.SetState(NetworkManager::GetInstance().GetNetworkState());
+
+
 	iocpSession->SendPacket(&resPacket);
+
+	NetworkManager::GetInstance().HandleNewClient(std::make_shared<User>(session, clientName, std::make_shared<PlayerServer>(session->GetID())));
+
 
 }
 
 
 
 
-void GameProcess::CS_REQ_EXIT(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
+void GameProcess::CS_REQ_EXIT(IOCPSession* session, std::shared_ptr<Packet>& packet)
 {
 	using leeder::PK_SC_RES_EXIT;
 
-	auto iocpSession = std::static_pointer_cast<IOCPSession>(session);
+	auto iocpSession = session;
 
 	//UserManager::GetInstance().RemoveUser(session->GetID());
 	
@@ -48,7 +52,7 @@ void GameProcess::CS_REQ_EXIT(std::shared_ptr<Session>& session, std::shared_ptr
 
 }
 
-void GameProcess::CS_SEND_INPUTLIST(std::shared_ptr<Session>& session, std::shared_ptr<Packet>& packet)
+void GameProcess::CS_SEND_INPUTLIST(IOCPSession* session, std::shared_ptr<Packet>& packet)
 {
 	using leeder::PK_CS_SEND_INPUTLIST;
 

@@ -22,7 +22,7 @@ void SessionManager::PrepareSessionPool()
 {
 	for (int i = 0; i < mMaxSessionCount; ++i)
 	{
-		mSessionPool.push_back(std::make_shared<IOCPSession>());
+		mSessionPool.push_back(new IOCPSession());
 		mSessionCount++;
 	}
 }
@@ -34,9 +34,8 @@ void SessionManager::AcceptSessions(SOCKET listenSocket)
 
 		while (mIssueCount - mReturnCount < mMaxSessionCount)
 		{
-			std::shared_ptr<IOCPSession> session = mSessionPool.back();
+			auto session = mSessionPool.back();
 
-			session->Init();
 			session->SetID(mSessionIDSeed++);
 
 			mSessionList.push_back(session);
@@ -51,7 +50,7 @@ void SessionManager::AcceptSessions(SOCKET listenSocket)
 }
 
 
-std::list<std::shared_ptr<IOCPSession>>::iterator SessionManager::ReturnSession(std::shared_ptr<IOCPSession> returnSession)
+std::list<IOCPSession*>::iterator SessionManager::ReturnSession(IOCPSession* returnSession)
 {
 	{
 		std::unique_lock<std::mutex> lock(mSessionPoolMutex);
@@ -95,7 +94,7 @@ void SessionManager::CheckHeartBeat()
 }
 
 
-bool SessionManager::AddSession(const std::shared_ptr<IOCPSession>& session)
+bool SessionManager::AddSession(IOCPSession* session)
 {
 	{
 		std::unique_lock<std::mutex> lock(mSessionPoolMutex);

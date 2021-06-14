@@ -19,6 +19,9 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{11440f11-8568-4db4-97ae-644869a614df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{3b4c8f48-cf90-4dfa-b15f-6ef4c5df19c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -50,6 +53,9 @@
     </ClInclude>
     <ClInclude Include="Components\AnimationComponent.h">
       <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\PlayerClient.h">
+      <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="Components\AnimationComponent.cpp">
       <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\PlayerClient.cpp">
+      <Filter>Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

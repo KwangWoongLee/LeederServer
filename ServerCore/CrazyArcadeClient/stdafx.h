@@ -23,6 +23,8 @@
 #include "Util/Input.h"
 #include "Util/InputManager.h"
 
+
+
 #include "Network/NetworkManager.h"
 
 using leeder::NetworkManager;
@@ -35,6 +37,6 @@ using leeder::NetworkManager;
 #include "Components/AnimationComponent.h"
 
 
-
+#include "Object/PlayerClient.h"
 
 #include "Core/Client.h"

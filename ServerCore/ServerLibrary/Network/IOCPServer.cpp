@@ -9,7 +9,7 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 	while (!bShutDown) 
 	{
 		Overlapped* overlapped = nullptr;
-		std::shared_ptr<IOCPSession> session = nullptr;
+		IOCPSession* session = nullptr;
 		DWORD			transferSize;
 
 		BOOL ret = GetQueuedCompletionStatus(server->GetIOCP(), &transferSize, (PULONG_PTR)&session, (LPOVERLAPPED*)&overlapped, INFINITE);
@@ -20,9 +20,8 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 			continue;
 		}
 
-		std::shared_ptr<IOData> ioData = overlapped->GetIOData();
 
-		session = (ioData == nullptr) ? nullptr : ioData->GetSession();
+		session = (overlapped == nullptr) ? nullptr : overlapped->GetSession();
 
 
 		if (session == nullptr)
@@ -32,24 +31,31 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 			return;
 		}
 
-		switch (ioData->GetType())
+		switch (overlapped->GetType())
 		{
 		case eIOType::ACCEPT: 
 			session->OnAccept(server);
 			break;
 
+		case eIOType::RECV_ZERO:
+		{
+			printf("recvzero\n");
+			session->OnZeroRecv();
+		}
+
 
 		case eIOType::RECV: 
 		{
+			
 			if (transferSize == 0)
 			{
-				session->OnDisconnect(eDisconnectReason::COMPLETION_ERROR);
+				printf("recv0\n");
 				delete overlapped;
 				continue;
 			}
 
 			std::shared_ptr<Package> package = session->OnRecv(transferSize);
-
+			printf("recv%d\n" , transferSize);
 			if (package)
 				server->PutPackage(std::move(package));
 			break;
@@ -58,7 +64,6 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 		case eIOType::SEND: 
 			if (transferSize == 0)
 			{
-				session->OnDisconnect(eDisconnectReason::COMPLETION_ERROR);
 				delete overlapped;
 				continue;
 			}
