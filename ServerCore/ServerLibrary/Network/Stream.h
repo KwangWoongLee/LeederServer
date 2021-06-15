@@ -90,7 +90,7 @@ public:
 
 		this->write(size);
 
-		for (auto element : map)
+		for (auto& element : map)
 		{
 			this->write(element.first);
 			this->write(element.second);
@@ -144,11 +144,18 @@ private:
 		switch (info.mState)
 		{
 		case eObjectState::CREATE:
+		{
 			this->write(info.mType);
 			this->write(info.mPos);
+
+		}
+					break;
 		case eObjectState::ACTION:
+		{
 			this->write(info.mPos);
 
+		}
+		break;
 		default:
 			break;
 		}

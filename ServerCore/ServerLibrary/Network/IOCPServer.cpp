@@ -39,7 +39,6 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 
 		case eIOType::RECV_ZERO:
 		{
-			printf("recvzero\n");
 			session->OnZeroRecv();
 		}
 
@@ -49,13 +48,11 @@ std::function < void(IOCPServer*)> ioWorkerThreadFunction = [](IOCPServer* serve
 			
 			if (transferSize == 0)
 			{
-				printf("recv0\n");
 				delete overlapped;
 				continue;
 			}
 
 			std::shared_ptr<Package> package = session->OnRecv(transferSize);
-			printf("recv%d\n" , transferSize);
 			if (package)
 				server->PutPackage(std::move(package));
 			break;

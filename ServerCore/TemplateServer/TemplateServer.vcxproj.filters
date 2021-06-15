@@ -5,9 +5,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
-    <ClCompile Include="UserManager.cpp" />
     <ClCompile Include="DummyTestProcess.cpp" />
     <ClCompile Include="User.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="PCH">
@@ -18,9 +19,10 @@
     <ClInclude Include="stdafx.h">
       <Filter>PCH</Filter>
     </ClInclude>
-    <ClInclude Include="UserManager.h" />
     <ClInclude Include="DummyTestProcess.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

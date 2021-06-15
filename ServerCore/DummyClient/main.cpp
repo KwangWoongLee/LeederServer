@@ -14,10 +14,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 
-	std::unique_ptr<IOCPClient> DummyTestClient = std::make_unique<IOCPClient>(std::make_unique<DummyTestClientProcess>());
+	std::unique_ptr<IOCPClient> DummyTestClient = std::make_unique<IOCPClient>(std::make_shared<DummyTestClientProcess>());
 
 	std::vector<std::shared_ptr<Client>> clients;
-	for (int i = 0; i < 5000; ++i)
+	for (int i = 0; i < 100; ++i)
 		clients.push_back(DummyTestClient->CreateClient());
 
 
@@ -29,34 +29,38 @@ int _tmain(int argc, _TCHAR* argv[])
 		client->Connect();
 	}
 
+	NetworkManager::GetInstance().Init(DummyTestClient->GetProcess());
 
+	//단일 로직 스레드
+	while (!bShutDown)
+	{
+		NetworkManager::GetInstance().ProcessQueuedPacket();
 
-	auto mThread = Thread([&]() {
-		while (true)
+		for (auto client : clients)
 		{
-			for (auto client : clients)
-			{
-				if (client->GetState() == eClientState::WELCOMED)
-				{
-					client->Action();
+			auto time = Clock::GetInstance().GetSystemTimeFloat();
 
-					client->SendHeartBeat();
+			if (client->GetState() == eClientState::WELCOMED)
+			{
+				if (time > client->mLastPacketSendTime + 0.000003f)
+				{
+					client->SendInputPacket();
+					client->mLastPacketSendTime = time;
 
 				}
+
+				//HeartBeat 패킷 전송
+				if (time > client->mLastHeartBeatTime + 0.003f)
+				{
+					client->SendHeartBeat();
+					client->mLastHeartBeatTime = time;
+				}
+
+			}
+
 			}
 		}
-		
-		});
-	
 
-
-	
-
-
-
-	Sleep(10000000000000000);
-
-    return 0;
-
+	return 0;
 
 };

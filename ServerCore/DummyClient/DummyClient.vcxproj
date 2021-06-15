@@ -148,6 +148,7 @@
     <ClCompile Include="DummyTestClientProcess.cpp" />
     <ClCompile Include="IOCPClient.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -159,6 +160,7 @@
     <ClInclude Include="ClientPackage.h" />
     <ClInclude Include="DummyTestClientProcess.h" />
     <ClInclude Include="IOCPClient.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

@@ -10,18 +10,24 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	using namespace leeder;
 
-	std::unique_ptr<IOCPServer> DummyTestServer = std::make_unique<IOCPServer>(std::make_unique<DummyTestProcess>());
+	std::unique_ptr<IOCPServer> DummyTestServer = std::make_unique<IOCPServer>(std::make_shared<DummyTestProcess>());
 
 	DummyTestServer->Run();
 
-	while (true)
+
+	NetworkManager::GetInstance().Init(DummyTestServer->GetProcess());
+
+
+	//단일 로직 스레드
+	while (!bShutDown)
 	{
-		UserManager::GetInstance().UpdateUsers();
+		NetworkManager::GetInstance().ProcessQueuedPacket();
 
-		UserManager::GetInstance().Replication();
-
-		Sleep(100);
+		World::GetInstance().Update();
+			
+		NetworkManager::GetInstance().Replication();
 	}
+
 
 
 	return 0;

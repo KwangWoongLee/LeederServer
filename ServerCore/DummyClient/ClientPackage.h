@@ -1,27 +1,23 @@
 #pragma once
 #include "stdafx.h"
 
-namespace leeder
+class Client;
+
+
+class ClientPackage
 {
-	class Client;
 
+public:
+	ClientPackage(Client* client, std::shared_ptr<Packet>& packet)
+		: mClient(client)
+		, mPacket(std::move(packet))
+	{};
 
-	class ClientPackage
-	{
+	Client* GetClient() { return mClient; }
+	std::shared_ptr<Packet>& GetPacket() { return mPacket; }
 
-	public:
-		ClientPackage(std::shared_ptr<Client> client, std::shared_ptr<Packet>& packet)
-			: mClient(client)
-			, mPacket(std::move(packet))
-		{};
+private:
+	Client*	mClient;
+	std::shared_ptr<Packet>		mPacket;
 
-		std::shared_ptr<Client>& GetClient() { return mClient; }
-		std::shared_ptr<Packet>& GetPacket() { return mPacket; }
-
-	private:
-		std::shared_ptr<Client>	mClient;
-		std::shared_ptr<Packet>		mPacket;
-
-	};
-
-}
+};
