@@ -1,12 +1,12 @@
 #pragma once
 #include "Common.h"
 
-class Player : public GameObject
+class Player : public MoveGameObject
 {
 public:
 	Player();
 
-	virtual void Update() {};
+	virtual void Update(float deltaTime) {};
 
 	void	AddInput(Input input);
 

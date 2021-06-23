@@ -30,9 +30,6 @@
     <ClInclude Include="Core\Client.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Network\NetworkManager.h">
-      <Filter>Network</Filter>
-    </ClInclude>
     <ClInclude Include="Util\InputManager.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -48,13 +45,31 @@
     <ClInclude Include="Graphics\TextureManager.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Components\TileMapComponent.h">
-      <Filter>Component</Filter>
-    </ClInclude>
     <ClInclude Include="Components\AnimationComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="Object\PlayerClient.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\NetworkManagerClient.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\BackGround.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\ObjectFactory.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\TileClient.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TileComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\BombClient.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\BoomClient.h">
       <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,17 +83,11 @@
     <ClCompile Include="Core\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Network\NetworkManager.cpp">
-      <Filter>Network</Filter>
-    </ClCompile>
     <ClCompile Include="Util\InputManager.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Util\Input.cpp">
       <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Components\SpriteComponent.cpp">
-      <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\RenderManager.cpp">
       <Filter>Graphics</Filter>
@@ -86,13 +95,31 @@
     <ClCompile Include="Graphics\TextureManager.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Components\TileMapComponent.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="Components\AnimationComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="Object\PlayerClient.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\SpriteComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\NetworkManagerClient.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\BackGround.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\TileClient.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\TileComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\BombClient.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\BoomClient.cpp">
       <Filter>Object</Filter>
     </ClCompile>
   </ItemGroup>

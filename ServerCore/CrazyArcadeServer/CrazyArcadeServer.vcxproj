@@ -148,18 +148,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BombServer.cpp" />
+    <ClCompile Include="BoomServer.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="GameProcess.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="NetworkManagerServer.cpp" />
     <ClCompile Include="PlayerServer.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="TileServer.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BombServer.h" />
+    <ClInclude Include="BoomServer.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="GameProcess.h" />
-    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="NetworkManagerServer.h" />
     <ClInclude Include="PlayerServer.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TileServer.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>

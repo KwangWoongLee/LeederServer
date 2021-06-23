@@ -23,7 +23,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		NetworkManager::GetInstance().ProcessQueuedPacket();
 
-		World::GetInstance().Update();
+		World::GetInstance().Update(0.f);
 			
 		NetworkManager::GetInstance().Replication();
 	}

@@ -8,15 +8,32 @@ enum class eObjectState
 	NONE,
 	CREATE,
 	ACTION,
-	WILL_DESTROY,
 	DESTROY
 };
 
-enum class eObjectType
+enum class eObjectType : int
 {
-	NONE,
+	NONE = -1,
+
+	BLOCK_1 = 1,
+	BLOCK_2 = 2,
+	BLOCK_3 = 3,
+	FLOWER = 4,
+	BUSH_1 = 5,
+	BUSH_2 = 6,
+	HOUSE_1 = 7,
+	HOUSE_2 = 8,
+	HOUSE_3 = 9,
+	BLOCK_4 = 13,
+	BLOCK_5 = 14,
+	BOX = 15,
+
+	BACKGROUND,
+	BOMB,
+	BOOM,
 	PLAYER,
 };
+
 
 struct Position
 {
@@ -24,11 +41,15 @@ struct Position
 	float mY;
 };
 
+enum class eMoveState;
+
 struct ObjectInfo
 {
-	eObjectState mState;
-	eObjectType mType;
-	Position mPos;
+	float			mScale;
+	eObjectState	mState;
+	eObjectType		mType;
+	eMoveState		mMoveState;
+	Position		mPos;
 };
 
 class GameObject
@@ -37,25 +58,40 @@ public:
 	GameObject();
 	~GameObject();
 
-	virtual void Update() {};
+	virtual void Update(float deltaTime) {};
+
+	virtual void HandleDying() { SetState(eObjectState::DESTROY); }
 
 	uint32_t&	GetNetworkID() { return mNetworkID; }
 	void		SetNetworkID(uint32_t	networkID) { mNetworkID = networkID; }
 
+	virtual ObjectInfo& GetObjectInfo() { return mObjectInfo; }
+
 	Position&	GetPosition() { return mPosition; }
-	void		SetPosition(Position position) { mPosition = position; }
+	void		SetPosition(Position position) { mPosition = position; mObjectInfo.mPos = position; }
+
+	float& GetWidth() { return mWidth; }
+	void	SetWidth(float width) { mWidth = width; }
+
+	float& GetHeight() { return mHeight; }
+	void	SetHeight(float height) { mHeight = height; }
+
 
 	eObjectState& GetState() { return mState; }
-	void		SetState(eObjectState state) { mState = state; }
+	void		SetState(eObjectState state) { mState = state; mObjectInfo.mState = state; }
 
 	eObjectType& GetType() { return mType; }
-	void		SetType(eObjectType type) { mType = type; }
+	void		SetType(eObjectType type) { mType = type;  mObjectInfo.mType = type; }
 
-	float		GetScale() { return mScale; }
-	void		SetScale(float scale) { mScale = scale; }
+	float&		GetScale() { return mScale; }
+	void		SetScale(float scale) { mScale = scale; mObjectInfo.mScale = scale; }
 
 	void	SetIndex(int index) { mIndex = index; }
 	int		GetIndex()		const { return mIndex; }
+
+	bool	IsDie() { return mDie; }
+	void	Die() { mDie = true; }
+
 
 protected:
 	uint32_t					mNetworkID;
@@ -63,8 +99,11 @@ protected:
 	eObjectState				mState;
 	eObjectType					mType;
 	float						mScale;
+	float						mWidth;
+	float						mHeight;
 	uint32_t					mIndex;
-	
+	ObjectInfo					mObjectInfo;
+	bool						mDie;
 
 };
 

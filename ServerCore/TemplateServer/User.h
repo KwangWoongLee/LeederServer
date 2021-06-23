@@ -8,7 +8,7 @@ public:
 
 	IOCPSession* GetSession() { return mSession; }
 
-	void Update() override;
+	void Update(float deltaTime) override;
 
 	uint32_t							GetSessionID()	const { return mSessionID; }
 	const	std::string& GetName()		const { return mName; }

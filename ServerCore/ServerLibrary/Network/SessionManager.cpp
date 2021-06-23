@@ -74,7 +74,7 @@ std::list<IOCPSession*>::iterator SessionManager::ReturnSession(IOCPSession* ret
 
 void SessionManager::CheckHeartBeat()
 {
-	std::time_t now = Clock::GetInstance().GetSystemTick();
+	double now = Clock::GetInstance().GetSystemTime();
 
 	auto iter = mSessionList.begin();
 	auto iterEnd = mSessionList.end();
@@ -82,7 +82,7 @@ void SessionManager::CheckHeartBeat()
 	for (; iter != iterEnd;) {
 		if ((*iter)->IsConnected())
 		{
-			std::time_t lastTick = (*iter)->GetLastHeartBeat();
+			double lastTick = (*iter)->GetLastHeartBeat();
 			if (now - lastTick > LifeTime) {
 				SysLogger::GetInstance().Log(L"Session %d is Not HeartBeat", (*iter)->GetID());
 				iter = (*iter)->OnDisconnect(eDisconnectReason::DIE);

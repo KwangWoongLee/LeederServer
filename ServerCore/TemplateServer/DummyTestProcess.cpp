@@ -14,7 +14,7 @@ DummyTestProcess::DummyTestProcess()
 
 
 
-void DummyTestProcess::CS_REQ_HELLO(IOCPSession* session, std::shared_ptr<Packet>& packet)
+void DummyTestProcess::CS_REQ_HELLO(Session* session, std::shared_ptr<Packet>& packet)
 {
 	using leeder::PK_CS_REQ_HELLO;
 	using leeder::PK_SC_RES_WELCOME;
@@ -23,7 +23,7 @@ void DummyTestProcess::CS_REQ_HELLO(IOCPSession* session, std::shared_ptr<Packet
 
 	std::string clientName = reqPacket->GetID();
 
-	auto iocpSession = session;
+	auto iocpSession = static_cast<IOCPSession*>(session);
 
 	PK_SC_RES_WELCOME resPacket;
 
@@ -32,11 +32,11 @@ void DummyTestProcess::CS_REQ_HELLO(IOCPSession* session, std::shared_ptr<Packet
 	iocpSession->SendPacket(&resPacket);
 
 
-	NetworkManager::GetInstance().HandleNewClient(std::make_shared<User>(session, clientName));
+	NetworkManager::GetInstance().HandleNewClient(std::make_shared<User>(iocpSession, clientName));
 
 }
 
-void DummyTestProcess::CS_SEND_INPUTLIST(IOCPSession* session, std::shared_ptr<Packet>& packet)
+void DummyTestProcess::CS_SEND_INPUTLIST(Session* session, std::shared_ptr<Packet>& packet)
 {
 	using leeder::PK_CS_SEND_INPUTLIST;
 
@@ -61,11 +61,13 @@ void DummyTestProcess::CS_SEND_INPUTLIST(IOCPSession* session, std::shared_ptr<P
 }
 
 
-void DummyTestProcess::CS_REQ_EXIT(IOCPSession* session, std::shared_ptr<Packet>& packet)
+void DummyTestProcess::CS_REQ_EXIT(Session* session, std::shared_ptr<Packet>& packet)
 {
 
 	PK_SC_RES_EXIT resPacket;
-	session->SendPacket(&resPacket);
+	auto iocpSession = static_cast<IOCPSession*>(session);
+
+	iocpSession->SendPacket(&resPacket);
 
 }
 

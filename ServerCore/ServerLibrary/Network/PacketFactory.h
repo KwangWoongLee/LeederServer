@@ -43,16 +43,20 @@ public:
 			return std::make_shared<PK_CS_SEND_INPUTLIST>();
 			break;
 
-		case ePacketType::CS_REQ_PARTICIPATE_CHATTING:
-			return std::make_shared<PK_CS_REQ_PARTICIPATE_CHATTING>();
+		case ePacketType::T_NOTIFY:
+			return std::make_shared<PK_T_NOTIFY>();
 			break;
 
-		case ePacketType::CS_REQ_CHATTING_MSG:
-			return std::make_shared<PK_CS_REQ_CHATTING_MSG>();
+		case ePacketType::T_NOTIFY_AUTH:
+			return std::make_shared<PK_T_NOTIFY_AUTH>();
 			break;
 
-		case ePacketType::SC_MSG_NOTIFY_ALL:
-			return std::make_shared<PK_SC_MSG_NOTIFY_ALL>();
+		case ePacketType::CS_REQ_AUTH:
+			return std::make_shared<PK_CS_REQ_AUTH>();
+			break;
+
+		case ePacketType::DB_RES_AUTH:
+			return std::make_shared<PK_DB_RES_AUTH>();
 			break;
 		default:
 			return nullptr;

@@ -23,29 +23,29 @@ void World::RemoveGameObject(std::shared_ptr<GameObject> obj)
 	mGameObjects.pop_back();
 }
 
-void World::Update()
+void World::Update(float deltaTime)
 {
 	for (int i = 0, c = mGameObjects.size(); i < c; ++i)
 	{
 		auto go = mGameObjects[i];
 
 
-		if (go->GetState() != eObjectState::WILL_DESTROY)
+		if (!go->IsDie())
 		{
-			go->Update();
+			go->Update(deltaTime);
 		}
-		//you might suddenly want to die after your update, so check again
-		if (go->GetState() == eObjectState::WILL_DESTROY)
+
+		if (go->IsDie())
 		{
 			RemoveGameObject(go);
-			//go->HandleDying();
+			go->HandleDying();
 			--i;
 			--c;
 		}
 	}
 }
 
-int World::GetIndexOfGameObject(std::shared_ptr<GameObject> obj)
+int World::getIndexOfGameObject(std::shared_ptr<GameObject> obj)
 {
 	return obj->GetIndex();
 }

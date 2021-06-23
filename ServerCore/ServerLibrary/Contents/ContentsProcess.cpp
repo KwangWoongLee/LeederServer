@@ -99,11 +99,18 @@ void ContentsProcess::RegistFunction(ePacketType type,func func)
 void ContentsProcess::RegistDefaultFunction()
 {
 	RegistFunction(ePacketType::CS_NOTIFY_HEARTBEAT, std::bind(&ContentsProcess::HeartBeatPacketFunction, this, std::placeholders::_1, std::placeholders::_2));
+	RegistFunction(ePacketType::T_NOTIFY, std::bind(&ContentsProcess::TerminalNotifyPacketFunction, this, std::placeholders::_1, std::placeholders::_2));
+
 }
 
-void ContentsProcess::HeartBeatPacketFunction(IOCPSession* session, std::shared_ptr<Packet>& packet)
+void ContentsProcess::HeartBeatPacketFunction(Session* session, std::shared_ptr<Packet>& packet)
 {
 	session->UpdateHeartBeat();
+}
+
+void ContentsProcess::TerminalNotifyPacketFunction(Session* session, std::shared_ptr<Packet>& packet)
+{
+	session->SetType(eSessionType::TERMINAL);
 }
 
 }

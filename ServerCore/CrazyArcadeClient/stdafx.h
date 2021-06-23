@@ -25,18 +25,23 @@
 
 
 
-#include "Network/NetworkManager.h"
-
-using leeder::NetworkManager;
+#include "Network/NetworkManagerClient.h"
 
 #include "Graphics/RenderManager.h"
 #include "Graphics/TextureManager.h"
 
 #include "Components/SpriteComponent.h"
-#include "Components/TileMapComponent.h"
 #include "Components/AnimationComponent.h"
+#include "Components/TileComponent.h"
 
+#include "Object/BackGround.h"
+#include "Object/TileClient.h"
+#include "Object/BoomClient.h"
+#include "Object/BombClient.h"
 
 #include "Object/PlayerClient.h"
+
+
+#include "Object/ObjectFactory.h"
 
 #include "Core/Client.h"

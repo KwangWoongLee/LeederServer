@@ -3,44 +3,6 @@
 
 namespace leeder
 {
-
-void PK_SC_MSG_NOTIFY_ALL::Encode(OutputStream& stream)
-{
-	stream << GetTypeToInt();
-	stream << mID;
-	stream << mMSG;
-}
-
-void PK_SC_MSG_NOTIFY_ALL::Decode(InputStream& stream)
-{
-	stream >> mID;
-	stream >> mMSG;
-}
-
-void PK_CS_REQ_CHATTING_MSG::Encode(OutputStream& stream)
-{
-	stream << GetTypeToInt();
-	stream << mID;
-	stream << mMSG;
-}
-
-void PK_CS_REQ_CHATTING_MSG::Decode(InputStream& stream)
-{
-	stream >> mID;
-	stream >> mMSG;
-}
-
-void PK_CS_REQ_PARTICIPATE_CHATTING::Encode(OutputStream& stream)
-{
-	stream << GetTypeToInt();
-	stream << mID;
-}
-
-void PK_CS_REQ_PARTICIPATE_CHATTING::Decode(InputStream& stream)
-{
-	stream >> mID;
-}
-
 void PK_SC_RES_WELCOME::Encode(OutputStream& stream)
 {
 	stream << GetTypeToInt();
@@ -118,5 +80,68 @@ void PK_CS_REQ_REPLICATION_STATE::Encode(OutputStream& stream)
 {
 	stream << GetTypeToInt();
 }
+
+void PK_T_NOTIFY::Encode(OutputStream& stream)
+{
+	stream << GetTypeToInt();
+}
+
+void PK_T_NOTIFY_AUTH::Encode(OutputStream& stream)
+{
+	stream << GetTypeToInt();
+	stream << mbAuthResult;
+	if (IsAuth())
+	{
+		stream << mName;
+		stream << mAuthToken;
+	}
+
+}
+
+void PK_T_NOTIFY_AUTH::Decode(InputStream& stream)
+{
+	stream >> mbAuthResult;
+	if (IsAuth())
+	{
+		stream >> mName;
+		stream >> mAuthToken;
+	}
+}
+
+void PK_CS_REQ_AUTH::Encode(OutputStream& stream)
+{
+	stream << GetTypeToInt();
+	stream << mID;
+	stream << mPassWord;
+}
+
+void PK_CS_REQ_AUTH::Decode(InputStream& stream)
+{
+	stream >> mID;
+	stream >> mPassWord;
+}
+
+void PK_DB_RES_AUTH::Encode(OutputStream& stream)
+{
+	stream << GetTypeToInt();
+	stream << mbAuthResult;
+	if (IsAuth())
+	{
+		stream << mName;
+		stream << mAuthToken;
+	}
+}
+
+void PK_DB_RES_AUTH::Decode(InputStream& stream)
+{
+	stream >> mbAuthResult;
+	if (IsAuth())
+	{
+		stream >> mName;
+		stream >> mAuthToken;
+	}
+}
+
+
 
 };

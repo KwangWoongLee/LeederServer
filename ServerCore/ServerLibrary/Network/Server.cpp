@@ -63,12 +63,22 @@ void Server::Init(XMLDocument* config)
 	mIP = element->GetText();
 
 	element = server->FirstChildElement("Port");
-	sscanf_s(element->GetText(), "%d", &mPort);
+	std::string strPort = element->GetText();
+	mPort = std::stoi(strPort);
 
 	element = server->FirstChildElement("ThreadCount");
-	sscanf_s(element->GetText(), "%d", &mThreadCount);
+	std::string strThreadCount = element->GetText();
+	mThreadCount = std::stoi(strThreadCount);
 
-		
+
+
+	TerminalManager::GetInstance().Init(this, config);
+
+	//DBManager::GetInstance().Init();
+	
+	
+	TerminalManager::GetInstance().Run();
+
 
 	SetState(eServerState::READY);
 

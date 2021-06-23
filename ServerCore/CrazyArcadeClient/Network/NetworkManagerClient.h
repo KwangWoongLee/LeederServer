@@ -1,10 +1,6 @@
 #pragma once
 #include "stdafx.h"
 
-namespace leeder
-{
-
-
 enum class eClientState
 {
 	UNREADY,
@@ -14,14 +10,12 @@ enum class eClientState
 
 };
 
-class NetworkManager : public Singleton<NetworkManager>
+class NetworkManagerClient : public Singleton<NetworkManagerClient>, public NetworkManager
 {
 public:
 
-	std::unordered_map<uint32_t, std::shared_ptr<GameObject>> mNetworkIDToGameObjectMap;
-
-	NetworkManager();
-	~NetworkManager();
+	NetworkManagerClient();
+	~NetworkManagerClient();
 
 
 	bool Init();
@@ -52,13 +46,16 @@ public:
 	void SendReqExitPacket();
 
 
-	void AddGameObjectToNetwork(std::shared_ptr<GameObject> obj);
-
+	void AddGameObjectToNetwork(std::shared_ptr<GameObject> obj) override;
+	void RemoveGameObjectToNetwork(uint32_t networkID) ;
+	
 
 private:
 	// ÇïÆÛ ÇÔ¼ö
 	bool createSocket();
 	bool connect();
+
+	void auth();
 
 
 	SOCKET mSocket;
@@ -93,9 +90,5 @@ private:
 	std::unique_ptr<Thread>	mRecvThread;
 
 	std::unordered_map<ePacketType, std::function<void(std::shared_ptr<Packet>&)>> mPacketToFunctionMap;
-
-
-	std::unordered_map<uint32_t, std::shared_ptr<GameObject>>	mNetworkIDToGameObject;
-};
 
 };

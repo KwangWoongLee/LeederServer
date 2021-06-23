@@ -9,7 +9,7 @@ User::User(IOCPSession* session, const std::string& name)
 	SetPosition({ leeder::GetRandomFloat() * 512 + 100, leeder::GetRandomFloat() * 512 + 100 });
 }
 
-void User::Update()
+void User::Update(float deltaTime)
 {
 
 	while (!mInputList.empty())

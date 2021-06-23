@@ -10,26 +10,35 @@ namespace leeder
 		Clock();
 		~Clock();
 
-		
+		float GetDeltaTime() { return mDeltaTime; }
 
-		std::time_t		GetSystemTick() { return  system_clock::to_time_t(system_clock::now()); }
+		void Update();
+
+		double		GetSystemTime() { 
+			auto now = high_resolution_clock::now();
+			auto ms = duration_cast<milliseconds>(now - mServerStartTime).count();
+
+			return static_cast<double>(ms) / 1000;
+		}
 		
 		float			GetSystemTimeFloat() { 
-		
-			high_resolution_clock::time_point point = high_resolution_clock::now();
-			milliseconds ms = duration_cast<milliseconds>(point.time_since_epoch());
+			auto now = high_resolution_clock::now();
+			auto ms = duration_cast<milliseconds>(now - mServerStartTime).count();
 
-			auto fms = std::chrono::duration<float>(ms);
-
-			return static_cast<float>(fms.count()/1000);
+			return static_cast<float>(ms) / 1000;
 		}
+
 
 
 
 		std::wstring	GetTimeNowToWS (const wchar_t* format = L"D%Y-%m-%dT%H-%M-%S");
 
 	private:
-		std::chrono::system_clock::time_point mServerStartTime;
+		high_resolution_clock::time_point mServerStartTime;
+		float		mDeltaTime;
+
+		double		mLastFrameStartTime;
+		float		mFrameStartTimef;
 
 	};
 

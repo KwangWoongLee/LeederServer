@@ -42,6 +42,7 @@
 
 
 #include <random>
+#include <algorithm>
 #include <typeinfo>    //typeinfo
 
 #include <map>
@@ -88,6 +89,7 @@
 #include "Util/Socket.h"
 
 #include "Util/GameObject.h"
+#include "Util/MoveGameObject.h"
 
 //Network
 #include "Network/Stream.h"
@@ -105,6 +107,12 @@
 #include "Network/Session.h"
 #include "Network/IOCPSession.h"
 #include "Network/SessionManager.h"
+
+
+//ลอนฬณฮ
+#include "Network/TerminalSession.h"
+#include "Network/Terminal.h"
+#include "Network/TerminalManager.h"
 
 #include "Contents/ContentsProcess.h"
 

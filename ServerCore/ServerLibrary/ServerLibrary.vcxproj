@@ -180,6 +180,9 @@
     <ClInclude Include="Network\Session.h" />
     <ClInclude Include="Network\SessionManager.h" />
     <ClInclude Include="Network\Stream.h" />
+    <ClInclude Include="Network\Terminal.h" />
+    <ClInclude Include="Network\TerminalManager.h" />
+    <ClInclude Include="Network\TerminalSession.h" />
     <ClInclude Include="ServerLibrary.h" />
     <ClInclude Include="ServerShutDown.h" />
     <ClInclude Include="stdafx.h" />
@@ -191,6 +194,7 @@
     <ClInclude Include="Util\InputType.h" />
     <ClInclude Include="Util\Logger.h" />
     <ClInclude Include="Util\Minidump.h" />
+    <ClInclude Include="Util\MoveGameObject.h" />
     <ClInclude Include="Util\ObjectPool.h" />
     <ClInclude Include="Util\RandomUtil.h" />
     <ClInclude Include="Util\Singleton.h" />
@@ -213,6 +217,9 @@
     <ClCompile Include="Network\Session.cpp" />
     <ClCompile Include="Network\SessionManager.cpp" />
     <ClCompile Include="Network\Stream.cpp" />
+    <ClCompile Include="Network\Terminal.cpp" />
+    <ClCompile Include="Network\TerminalManager.cpp" />
+    <ClCompile Include="Network\TerminalSession.cpp" />
     <ClCompile Include="ServerShutDown.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -227,6 +234,7 @@
     <ClCompile Include="Util\GameObject.cpp" />
     <ClCompile Include="Util\Logger.cpp" />
     <ClCompile Include="Util\Minidump.cpp" />
+    <ClCompile Include="Util\MoveGameObject.cpp" />
     <ClCompile Include="Util\Socket.cpp" />
     <ClCompile Include="Util\Thread.cpp" />
     <ClCompile Include="Util\tinyxml\tinystr.cpp" />

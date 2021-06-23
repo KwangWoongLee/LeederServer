@@ -21,9 +21,6 @@ private:
 	void updateGame();
 	void generateOutput();
 
-	void loadData();
-
-	bool readTileMap(const std::string& fileName);
 
 	//SDL À©µµ¿ì
 	SDL_Window* mWindow;

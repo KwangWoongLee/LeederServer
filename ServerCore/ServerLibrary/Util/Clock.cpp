@@ -3,15 +3,35 @@
 
 namespace leeder
 {
+    float kDesiredFrameTime = 0.0166f;
 
     Clock::Clock()
     {
-        mServerStartTime = std::chrono::system_clock::now();
+        mServerStartTime = high_resolution_clock::now();
     }
 
 
     Clock::~Clock()
     {
+    }
+
+    void Clock::Update()
+    {
+        double currentTime = GetSystemTime();
+
+        mDeltaTime = (float)(currentTime - mLastFrameStartTime);
+
+        //frame lock at 60fps
+        while (mDeltaTime < kDesiredFrameTime)
+        {
+            currentTime = GetSystemTime();
+
+            mDeltaTime = (float)(currentTime - mLastFrameStartTime);
+        }
+
+        mLastFrameStartTime = currentTime;
+        mFrameStartTimef = static_cast<float> (mLastFrameStartTime);
+
     }
 
     std::wstring Clock::GetTimeNowToWS(const wchar_t* format)

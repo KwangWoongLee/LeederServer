@@ -153,12 +153,17 @@
   <ItemGroup>
     <ClInclude Include="Components\AnimationComponent.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
-    <ClInclude Include="Components\TileMapComponent.h" />
+    <ClInclude Include="Components\TileComponent.h" />
     <ClInclude Include="Core\Client.h" />
     <ClInclude Include="Graphics\RenderManager.h" />
     <ClInclude Include="Graphics\TextureManager.h" />
-    <ClInclude Include="Network\NetworkManager.h" />
+    <ClInclude Include="Network\NetworkManagerClient.h" />
+    <ClInclude Include="Object\BackGround.h" />
+    <ClInclude Include="Object\BombClient.h" />
+    <ClInclude Include="Object\BoomClient.h" />
+    <ClInclude Include="Object\ObjectFactory.h" />
     <ClInclude Include="Object\PlayerClient.h" />
+    <ClInclude Include="Object\TileClient.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Util\Input.h" />
     <ClInclude Include="Util\InputManager.h" />
@@ -166,13 +171,17 @@
   <ItemGroup>
     <ClCompile Include="Components\AnimationComponent.cpp" />
     <ClCompile Include="Components\SpriteComponent.cpp" />
-    <ClCompile Include="Components\TileMapComponent.cpp" />
+    <ClCompile Include="Components\TileComponent.cpp" />
     <ClCompile Include="Core\Client.cpp" />
     <ClCompile Include="Core\main.cpp" />
     <ClCompile Include="Graphics\RenderManager.cpp" />
     <ClCompile Include="Graphics\TextureManager.cpp" />
-    <ClCompile Include="Network\NetworkManager.cpp" />
+    <ClCompile Include="Network\NetworkManagerClient.cpp" />
+    <ClCompile Include="Object\BackGround.cpp" />
+    <ClCompile Include="Object\BombClient.cpp" />
+    <ClCompile Include="Object\BoomClient.cpp" />
     <ClCompile Include="Object\PlayerClient.cpp" />
+    <ClCompile Include="Object\TileClient.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

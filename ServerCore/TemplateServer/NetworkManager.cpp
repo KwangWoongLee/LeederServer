@@ -63,8 +63,7 @@ void NetworkManager::RemoveGameObjectToNetwork(std::shared_ptr<GameObject>& obj)
 
 void NetworkManager::SetObjectState(std::shared_ptr<GameObject> obj)
 {
-	ObjectInfo info(obj->GetState(), obj->GetType(), obj->GetPosition());
-	mNetworkIDToInfo[obj->GetNetworkID()] = info;
+	mNetworkIDToInfo[obj->GetNetworkID()] = obj->GetObjectInfo();
 }
 
 void NetworkManager::SendReplicationPacket(IOCPSession* session)

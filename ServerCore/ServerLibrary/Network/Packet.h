@@ -15,6 +15,7 @@ public:
 	virtual void Encode(OutputStream& stream) {};
 	virtual void Decode(InputStream& stream) {};
 
+
 private:
 	ePacketType mType;
 
@@ -144,65 +145,93 @@ private:
 
 };
 
-class PK_CS_REQ_PARTICIPATE_CHATTING : public Packet
+class PK_T_NOTIFY : public Packet
 {
 public:
-	PK_CS_REQ_PARTICIPATE_CHATTING()
-		:Packet(ePacketType::CS_REQ_PARTICIPATE_CHATTING) {};
+	PK_T_NOTIFY()
+		:Packet(ePacketType::T_NOTIFY)
+	{
+	};
+
+	void Encode(OutputStream& stream) override;
+};
+
+
+class PK_T_NOTIFY_AUTH : public Packet
+{
+public:
+	PK_T_NOTIFY_AUTH()
+		:Packet(ePacketType::T_NOTIFY_AUTH)
+	{
+	};
 
 	void Encode(OutputStream& stream) override;
 	void Decode(InputStream& stream) override;
 
-	std::string GetID() { return mID; }
-	void SetID(std::string id) { mID = id; }
+	bool		IsAuth() { return mbAuthResult; }
+	void		SetAuth(bool auth) { mAuthToken = auth; }
+
+	std::string GetName() { return mName; }
+	void SetName(std::string name) { mName = name; }
+
+	int			GetToken() { return mAuthToken; }
+	void		SetToken(int token) { mAuthToken = token; }
 
 private:
-	std::string	mID;
-
+	bool		mbAuthResult;
+	std::string	mName;
+	int			mAuthToken;
 };
 
-class PK_CS_REQ_CHATTING_MSG : public Packet
+class PK_CS_REQ_AUTH : public Packet
 {
 public:
-	PK_CS_REQ_CHATTING_MSG()
-		:Packet(ePacketType::CS_REQ_CHATTING_MSG) {};
+	PK_CS_REQ_AUTH()
+		:Packet(ePacketType::CS_REQ_AUTH)
+	{
+	};
 
 	void Encode(OutputStream& stream) override;
 	void Decode(InputStream& stream) override;
 
+
 	std::string GetID() { return mID; }
 	void SetID(std::string id) { mID = id; }
 
-	std::string	GetMSG() { return mMSG; }
-	void	SetMSG(std::string msg) { mMSG = msg; }
-
+	std::string GetPassWord() { return mPassWord; }
+	void SetPassWord(std::string pw) { mPassWord = pw; }
 
 private:
 	std::string	mID;
-	std::string	mMSG;
+	std::string mPassWord;
 
 };
 
-class PK_SC_MSG_NOTIFY_ALL : public Packet
+class PK_DB_RES_AUTH : public Packet
 {
 public:
-	PK_SC_MSG_NOTIFY_ALL()
-		:Packet(ePacketType::SC_MSG_NOTIFY_ALL) {};
+	PK_DB_RES_AUTH()
+		:Packet(ePacketType::DB_RES_AUTH)
+	{
+	};
 
 	void Encode(OutputStream& stream) override;
 	void Decode(InputStream& stream) override;
 
-	std::string GetID() { return mID; }
-	void SetID(std::string id) { mID = id; }
+	bool		IsAuth() { return mbAuthResult; }
+	void		SetAuth(bool auth) { mAuthToken = auth; }
 
-	std::string	GetMSG() { return mMSG; }
-	void	SetMSG(std::string msg) { mMSG = msg; }
+	std::string GetName() { return mName; }
+	void SetName(std::string name) { mName = name; }
+
+	int			GetToken() { return mAuthToken; }
+	void		SetToken(int token) { mAuthToken = token; }
 
 private:
-	std::string	mID;
-	std::string	mMSG;
+	bool		mbAuthResult;
+	std::string	mName;
+	int			mAuthToken;
 
 };
-
 
 };

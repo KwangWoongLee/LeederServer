@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "NetworkManager.h"
+#include "NetworkManagerServer.h"
 
-void NetworkManager::Init(std::shared_ptr<ContentsProcess> process)
+void NetworkManagerServer::Init(std::shared_ptr<ContentsProcess> process)
 {
 	mProcess = process;
 }
 
-void NetworkManager::ProcessQueuedPacket()
+void NetworkManagerServer::ProcessQueuedPacket()
 {
 	while (!mProcess->GetPackageQueue().Empty())
 	{
@@ -20,19 +20,28 @@ void NetworkManager::ProcessQueuedPacket()
 	}
 }
 
-void NetworkManager::Replication()
+void NetworkManagerServer::Replication()
 {
-	for (auto element : mSessionIDToUser)
-	{
-		auto user = element.second;
+	auto time = Clock::GetInstance().GetSystemTimeFloat();
 
-		SendReplicationPacket(user->GetSession());
+	if (time > mLastReplicationTime + 0.03f)
+	{
+
+		for (auto element : mSessionIDToUser)
+		{
+			auto user = element.second;
+
+			SendReplicationPacket(user->GetSession());
+		}
+
+		mNetworkIDToInfo.clear();
+
+		mLastReplicationTime = time;
 	}
 
-	mNetworkIDToInfo.clear();
 }
 
-void NetworkManager::HandleNewClient(std::shared_ptr<User> user)
+void NetworkManagerServer::HandleNewClient(std::shared_ptr<User> user)
 {
 	mSessionIDToUser[user->GetSessionID()] = user;
 
@@ -44,30 +53,29 @@ void NetworkManager::HandleNewClient(std::shared_ptr<User> user)
 
 }
 
-void NetworkManager::AddGameObjectToNetwork(std::shared_ptr<GameObject> obj)
+void NetworkManagerServer::AddGameObjectToNetwork(std::shared_ptr<GameObject> obj)
 {
 	obj->SetNetworkID(mNetworkIDSeed++);
 	mNetworkIDToGameObject[obj->GetNetworkID()] = obj;
 
 	obj->SetState(eObjectState::CREATE);
-	SetObjectState(obj);
+	SetObjectState(obj.get());
 
 }
 
-void NetworkManager::RemoveGameObjectToNetwork(std::shared_ptr<GameObject>& obj)
+void NetworkManagerServer::RemoveGameObjectToNetwork(GameObject* obj)
 {
 	mNetworkIDToGameObject.erase(obj->GetNetworkID());
 	obj->SetState(eObjectState::DESTROY);
 	SetObjectState(obj);
 }
 
-void NetworkManager::SetObjectState(std::shared_ptr<GameObject> obj)
+void NetworkManagerServer::SetObjectState(GameObject* obj)
 {
-	ObjectInfo info(obj->GetState(), obj->GetType(), obj->GetPosition());
-	mNetworkIDToInfo[obj->GetNetworkID()] = info;
+	mNetworkIDToInfo[obj->GetNetworkID()] = obj->GetObjectInfo();
 }
 
-void NetworkManager::SendReplicationPacket(IOCPSession* session)
+void NetworkManagerServer::SendReplicationPacket(IOCPSession* session)
 {
 	if (mNetworkIDToInfo.size() == 0)
 		return;
@@ -80,12 +88,10 @@ void NetworkManager::SendReplicationPacket(IOCPSession* session)
 
 	replicationPacket.SetInfo(mNetworkIDToInfo);
 
-
-
 	iocpSession->SendPacket(&replicationPacket);
 }
 
-std::shared_ptr<User> NetworkManager::FindUserToSessionID(uint32_t sessionID)
+std::shared_ptr<User> NetworkManagerServer::FindUserToSessionID(uint32_t sessionID)
 {
 
 	auto iter = mSessionIDToUser.find(sessionID);
