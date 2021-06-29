@@ -43,21 +43,6 @@ public:
 			return std::make_shared<PK_CS_SEND_INPUTLIST>();
 			break;
 
-		case ePacketType::T_NOTIFY:
-			return std::make_shared<PK_T_NOTIFY>();
-			break;
-
-		case ePacketType::T_NOTIFY_AUTH:
-			return std::make_shared<PK_T_NOTIFY_AUTH>();
-			break;
-
-		case ePacketType::CS_REQ_AUTH:
-			return std::make_shared<PK_CS_REQ_AUTH>();
-			break;
-
-		case ePacketType::DB_RES_AUTH:
-			return std::make_shared<PK_DB_RES_AUTH>();
-			break;
 		default:
 			return nullptr;
 			break;

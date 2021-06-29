@@ -30,11 +30,9 @@ protected:
 private:
 	void	RegistDefaultFunction();
 	void	HeartBeatPacketFunction(Session* session, std::shared_ptr<Packet>& packet);
-	void	TerminalNotifyPacketFunction(Session* session, std::shared_ptr<Packet>& packet);
 
 
 	ThreadSafeQueue<std::shared_ptr<Package>>	mPackageQueue;
-	//std::vector<std::unique_ptr<Thread>>		mProcessThreadPool;
 	size_t										mThreadCount;
 	std::unordered_map<ePacketType, func>		mProcessFunctionMap;
 

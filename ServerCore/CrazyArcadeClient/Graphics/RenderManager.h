@@ -7,7 +7,11 @@ class RenderManager : public Singleton<RenderManager>
 {
 
 public:
+	void Init(SDL_Renderer* renderer);
+
 	void Render(SDL_Renderer* renderer);
+
+	SDL_Renderer* GetRenderer() { return mRenderer; }
 
 	//vert inefficient method of tracking scene graph...
 	void AddComponent(SpriteComponent* component);
@@ -15,5 +19,6 @@ public:
 
 private:
 	std::vector<SpriteComponent*> mComponents;
+	SDL_Renderer* mRenderer;
 };
 

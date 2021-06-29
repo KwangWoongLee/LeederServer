@@ -32,6 +32,8 @@ enum class eObjectType : int
 	BOMB,
 	BOOM,
 	PLAYER,
+	ITEM_SHOE,
+	ITEM_BOMB,
 };
 
 

@@ -37,7 +37,7 @@ void Server::Run()
 void Server::loadData()
 {
 	auto BackGround = std::make_shared<GameObject>();
-	BackGround->SetPosition({ 512.f, 410.f });
+	BackGround->SetPosition({ 352.5f, 352.5f });
 	BackGround->SetScale(1.0f);
 	BackGround->SetType(eObjectType::BACKGROUND);
 
@@ -96,7 +96,7 @@ bool Server::setTileMap()
 			{
 				auto tile = std::make_shared<TileServer>();
 				tile->SetScale(2.0f);
-				tile->SetPosition({row * mTileSizeX + mTileSizeX / 2.0f + 24.f, col * mTileSizeY + mTileSizeY / 2.0f  + 53.f});
+				tile->SetPosition({row * mTileSizeX + mTileSizeX / 2.0f, col * mTileSizeY + mTileSizeY / 2.0f});
 				tile->SetType(tileType);
 
 				NetworkManagerServer::GetInstance().AddGameObjectToNetwork(tile);

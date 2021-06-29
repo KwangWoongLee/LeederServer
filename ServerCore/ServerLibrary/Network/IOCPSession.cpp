@@ -103,8 +103,6 @@ void IOCPSession::OnAccept(IOCPServer* server)
 
 	int addrLen = sizeof(SOCKADDR_IN);
 	int ret = getpeername(mSocket.GetHandle(), (struct sockaddr*)&mSocket.GetSocketInfo(), &addrLen);
-	if (ret == -1)
-		printf("%d", WSAGetLastError());
 
 
 	if (!server->RegistCompletionPort(mSocket.GetHandle(), (ULONG_PTR)this))

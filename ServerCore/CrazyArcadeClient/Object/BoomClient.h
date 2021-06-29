@@ -7,6 +7,7 @@ class BoomClient : public Boom
 {
 public:
 	BoomClient();
+	~BoomClient();
 
 	void HandleDying() override;
 

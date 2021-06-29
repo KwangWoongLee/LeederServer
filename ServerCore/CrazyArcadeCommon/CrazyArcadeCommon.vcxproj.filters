@@ -10,6 +10,7 @@
     <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="Bomb.h" />
     <ClInclude Include="Boom.h" />
+    <ClInclude Include="Item.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Player.cpp" />
@@ -21,6 +22,7 @@
     <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="Boom.cpp" />
+    <ClCompile Include="Item.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="PCH">

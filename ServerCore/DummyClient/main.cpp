@@ -34,6 +34,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	//단일 로직 스레드
 	while (!bShutDown)
 	{
+		Clock::GetInstance().Update();
+
+		auto deltaTime = Clock::GetInstance().GetDeltaTime();
+
 		NetworkManager::GetInstance().ProcessQueuedPacket();
 
 		for (auto client : clients)
@@ -42,7 +46,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 			if (client->GetState() == eClientState::WELCOMED)
 			{
-				if (time > client->mLastPacketSendTime + 0.000003f)
+				if (time > client->mLastPacketSendTime + 0.3f)
 				{
 					client->SendInputPacket();
 					client->mLastPacketSendTime = time;
@@ -50,7 +54,7 @@ int _tmain(int argc, _TCHAR* argv[])
 				}
 
 				//HeartBeat 패킷 전송
-				if (time > client->mLastHeartBeatTime + 0.003f)
+				if (time > client->mLastHeartBeatTime + 0.3f)
 				{
 					client->SendHeartBeat();
 					client->mLastHeartBeatTime = time;

@@ -47,7 +47,7 @@ public:
 	std::pair<std::string, int> GetTextureAndFrame(eObjectType type, eMoveState state)
 	{
 		std::string textureName = "";
-		int			frameX = 1;
+		int			frameX = 0;
 
 		switch (type)
 		{
@@ -96,15 +96,12 @@ public:
 			break;
 
 
-		case eObjectType::BOMB:
-		{
-			if (state == eMoveState::IDLE)
-			{
-				textureName = "Bomb";
-				frameX = 4;
-			}
-			break;
-		}
+		//case eObjectType::BOMB:
+		//{
+		//	textureName = "Bomb";
+		//	frameX = 4;
+		//}
+		//break;
 
 		case eObjectType::BOOM:
 		{
@@ -133,12 +130,25 @@ public:
 				textureName = "BoomLeft";
 				frameX = 9;
 			}
-			break;
 		}
+		break;
 
+		case eObjectType::ITEM_SHOE:
+		case eObjectType::ITEM_BOMB:
+		{
+			if (state == eMoveState::IDLE)
+			{
+				if (type == eObjectType::ITEM_SHOE)
+					textureName = "ItemShoe";
+				else
+					textureName = "ItemBomb";
+
+				frameX = 2;
+			}
+		}
+		break;
 
 		}
-
 		return std::make_pair(textureName , frameX);
 	}
 };

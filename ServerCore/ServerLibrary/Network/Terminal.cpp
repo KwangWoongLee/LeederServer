@@ -32,8 +32,8 @@ void Terminal::Run()
 				Sleep(1000);        // 1초마다 연결 시도
 			}
 
-			PK_T_NOTIFY terminalPacket;
-			mSession.SendPacket(&terminalPacket);
+			//PK_T_NOTIFY terminalPacket;
+			//mSession.SendPacket(&terminalPacket);
 
 			while (!bShutDown && mState != eTermialState::UNCONNECT) {
 				std::shared_ptr<Package> package = mSession.OnRecv();

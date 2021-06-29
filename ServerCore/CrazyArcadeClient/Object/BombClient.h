@@ -7,6 +7,7 @@ class BombClient : public Bomb
 {
 public:
 	BombClient();
+	~BombClient();
 
 	void HandleDying() override;
 

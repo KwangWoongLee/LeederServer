@@ -3,7 +3,7 @@
 
 BoomClient::BoomClient()
 {
-	mAnimationComponent = new AnimationComponent(this, 10);
+	mAnimationComponent = new AnimationComponent(this);
 
 	SDL_Texture* boomCenter = TextureManager::GetInstance().GetTexture("BoomCenter");
 	SDL_Texture* boomRight = TextureManager::GetInstance().GetTexture("BoomRight");
@@ -17,6 +17,11 @@ BoomClient::BoomClient()
 	mAnimationComponent->AddAnimTextures("BoomUp", boomUp);
 	mAnimationComponent->AddAnimTextures("BoomDown", boomDown);
 
+}
+
+BoomClient::~BoomClient()
+{
+	delete mAnimationComponent;
 }
 
 void BoomClient::HandleDying()

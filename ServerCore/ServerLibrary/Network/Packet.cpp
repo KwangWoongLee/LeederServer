@@ -81,67 +81,6 @@ void PK_CS_REQ_REPLICATION_STATE::Encode(OutputStream& stream)
 	stream << GetTypeToInt();
 }
 
-void PK_T_NOTIFY::Encode(OutputStream& stream)
-{
-	stream << GetTypeToInt();
-}
-
-void PK_T_NOTIFY_AUTH::Encode(OutputStream& stream)
-{
-	stream << GetTypeToInt();
-	stream << mbAuthResult;
-	if (IsAuth())
-	{
-		stream << mName;
-		stream << mAuthToken;
-	}
-
-}
-
-void PK_T_NOTIFY_AUTH::Decode(InputStream& stream)
-{
-	stream >> mbAuthResult;
-	if (IsAuth())
-	{
-		stream >> mName;
-		stream >> mAuthToken;
-	}
-}
-
-void PK_CS_REQ_AUTH::Encode(OutputStream& stream)
-{
-	stream << GetTypeToInt();
-	stream << mID;
-	stream << mPassWord;
-}
-
-void PK_CS_REQ_AUTH::Decode(InputStream& stream)
-{
-	stream >> mID;
-	stream >> mPassWord;
-}
-
-void PK_DB_RES_AUTH::Encode(OutputStream& stream)
-{
-	stream << GetTypeToInt();
-	stream << mbAuthResult;
-	if (IsAuth())
-	{
-		stream << mName;
-		stream << mAuthToken;
-	}
-}
-
-void PK_DB_RES_AUTH::Decode(InputStream& stream)
-{
-	stream >> mbAuthResult;
-	if (IsAuth())
-	{
-		stream >> mName;
-		stream >> mAuthToken;
-	}
-}
-
 
 
 };

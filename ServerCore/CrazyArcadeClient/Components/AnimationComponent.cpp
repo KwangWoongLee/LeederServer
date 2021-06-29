@@ -24,8 +24,10 @@ void AnimationComponent::Update(float deltaTime)
 
 		mAnimTexture = GetAnimTexture(textureName);
 	}
+	
 
-	if (owner->GetMoveState() == eMoveState::STOP)
+
+	if (owner->GetMoveState() == eMoveState::STOP &&owner->GetType() == eObjectType::PLAYER)
 	{
 		mCurrFrame = 0.f;
 	}
@@ -37,7 +39,7 @@ void AnimationComponent::Update(float deltaTime)
 
 
 	////모든 texture animation이 끝나면 처음 animation으로 변경
-	if (mCurrFrame >= mFrameX)
+	while (mCurrFrame >= mFrameX)
 	{
 		mCurrFrame -= mFrameX;
 	}
@@ -53,7 +55,7 @@ void AnimationComponent::Draw(SDL_Renderer* renderer)
 		SDL_Rect src;
 		src.w = static_cast<int>(mTextureWidth / mFrameX);
 		src.h = static_cast<int>(mTextureHeight);
-		src.x = static_cast<int>(mTextureWidth / mFrameX * static_cast<int>(mCurrFrame));
+		src.x = static_cast<int>(mTextureWidth / mFrameX) * static_cast<int>(mCurrFrame);
 		src.y = static_cast<int>(0);
 
 		//소유 actor의 정보에 따라 texture 배치

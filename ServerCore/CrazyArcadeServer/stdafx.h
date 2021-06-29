@@ -7,7 +7,7 @@
 
 #include "Collider.h"
 
-
+#include "ItemServer.h"
 #include "TileServer.h"
 #include "BoomServer.h"
 #include "BombServer.h"

@@ -72,6 +72,9 @@
     <ClInclude Include="Object\BoomClient.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="Object\ItemClient.h">
+      <Filter>Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -120,6 +123,9 @@
       <Filter>Object</Filter>
     </ClCompile>
     <ClCompile Include="Object\BoomClient.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\ItemClient.cpp">
       <Filter>Object</Filter>
     </ClCompile>
   </ItemGroup>

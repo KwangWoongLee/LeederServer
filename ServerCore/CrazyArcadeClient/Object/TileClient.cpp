@@ -4,7 +4,7 @@
 TileClient::TileClient()
 {
 	SetMoveState(eMoveState::IDLE);
-	SetScale(2.0f);
+	SetScale(1.0f);
 	SDL_Texture* tileTexture = TextureManager::GetInstance().GetTexture("Tile");
 
 	mTileComponent = new TileComponent(this,2);
@@ -13,6 +13,11 @@ TileClient::TileClient()
 
 	mTileComponent->AddAnimTextures("idle", tileTexture);
 
+}
+
+TileClient::~TileClient()
+{
+	delete mTileComponent;
 }
 
 void TileClient::HandleDying()

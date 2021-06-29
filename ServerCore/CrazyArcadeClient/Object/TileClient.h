@@ -5,6 +5,7 @@ class TileClient : public Tile
 {
 public:
 	TileClient();
+	~TileClient();
 
 	void HandleDying() override;
 

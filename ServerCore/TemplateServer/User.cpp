@@ -6,7 +6,7 @@ User::User(IOCPSession* session, const std::string& name)
 	, mSessionID(session->GetID())
 	, mName(name)
 {
-	SetPosition({ leeder::GetRandomFloat() * 512 + 100, leeder::GetRandomFloat() * 512 + 100 });
+	SetPosition({ leeder::GetRandomFloat() * 668 + 100, leeder::GetRandomFloat() * 284 + 100 });
 }
 
 void User::Update(float deltaTime)

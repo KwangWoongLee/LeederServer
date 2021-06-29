@@ -10,36 +10,35 @@ constexpr int LifeTime = 15;
 class SessionManager : public Singleton< SessionManager >
 {
 public:
-
+	char								mAcceptBuffer[64];
 
 	SessionManager();
 	~SessionManager();
 
-	void	PrepareSessionPool();
-	void	AcceptSessions(SOCKET listenSocket);
+	void								PrepareSessionPool();
+	void								AcceptSessions(SOCKET listenSocket);
 
 
-	bool	AddSession(IOCPSession* session);
+	bool								AddSession(IOCPSession* session);
 	std::list<IOCPSession*>::iterator	ReturnSession(IOCPSession* returnSession);
 
-	void	CheckHeartBeat();
+	void								CheckHeartBeat();
 
-	char									mAcceptBuffer[64];
 
 private:
 	std::list<IOCPSession*>		mSessionPool;
 	std::list<IOCPSession*>		mSessionList;
 
-	std::mutex								mSessionPoolMutex;
+	std::mutex					mSessionPoolMutex;
 
-	int										mMaxSessionCount;
-	std::atomic<int>						mSessionCount;
+	int							mMaxSessionCount;
+	std::atomic<int>			mSessionCount;
 
-	int										mIssueCount;
-	int										mReturnCount;
+	int							mIssueCount;
+	int							mReturnCount;
 
 
-	static std::atomic<int>					mSessionIDSeed;
+	static std::atomic<int>		mSessionIDSeed;
 
 
 	

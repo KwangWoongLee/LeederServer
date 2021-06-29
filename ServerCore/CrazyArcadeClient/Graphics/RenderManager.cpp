@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "RenderManager.h"
 
+void RenderManager::Init(SDL_Renderer* renderer)
+{
+	mRenderer = renderer;
+}
+
 void RenderManager::Render(SDL_Renderer* renderer)
 {
 	for (auto component : mComponents)

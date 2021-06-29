@@ -55,28 +55,6 @@ bool NetworkManagerClient::Init()
 
 	XMLElement* app = mConfig.FirstChildElement("App");
 
-	XMLElement* loginServer = app->FirstChildElement("LoginServer");
-
-	if (!loginServer) {
-		printf("No setting for login server in config");
-		return false;
-	}
-
-	XMLElement* element = loginServer->FirstChildElement("IP");
-	mServerIP = element->GetText();
-
-	element = loginServer->FirstChildElement("Port");
-	std::string strPort = element->GetText();
-	mServerPort = std::stoi(strPort);
-
-
-	memset(&mServerInfo, 0, sizeof(mServerInfo));
-	mServerInfo.sin_family = AF_INET;
-	mServerInfo.sin_port = htons(mServerPort);
-	inet_pton(AF_INET, mServerIP.c_str(), &mServerInfo.sin_addr.s_addr);
-
-
-	this->auth();
 
 	if (!createSocket())
 		return false;
@@ -88,7 +66,7 @@ bool NetworkManagerClient::Init()
 		return false;
 	}
 
-	element = server->FirstChildElement("IP");
+	XMLElement* element = server->FirstChildElement("IP");
 	mServerIP = element->GetText();
 
 	element = server->FirstChildElement("Port");
@@ -194,7 +172,7 @@ void NetworkManagerClient::registPacketFunction()
 
 				if (info.mMoveState != eMoveState::NONE)
 				{
-					auto object = std::static_pointer_cast<MoveGameObject>(newObject);
+					auto object = static_cast<MoveGameObject*>(newObject.get());
 					object->SetMoveState(info.mMoveState);
 				}
 				newObject->SetNetworkID(netid);
@@ -383,57 +361,6 @@ bool NetworkManagerClient::connect()
 
 
 	return true;
-}
-
-void NetworkManagerClient::auth()
-{
-	if (!createSocket())
-		return ;
-
-	while (true)
-	{
-		if (!connect())
-		{
-			Sleep(100);
-			continue;
-		}
-
-		std::string id;
-		std::string password;
-
-		printf("id를 입력하세요 : ");
-		std::cin >> id;
-
-		printf("password를 입력하세요 : ");
-		std::cin >> password;
-
-		using leeder::PK_CS_REQ_AUTH;
-		std::shared_ptr<PK_CS_REQ_AUTH> packet = std::make_shared<PK_CS_REQ_AUTH>();
-
-		packet->SetID(id);
-		packet->SetPassWord(password);
-
-		SendPacket(packet);
-
-		char buf[10240];
-
-		recv(mSocket, buf, 10240, 0);
-		size_t offset = 0;
-		size_t size[1] = { 0 };
-		memcpy(size, buf, sizeof(leeder::PACKET_SIZE));
-
-		offset += sizeof(leeder::PACKET_SIZE);
-
-		std::shared_ptr<leeder::Packet> packet = leeder::PacketAnalyzer::GetInstance().analyze(buf + offset, size[0] - offset);
-
-		if (packet == nullptr) {
-			continue;
-		}
-
-
-	}
-
-	closesocket(mSocket);
 }
 
 void NetworkManagerClient::RecvPacket()

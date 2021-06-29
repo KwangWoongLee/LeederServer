@@ -3,7 +3,8 @@
 
 PlayerServer::PlayerServer(uint32_t sessionID)
 	:Player()
-	, mPower(1)
+	, mBombCount(0)
+	, mMaxBombCount(1)
 	, mCollider(this)
 	, mDeathTimer(4.0f)
 {
@@ -13,8 +14,6 @@ PlayerServer::PlayerServer(uint32_t sessionID)
 	SetMoveState(eMoveState::IDLE);
 	SetSpeed(150.0f);
 	SetScale(1.0f);
-	SetHeight(76.f* GetScale());
-	SetWidth(64.f * GetScale());
 	mCollider.SetRadius(32.f);
 
 };
@@ -106,6 +105,22 @@ void PlayerServer::Update(float deltaTime)
 
 		switch ((obj->GetType()))
 		{
+		case eObjectType::PLAYER:
+		{
+			auto other = std::static_pointer_cast<PlayerServer>(obj);
+
+			if (mCollider.IsIntersect(other->GetCollider(), &deltaX, &deltaY))
+			{
+				if (GetMoveState() == eMoveState::TEMP_DIE)
+				{
+					SetState(eObjectState::ACTION);
+					SetMoveState(eMoveState::DIE);
+					NetworkManagerServer::GetInstance().SetObjectState(this);
+				}
+			}
+			break;
+		}
+
 		case eObjectType::BOMB:
 		{
 			auto bomb = std::static_pointer_cast<BombServer>(obj);
@@ -117,17 +132,42 @@ void PlayerServer::Update(float deltaTime)
 					continue;
 				}
 
-				printf("Collision with bomb");
-
 				SetPosition({ bomb->GetPosition().mX - deltaX, bomb->GetPosition().mY - deltaY });
 
 			}
 			else
 			{
-				bomb->SetContact();
+				if(bomb->IsOwner(GetNetworkID()))
+					bomb->SetContact();
 			}
 			break;
 		}
+
+		case eObjectType::ITEM_BOMB:
+		{
+			auto item = std::static_pointer_cast<ItemServer>(obj);
+
+			if (mCollider.IsIntersect(item->GetCollider(), &deltaX, &deltaY))
+			{
+				item->Die();
+				mMaxBombCount += 1;
+
+			}
+			break;
+		}
+
+		case eObjectType::ITEM_SHOE:
+		{
+			auto item = std::static_pointer_cast<ItemServer>(obj);
+
+			if (mCollider.IsIntersect(item->GetCollider(), &deltaX, &deltaY))
+			{
+				item->Die();
+				SetSpeed(GetSpeed() + 50.0f);
+			}
+			break;
+		}
+
 
 
 		case eObjectType::BLOCK_1:
@@ -170,6 +210,10 @@ void PlayerServer::HandleDying()
 
 void PlayerServer::CreateBomb()
 {
+	if (mBombCount >= mMaxBombCount)
+		return;
+
+
 
 	Position pos = searchBombPosition();
 	auto map = NetworkManagerServer::GetInstance().GetNetworkState();
@@ -192,13 +236,15 @@ void PlayerServer::CreateBomb()
 
 	NetworkManagerServer::GetInstance().AddGameObjectToNetwork(bomb);
 	World::GetInstance().AddGameObject(bomb);
+
+	++mBombCount;
 }
 
 
 Position PlayerServer::searchBombPosition()
 {
 	int x = static_cast<int>(fabsf(GetPosition().mX) / 64) * 64 + 32 ;
-	int y = static_cast<int>(fabsf(GetPosition().mY) / 64 -1) * 64 + 32 ;
+	int y = static_cast<int>(fabsf(GetPosition().mY) / 64) * 64 + 32 ;
 
-	return { x * 1.0f + 24.f, y * 1.0f + 53.f };
+	return { x * 1.0f, y * 1.0f };
 }

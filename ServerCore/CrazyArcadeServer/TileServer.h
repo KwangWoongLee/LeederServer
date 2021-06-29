@@ -9,8 +9,6 @@ public:
 		, mCollider(this)
 	{
 		SetScale(2.0f);
-		SetWidth(32 * GetScale());
-		SetHeight(32 * GetScale());
 		mCollider.SetRadius(16.f * GetScale());
 	};
 
@@ -23,5 +21,7 @@ public:
 
 private:
 	Collider mCollider;
+
+	void createItem();
 };
 

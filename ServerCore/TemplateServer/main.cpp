@@ -21,6 +21,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	//단일 로직 스레드
 	while (!bShutDown)
 	{
+		Clock::GetInstance().Update();
+
+		auto deltaTime = Clock::GetInstance().GetDeltaTime();
+
 		NetworkManager::GetInstance().ProcessQueuedPacket();
 
 		World::GetInstance().Update(0.f);

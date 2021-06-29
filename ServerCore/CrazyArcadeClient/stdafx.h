@@ -35,6 +35,7 @@
 #include "Components/TileComponent.h"
 
 #include "Object/BackGround.h"
+#include "Object/ItemClient.h"
 #include "Object/TileClient.h"
 #include "Object/BoomClient.h"
 #include "Object/BombClient.h"

@@ -114,7 +114,7 @@ public:
 	void Decode(InputStream& stream) override;
 
 	std::unordered_map<uint32_t, ObjectInfo>&	GetInfo() { return mNetworkIDToInfo; };
-	void						SetInfo(std::unordered_map<uint32_t, ObjectInfo>& networkIDToInfo) { mNetworkIDToInfo = networkIDToInfo; }
+	void SetInfo(std::unordered_map<uint32_t, ObjectInfo>& networkIDToInfo) { mNetworkIDToInfo = networkIDToInfo; }
 
 
 private:
@@ -142,95 +142,6 @@ public:
 private:
 	std::vector<Input>	mInputList;
 
-
-};
-
-class PK_T_NOTIFY : public Packet
-{
-public:
-	PK_T_NOTIFY()
-		:Packet(ePacketType::T_NOTIFY)
-	{
-	};
-
-	void Encode(OutputStream& stream) override;
-};
-
-
-class PK_T_NOTIFY_AUTH : public Packet
-{
-public:
-	PK_T_NOTIFY_AUTH()
-		:Packet(ePacketType::T_NOTIFY_AUTH)
-	{
-	};
-
-	void Encode(OutputStream& stream) override;
-	void Decode(InputStream& stream) override;
-
-	bool		IsAuth() { return mbAuthResult; }
-	void		SetAuth(bool auth) { mAuthToken = auth; }
-
-	std::string GetName() { return mName; }
-	void SetName(std::string name) { mName = name; }
-
-	int			GetToken() { return mAuthToken; }
-	void		SetToken(int token) { mAuthToken = token; }
-
-private:
-	bool		mbAuthResult;
-	std::string	mName;
-	int			mAuthToken;
-};
-
-class PK_CS_REQ_AUTH : public Packet
-{
-public:
-	PK_CS_REQ_AUTH()
-		:Packet(ePacketType::CS_REQ_AUTH)
-	{
-	};
-
-	void Encode(OutputStream& stream) override;
-	void Decode(InputStream& stream) override;
-
-
-	std::string GetID() { return mID; }
-	void SetID(std::string id) { mID = id; }
-
-	std::string GetPassWord() { return mPassWord; }
-	void SetPassWord(std::string pw) { mPassWord = pw; }
-
-private:
-	std::string	mID;
-	std::string mPassWord;
-
-};
-
-class PK_DB_RES_AUTH : public Packet
-{
-public:
-	PK_DB_RES_AUTH()
-		:Packet(ePacketType::DB_RES_AUTH)
-	{
-	};
-
-	void Encode(OutputStream& stream) override;
-	void Decode(InputStream& stream) override;
-
-	bool		IsAuth() { return mbAuthResult; }
-	void		SetAuth(bool auth) { mAuthToken = auth; }
-
-	std::string GetName() { return mName; }
-	void SetName(std::string name) { mName = name; }
-
-	int			GetToken() { return mAuthToken; }
-	void		SetToken(int token) { mAuthToken = token; }
-
-private:
-	bool		mbAuthResult;
-	std::string	mName;
-	int			mAuthToken;
 
 };
 

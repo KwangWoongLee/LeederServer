@@ -27,6 +27,13 @@ public:
 			return std::make_shared<BoomClient>();
 			break;
 
+		case eObjectType::ITEM_SHOE:
+			return std::make_shared<ItemClient>(type);
+			break;
+
+		case eObjectType::ITEM_BOMB:
+			return std::make_shared<ItemClient>(type);
+			break;
 
 		case eObjectType::BLOCK_1:
 		case eObjectType::BLOCK_2:

@@ -12,8 +12,6 @@ void Collider::Update(float deltaTime)
 
 bool Collider::IsIntersect(Collider& other, float* deltaX, float* deltaY)
 {
-
-	//simple collision test for spheres- are the radii summed less than the distance?
 	Position targetLocation = other.GetPosition();
 	float targetRadius = other.GetRadius();
 
@@ -40,8 +38,6 @@ bool Collider::IsIntersect(Collider& other, float* deltaX, float* deltaY)
 
 		*deltaX = acceptableDeltaFromSourceToTarget.mX;
 		*deltaY = acceptableDeltaFromSourceToTarget.mY;
-
-		printf("%f, %f \n", *deltaX, *deltaY);
 
 		return true;
 

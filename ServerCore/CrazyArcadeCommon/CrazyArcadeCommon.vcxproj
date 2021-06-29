@@ -150,6 +150,7 @@
     <ClInclude Include="Bomb.h" />
     <ClInclude Include="Boom.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Tile.h" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Common.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Tile.cpp" />

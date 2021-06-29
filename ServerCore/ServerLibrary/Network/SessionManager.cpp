@@ -9,7 +9,6 @@ SessionManager::SessionManager()
 	: mMaxSessionCount(5000)
 {
 	PrepareSessionPool();
-
 }
 
 SessionManager::~SessionManager()
@@ -84,7 +83,7 @@ void SessionManager::CheckHeartBeat()
 		{
 			double lastTick = (*iter)->GetLastHeartBeat();
 			if (now - lastTick > LifeTime) {
-				SysLogger::GetInstance().Log(L"Session %d is Not HeartBeat", (*iter)->GetID());
+				SysLogger::GetInstance().Log(L"\nSession %d is Not HeartBeat", (*iter)->GetID());
 				iter = (*iter)->OnDisconnect(eDisconnectReason::DIE);
 				continue;
 			}

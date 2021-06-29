@@ -8,12 +8,8 @@ BombServer::BombServer(GameObject* owner)
 {
 	SetScale(1.6f);
 	SetMoveState(eMoveState::IDLE);
-	SetState(eObjectState::CREATE);
 
 	mFirstContact = true;
-
-	SetWidth(32 * GetScale());
-	SetHeight(32 * GetScale());
 	mCollider.SetRadius(32.f);
 }
 
@@ -33,6 +29,9 @@ void BombServer::Update(float deltaTime)
 
 void BombServer::HandleDying()
 {
+	auto player = static_cast<PlayerServer*>(mOwner);
+	player->SetBombCount(player->GetBombCount() -1);
+
 	NetworkManagerServer::GetInstance().RemoveGameObjectToNetwork(this);
 
 	createBoom();
@@ -47,15 +46,12 @@ void BombServer::createBoom()
 	World::GetInstance().AddGameObject(boomCenter);
 
 	auto player = static_cast<PlayerServer*>(mOwner);
-	auto power = player->GetPower();
-	for (int i = 0; i < power; ++i)
+
+
+	auto pos = searchBoomPosition(1 , 0);
+
+	if (pos.mX != -1.f && pos.mY != -1.f)
 	{
-
-		auto pos = searchBoomPosition(1 + i, 0);
-
-		if (pos.mX == -1.f && pos.mY == -1.f)
-			break;
-
 		auto boomRight = std::make_shared<BoomServer>(mOwner);
 
 		boomRight->SetPosition(pos);
@@ -63,22 +59,17 @@ void BombServer::createBoom()
 
 		NetworkManagerServer::GetInstance().AddGameObjectToNetwork(boomRight);
 		World::GetInstance().AddGameObject(boomRight);
-
-		
-
-
-
-
 	}
 
-	for (int i = 0; i < power; ++i)
+
+
+
+
+
+	pos = searchBoomPosition(-1 , 0);
+
+	if (pos.mX != -1.f && pos.mY != -1.f)
 	{
-
-		auto pos = searchBoomPosition(-1 - i, 0);
-
-		if (pos.mX == -1.f && pos.mY == -1.f)
-			break;
-
 		auto boomLeft = std::make_shared<BoomServer>(mOwner);
 		boomLeft->SetPosition(pos);
 		boomLeft->SetMoveState(eMoveState::LEFT);
@@ -88,13 +79,10 @@ void BombServer::createBoom()
 	}
 
 
-	for (int i = 0; i < power; ++i)
+	pos = searchBoomPosition(0, -1);
+
+	if (pos.mX != -1.f && pos.mY != -1.f)
 	{
-
-		auto pos = searchBoomPosition(0, -1 - i);
-
-		if (pos.mX == -1.f && pos.mY == -1.f)
-			break;
 
 		auto boomUp = std::make_shared<BoomServer>(mOwner);
 		boomUp->SetPosition(pos);
@@ -105,13 +93,10 @@ void BombServer::createBoom()
 	}
 
 
-	for (int i = 0; i < power; ++i)
+	pos = searchBoomPosition(0, 1 );
+
+	if (pos.mX != -1.f && pos.mY != -1.f)
 	{
-
-		auto pos = searchBoomPosition(0, 1 + i);
-
-		if (pos.mX == -1.f && pos.mY == -1.f)
-			break;
 
 		auto boomDown = std::make_shared<BoomServer>(mOwner);
 		boomDown->SetPosition(pos);
@@ -122,16 +107,15 @@ void BombServer::createBoom()
 	}
 
 
-
 }
 
 Position BombServer::searchBoomPosition(int dx , int dy)
 {
 	int x = static_cast<int>(fabsf(GetPosition().mX) / 64) * 64 + (64 * dx) + 32;
-	int y = static_cast<int>(fabsf(GetPosition().mY) / 64 -1 ) * 64 + (64 * dy) + 32;
+	int y = static_cast<int>(fabsf(GetPosition().mY) / 64) * 64 + (64 * dy) + 32;
 
-	float realX = x * 1.0f + 24.f;
-	float realY = y * 1.0f + 53.f;
+	float realX = x * 1.0f;
+	float realY = y * 1.0f;
 
 	auto map = NetworkManagerServer::GetInstance().GetNetworkState();
 
@@ -180,7 +164,12 @@ Position BombServer::searchBoomPosition(int dx , int dy)
 			{
 				break;
 			}
-
+			case eObjectType::ITEM_BOMB:
+			case eObjectType::ITEM_SHOE:
+			{
+				obj->Die();
+				break;
+			}
 			default:
 				break;
 			}

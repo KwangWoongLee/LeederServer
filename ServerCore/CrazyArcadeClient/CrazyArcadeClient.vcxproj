@@ -161,6 +161,7 @@
     <ClInclude Include="Object\BackGround.h" />
     <ClInclude Include="Object\BombClient.h" />
     <ClInclude Include="Object\BoomClient.h" />
+    <ClInclude Include="Object\ItemClient.h" />
     <ClInclude Include="Object\ObjectFactory.h" />
     <ClInclude Include="Object\PlayerClient.h" />
     <ClInclude Include="Object\TileClient.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Object\BackGround.cpp" />
     <ClCompile Include="Object\BombClient.cpp" />
     <ClCompile Include="Object\BoomClient.cpp" />
+    <ClCompile Include="Object\ItemClient.cpp" />
     <ClCompile Include="Object\PlayerClient.cpp" />
     <ClCompile Include="Object\TileClient.cpp" />
     <ClCompile Include="stdafx.cpp">

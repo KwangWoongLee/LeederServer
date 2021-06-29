@@ -180,9 +180,6 @@
     <ClInclude Include="Network\Session.h" />
     <ClInclude Include="Network\SessionManager.h" />
     <ClInclude Include="Network\Stream.h" />
-    <ClInclude Include="Network\Terminal.h" />
-    <ClInclude Include="Network\TerminalManager.h" />
-    <ClInclude Include="Network\TerminalSession.h" />
     <ClInclude Include="ServerLibrary.h" />
     <ClInclude Include="ServerShutDown.h" />
     <ClInclude Include="stdafx.h" />
@@ -217,9 +214,6 @@
     <ClCompile Include="Network\Session.cpp" />
     <ClCompile Include="Network\SessionManager.cpp" />
     <ClCompile Include="Network\Stream.cpp" />
-    <ClCompile Include="Network\Terminal.cpp" />
-    <ClCompile Include="Network\TerminalManager.cpp" />
-    <ClCompile Include="Network\TerminalSession.cpp" />
     <ClCompile Include="ServerShutDown.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

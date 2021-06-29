@@ -55,8 +55,6 @@ private:
 	bool createSocket();
 	bool connect();
 
-	void auth();
-
 
 	SOCKET mSocket;
 	eClientState mState;

@@ -49,6 +49,7 @@ using leeder::loadConfig;
 #include "Boom.h"
 #include "Bomb.h"
 #include "Player.h"
+#include "Item.h"
 
 #include "NetworkManager.h"
 

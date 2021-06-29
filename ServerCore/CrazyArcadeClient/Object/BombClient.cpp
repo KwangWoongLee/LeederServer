@@ -3,14 +3,20 @@
 
 BombClient::BombClient()
 {
-	mAnimationComponent = new AnimationComponent(this, 1);
-
+	mAnimationComponent = new AnimationComponent(this);
 	SDL_Texture* bomb = TextureManager::GetInstance().GetTexture("Bomb");
 
 	mAnimationComponent->AddAnimTextures("Bomb", bomb);
 
+	mAnimationComponent->SetAnimTexture(bomb, 4);
 
 }
+
+BombClient::~BombClient()
+{
+	delete mAnimationComponent;
+}
+
 
 void BombClient::HandleDying()
 {

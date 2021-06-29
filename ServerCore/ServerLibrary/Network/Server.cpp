@@ -71,15 +71,6 @@ void Server::Init(XMLDocument* config)
 	mThreadCount = std::stoi(strThreadCount);
 
 
-
-	TerminalManager::GetInstance().Init(this, config);
-
-	//DBManager::GetInstance().Init();
-	
-	
-	TerminalManager::GetInstance().Run();
-
-
 	SetState(eServerState::READY);
 
 }

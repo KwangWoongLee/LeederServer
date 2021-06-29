@@ -16,15 +16,16 @@ public:
 
 	Collider& GetCollider() { return mCollider; }
 
-	int	GetPower() { return mPower; }
-	void SetPower(int power) { mPower = power; }
+	int	GetBombCount() { return mBombCount; }
+	void SetBombCount(int count) { mBombCount = count; }
 
 private:
 	Position searchBombPosition();
 
-	float BirthPosition[4][2] = { { 160.f + 24.f, 32.f + 53.f} ,{96.f + 24.f , 608.f + 53.f} , { 672.f +24.f , 96.f + 53.f } , { 736.f +24.f, 608.f + 53.f } };
+	float BirthPosition[4][2] = { { 160.f, 32.f} ,{96.f , 608.f} , { 672.f , 96.f } , { 672, 608.f } };
 	Collider mCollider;
-	int		mPower;
+	int		mBombCount;
+	int		mMaxBombCount;
 	float	mDeathTimer;
 
 

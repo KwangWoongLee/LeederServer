@@ -7,7 +7,6 @@ BoomServer::BoomServer(GameObject* owner)
 {
 	SetScale(1.6f);
 	SetMoveState(eMoveState::IDLE);
-	SetState(eObjectState::CREATE);
 }
 
 void BoomServer::Update(float deltaTime)

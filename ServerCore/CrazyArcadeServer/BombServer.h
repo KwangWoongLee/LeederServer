@@ -15,6 +15,8 @@ public:
 	bool	IsFirstContact() { return mFirstContact; }
 	void	SetContact() { mFirstContact = false; }
 
+	bool	IsOwner(uint32_t netid) { return mOwner->GetNetworkID() == netid; }
+
 
 
 private:

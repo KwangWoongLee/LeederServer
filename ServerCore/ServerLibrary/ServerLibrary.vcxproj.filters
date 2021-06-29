@@ -19,9 +19,6 @@
     <Filter Include="Contents">
       <UniqueIdentifier>{bc6e9c90-bf5e-4e09-a298-b675c38ab15e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Network\Terminal">
-      <UniqueIdentifier>{6a70b629-0c3e-4480-a5d8-1e8f9c0bf69a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -129,15 +126,6 @@
     <ClInclude Include="Util\tinyxml\tinyxml.h">
       <Filter>Util\tinyXML</Filter>
     </ClInclude>
-    <ClInclude Include="Network\Terminal.h">
-      <Filter>Network\Terminal</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\TerminalSession.h">
-      <Filter>Network\Terminal</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\TerminalManager.h">
-      <Filter>Network\Terminal</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -217,15 +205,6 @@
     </ClCompile>
     <ClCompile Include="Util\tinyxml\tinyxmlerror.cpp">
       <Filter>Util\tinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\Terminal.cpp">
-      <Filter>Network\Terminal</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\TerminalSession.cpp">
-      <Filter>Network\Terminal</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\TerminalManager.cpp">
-      <Filter>Network\Terminal</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

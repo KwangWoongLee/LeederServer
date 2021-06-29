@@ -152,6 +152,7 @@
     <ClCompile Include="BoomServer.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="GameProcess.cpp" />
+    <ClCompile Include="ItemServer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NetworkManagerServer.cpp" />
     <ClCompile Include="PlayerServer.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="BoomServer.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="GameProcess.h" />
+    <ClInclude Include="ItemServer.h" />
     <ClInclude Include="NetworkManagerServer.h" />
     <ClInclude Include="PlayerServer.h" />
     <ClInclude Include="Server.h" />
