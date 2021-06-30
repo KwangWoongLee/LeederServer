@@ -5,12 +5,23 @@
   <Server>
     <!--<IP>192.168.0.15</IP>-->
     <IP>127.0.0.1</IP>
-    <Port>9990</Port>
+    <Port>9900</Port>
     <ThreadCount>5</ThreadCount>
   </Server>
 
+  <Terminal>
+    <LoginServer>
+      <IP>127.0.0.1</IP>
+      <Port>9800</Port>
+    </LoginServer>
+    <DBAgent>
+      <IP>127.0.0.1</IP>
+      <Port>9700</Port>
+    </DBAgent>
+  </Terminal>
+
   <Log>
-    <Path>./Log/Test1.log</Path>
+    <Path>./Log/GameLog.log</Path>
     <Prefix>[System]</Prefix>
     <Type>File</Type>
   </Log>

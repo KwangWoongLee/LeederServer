@@ -1,26 +1,28 @@
 #pragma once
 #include "stdafx.h"
 
-namespace leeder
-{
-
 class User : public GameObject
 {
 public:
-	User(std::shared_ptr<Session>& session, std::string& id);
+	User(IOCPSession* session, const std::string& name);
 
-	const std::shared_ptr<Session>& GetSession() { return mSession; }
+	IOCPSession* GetSession() { return mSession; }
 
-	void	PushInput(eInputType type) { mInputQueue.Push(type); }
+	void Update(float deltaTime) override;
 
-	void	Update();
-	
-	
+	uint32_t							GetSessionID()	const { return mSessionID; }
+	const	std::string& GetName()		const { return mName; }
+
+
+	void	AddInput(Input input);
+
+
 private:
-	std::shared_ptr<Session>	mSession;
-	std::string					mID;
+	IOCPSession* mSession;
+	uint32_t					mSessionID;
+	std::string					mName;
 
-	ThreadSafeQueue<eInputType>		mInputQueue;
+	std::deque<Input>			mInputList;
+
 };
 
-}

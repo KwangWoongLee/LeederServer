@@ -5,14 +5,20 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkManager.cpp">
-      <Filter>Network</Filter>
-    </ClCompile>
     <ClCompile Include="GameProcess.cpp">
       <Filter>ContentsProcess</Filter>
     </ClCompile>
     <ClCompile Include="User.cpp" />
     <ClCompile Include="PlayerServer.cpp" />
+    <ClCompile Include="NetworkManagerServer.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="TileServer.cpp" />
+    <ClCompile Include="BombServer.cpp" />
+    <ClCompile Include="BoomServer.cpp" />
+    <ClCompile Include="ItemServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="PCH">
@@ -29,14 +35,20 @@
     <ClInclude Include="stdafx.h">
       <Filter>PCH</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkManager.h">
-      <Filter>Network</Filter>
-    </ClInclude>
     <ClInclude Include="GameProcess.h">
       <Filter>ContentsProcess</Filter>
     </ClInclude>
     <ClInclude Include="User.h" />
     <ClInclude Include="PlayerServer.h" />
+    <ClInclude Include="NetworkManagerServer.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="TileServer.h" />
+    <ClInclude Include="BombServer.h" />
+    <ClInclude Include="BoomServer.h" />
+    <ClInclude Include="ItemServer.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

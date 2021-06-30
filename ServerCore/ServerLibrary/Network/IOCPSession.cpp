@@ -46,14 +46,6 @@ void IOCPSession::SendPacket(Packet* packet)
 		return;
 	}
 
-	//std::unique_lock<std::mutex> lock(mBufferMutex);
-
-	//if (0 == mBuffer.GetContiguiousBytes())
-	//{
-	//	return;
-
-	//}
-	
 
 	//ÆÐÅ¶ ÃÑ±æÀÌ
 	PACKET_SIZE packetTotalLength[1] = { sizeof(PACKET_SIZE) + sizeof(float) + stream.GetLength() };
@@ -76,7 +68,7 @@ void IOCPSession::SendPacket(Packet* packet)
 
 	Overlapped* sendOverlapped = new Overlapped(this);
 	sendOverlapped->SetType(eIOType::SEND);
-
+	sendOverlapped->SetSession(this);
 
 	auto wsaBuf = sendOverlapped->GetWSABuf();
 	wsaBuf.len = (ULONG)packetTotalLength[0];
@@ -111,8 +103,6 @@ void IOCPSession::OnAccept(IOCPServer* server)
 
 	int addrLen = sizeof(SOCKADDR_IN);
 	int ret = getpeername(mSocket.GetHandle(), (struct sockaddr*)&mSocket.GetSocketInfo(), &addrLen);
-	if (ret == -1)
-		printf("%d", WSAGetLastError());
 
 
 	if (!server->RegistCompletionPort(mSocket.GetHandle(), (ULONG_PTR)this))
@@ -189,7 +179,6 @@ std::shared_ptr<Package> IOCPSession::OnRecv(DWORD transferSize)
 void IOCPSession::Reset()
 {
 	mConnected.store(false);
-
 
 	mSocket.Reset();
 }

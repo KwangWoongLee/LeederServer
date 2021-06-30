@@ -1,24 +1,22 @@
 #include "stdafx.h"
 #include "User.h"
 
-
-namespace leeder
-{
-
-User::User(std::shared_ptr<Session>& session, std::string& id)
+User::User(IOCPSession* session, const std::string& name)
 	: mSession(session)
-	, mID(id)
+	, mSessionID(session->GetID())
+	, mName(name)
 {
+	SetPosition({ leeder::GetRandomFloat() * 668 + 100, leeder::GetRandomFloat() * 284 + 100 });
 }
 
-void User::Update()
+void User::Update(float deltaTime)
 {
-	while (!mInputQueue.Empty())
-	{
-		SetState(eObjectState::ACTION);
-		auto input = mInputQueue.Pop();
 
-		switch ((input))
+	while (!mInputList.empty())
+	{
+		auto input = mInputList.front();
+
+		switch (input.GetType())
 		{
 		case eInputType::A:
 			SetPosition({ GetPosition().mX - 2.0f, GetPosition().mY });
@@ -40,11 +38,14 @@ void User::Update()
 		default:
 			break;
 		}
+
+		mInputList.pop_front();
 	}
+
+	mInputList.clear();
 }
 
-
-
-
+void User::AddInput(Input input)
+{
+	mInputList.push_back(input);
 }
-

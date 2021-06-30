@@ -1,11 +1,8 @@
 #include "stdafx.h"
-#include "NetworkManager.h"
+#include "NetworkManagerClient.h"
 
 
-namespace leeder
-{
-
-std::function<void(NetworkManager*)> RecvThreadFunction = [](NetworkManager* network) {
+std::function<void(NetworkManagerClient*)> RecvThreadFunction = [](NetworkManagerClient* network) {
 
 	while (!bShutDown)
 	{
@@ -15,7 +12,7 @@ std::function<void(NetworkManager*)> RecvThreadFunction = [](NetworkManager* net
 
 
 
-NetworkManager::NetworkManager()
+NetworkManagerClient::NetworkManagerClient()
 	: mSocket(INVALID_SOCKET)
 	, mServerIP("")
 	, mServerPort(0)
@@ -28,7 +25,7 @@ NetworkManager::NetworkManager()
 
 }
 
-NetworkManager::~NetworkManager()
+NetworkManagerClient::~NetworkManagerClient()
 {
 	closesocket(mSocket);
 
@@ -36,7 +33,7 @@ NetworkManager::~NetworkManager()
 }
 
 
-bool NetworkManager::Init()
+bool NetworkManagerClient::Init()
 {
 	// 윈속 초기화
 	WSADATA wsaData;
@@ -57,6 +54,10 @@ bool NetworkManager::Init()
 	}
 
 	XMLElement* app = mConfig.FirstChildElement("App");
+
+
+	if (!createSocket())
+		return false;
 
 	XMLElement* server = app->FirstChildElement("Server");
 
@@ -94,16 +95,16 @@ bool NetworkManager::Init()
 
 	return true;
 }
-void NetworkManager::Run()
+void NetworkManagerClient::Run()
 {
 	mRecvThread = std::make_unique<Thread>(RecvThreadFunction, this);
 
 }
 
-void NetworkManager::registPacketFunction()
+void NetworkManagerClient::registPacketFunction()
 {
 	mPacketToFunctionMap.insert(std::make_pair(ePacketType::SC_RES_WELCOME, [&](const auto& packet) {
-
+		using leeder::PK_SC_RES_WELCOME;
 		std::shared_ptr<PK_SC_RES_WELCOME> typePacket = std::static_pointer_cast<PK_SC_RES_WELCOME>(packet);
 
 		auto map = typePacket->GetState();
@@ -112,18 +113,28 @@ void NetworkManager::registPacketFunction()
 		{
 			auto netid = element.first;
 			auto obj = element.second;
-			obj.SetNetworkID(netid);
 
-			auto  obj2 = std::make_shared<PlayerClient>(obj);
-			AddGameObjectToNetwork(obj2);
+			std::shared_ptr<GameObject> newObject = ObjectFactory::GetInstance().CreateObject(obj.GetType());
+
+			if (newObject == nullptr)
+				continue;
+
+			newObject->SetNetworkID(netid);
+			newObject->SetPosition(obj.GetPosition());
+			newObject->SetScale(obj.GetScale());
+
+
+			AddGameObjectToNetwork(newObject);
+
+			World::GetInstance().AddGameObject(newObject);
 		}
 
 		mState = eClientState::WELCOMED;
 		}));
 
 	mPacketToFunctionMap.insert(std::make_pair(ePacketType::SC_RES_EXIT, [&](const auto& packet) {
-		
-		bShutDown = true;
+
+		leeder::bShutDown = true;
 		mState = eClientState::TERMINATE;
 
 		SDL_Quit();
@@ -131,6 +142,7 @@ void NetworkManager::registPacketFunction()
 		}));
 
 	mPacketToFunctionMap.insert(std::make_pair(ePacketType::SC_REPLICATION_STATE, [&](const auto& packet) {
+		using leeder::PK_SC_REPLICATION_STATE;
 
 		std::shared_ptr<PK_SC_REPLICATION_STATE> typePacket = std::static_pointer_cast<PK_SC_REPLICATION_STATE>(packet);
 
@@ -146,33 +158,50 @@ void NetworkManager::registPacketFunction()
 			if (iter == mNetworkIDToGameObject.end() && info.mState != eObjectState::CREATE)
 				continue;
 
-		
+
 			switch (info.mState)
 			{
 			case eObjectState::CREATE:
 			{
 				printf("CREATE : ");
-				std::shared_ptr<GameObject> obj;
 
-				if (info.mType == eObjectType::PLAYER)
+				std::shared_ptr<GameObject> newObject = ObjectFactory::GetInstance().CreateObject(info.mType);
+
+				if (newObject == nullptr)
+					continue;
+
+				if (info.mMoveState != eMoveState::NONE)
 				{
-					obj = std::make_shared<PlayerClient>();
-
+					auto object = static_cast<MoveGameObject*>(newObject.get());
+					object->SetMoveState(info.mMoveState);
 				}
-				obj->SetNetworkID(netid);
-				obj->SetPosition(info.mPos);
+				newObject->SetNetworkID(netid);
+				newObject->SetPosition(info.mPos);
+				newObject->SetScale(info.mScale);
 
-				AddGameObjectToNetwork(obj);
+
+				AddGameObjectToNetwork(newObject);
+				World::GetInstance().AddGameObject(newObject);
 
 				break;
 			}
 
 			case eObjectState::ACTION:
-				printf("ACTION\n");
-				iter->second->SetPosition(info.mPos);
+			{
+				printf("ACTION");
+				printf(" : %d\n", info.mMoveState);
+				auto obj = std::static_pointer_cast<MoveGameObject>(iter->second);
+				obj->SetPosition(info.mPos);
+				obj->SetMoveState(info.mMoveState);
+				obj->SetScale(info.mScale);
+				obj->SetLastActionTime();
+
 				break;
+			}
 			case eObjectState::DESTROY:
-				printf("DESTROY\n");
+				printf("DESTROY : ");
+				iter->second->Die();
+				mNetworkIDToGameObject.erase(iter->first);
 				break;
 
 			default:
@@ -185,7 +214,7 @@ void NetworkManager::registPacketFunction()
 
 }
 
-void NetworkManager::RecvPacketProcess()
+void NetworkManagerClient::RecvPacketProcess()
 {
 	while (!mRecvPacketQueue.Empty())
 	{
@@ -202,7 +231,7 @@ void NetworkManager::RecvPacketProcess()
 	}
 }
 
-void NetworkManager::SendPacketProcess()
+void NetworkManagerClient::SendPacketProcess()
 {
 	std::shared_ptr<Packet> packet = nullptr;
 
@@ -211,7 +240,7 @@ void NetworkManager::SendPacketProcess()
 	if (mState == eClientState::READY)
 	{
 
-		if (time > mLastHelloTime + 0.3f)
+		if (time > mLastHelloTime + 0.4f)
 		{
 			packet = SendHelloPacket();
 			mLastHelloTime = time;
@@ -221,7 +250,7 @@ void NetworkManager::SendPacketProcess()
 
 	else if (mState == eClientState::WELCOMED)
 	{
-		if (time > mLastPacketSendTime + 0.0000003f)
+		if (time > mLastPacketSendTime + 0.03f)
 		{
 			packet = SendInputPacket();
 			mLastPacketSendTime = time;
@@ -229,7 +258,7 @@ void NetworkManager::SendPacketProcess()
 		}
 
 		//HeartBeat 패킷 전송
-		if (time > mLastHeartBeatTime + 0.003f)
+		if (time > mLastHeartBeatTime + 3.f)
 		{
 			SendHeartBeat();
 			mLastHeartBeatTime = time;
@@ -252,18 +281,20 @@ void NetworkManager::SendPacketProcess()
 // Helper ---------------------------------------------------------------//
 
 
-std::shared_ptr<Packet> NetworkManager::SendHelloPacket()
+std::shared_ptr<Packet> NetworkManagerClient::SendHelloPacket()
 {
+	using leeder::PK_CS_REQ_HELLO;
 	std::shared_ptr<PK_CS_REQ_HELLO> packet = std::make_shared<PK_CS_REQ_HELLO>();
 
-	packet->SetID(GetRandomString());
+	packet->SetID(leeder::GetRandomString());
 
 	return packet;
 }
 
 
-std::shared_ptr<Packet> NetworkManager::SendInputPacket()
+std::shared_ptr<Packet> NetworkManagerClient::SendInputPacket()
 {
+	using leeder::PK_CS_SEND_INPUTLIST;
 	std::deque<Input>& inputList = ::InputManager::GetInstance().GetInputList();
 
 	if (inputList.empty())
@@ -273,7 +304,7 @@ std::shared_ptr<Packet> NetworkManager::SendInputPacket()
 
 	int loopSize = std::min((int)inputList.size(), 3);
 
-	int startIndex = loopSize < 3 ?  0 : (int)inputList.size() - 3;
+	int startIndex = loopSize < 3 ? 0 : (int)inputList.size() - 3;
 
 	for (int i = startIndex; i < inputList.size(); ++i)
 	{
@@ -287,23 +318,25 @@ std::shared_ptr<Packet> NetworkManager::SendInputPacket()
 
 
 
-void NetworkManager::SendHeartBeat()
+void NetworkManagerClient::SendHeartBeat()
 {
+	using leeder::PK_CS_NOTIFY_HEARTBEAT;
 	std::shared_ptr<PK_CS_NOTIFY_HEARTBEAT> packet = std::make_shared<PK_CS_NOTIFY_HEARTBEAT>();
 	SendPacket(std::move(packet));
 
 	printf("heartbeat\n");
 }
 
-void NetworkManager::SendReqExitPacket()
+void NetworkManagerClient::SendReqExitPacket()
 {
+	using leeder::PK_CS_REQ_EXIT;
 	std::shared_ptr<PK_CS_REQ_EXIT> packet = std::make_shared<PK_CS_REQ_EXIT>();
 
 	SendPacket(std::move(packet));
 }
 
 
-bool NetworkManager::createSocket()
+bool NetworkManagerClient::createSocket()
 {
 	mSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -316,7 +349,7 @@ bool NetworkManager::createSocket()
 	return true;
 }
 
-bool NetworkManager::connect()
+bool NetworkManagerClient::connect()
 {
 	if (::connect(mSocket, (SOCKADDR*)&mServerInfo, sizeof(mServerInfo)) == SOCKET_ERROR)
 	{
@@ -330,16 +363,16 @@ bool NetworkManager::connect()
 	return true;
 }
 
-void NetworkManager::RecvPacket()
+void NetworkManagerClient::RecvPacket()
 {
 	char buf[10240];
 
 	recv(mSocket, buf, 10240, 0);
 	size_t offset = 0;
 	size_t size[1] = { 0 };
-	memcpy(size, buf, sizeof(PACKET_SIZE));
+	memcpy(size, buf, sizeof(leeder::PACKET_SIZE));
 
-	offset += sizeof(PACKET_SIZE);
+	offset += sizeof(leeder::PACKET_SIZE);
 
 	float packetRecvTime[1] = { 0 };
 	memcpy(packetRecvTime, buf + offset, sizeof(float));
@@ -361,25 +394,25 @@ void NetworkManager::RecvPacket()
 
 
 		printf("Packet is not analyzed by Analyzer, Error : %d \n", GetLastError());
-		ASSERT(false);
+		leeder::ASSERT(false);
 		return;
 	}
 
 	PutRecvPacket(std::move(packet));
 }
 
-void NetworkManager::SendPacket(std::shared_ptr<Packet> packet)
+void NetworkManagerClient::SendPacket(std::shared_ptr<Packet> packet)
 {
 	OutputStream stream;
 	packet->Encode(stream);
 
 	size_t offset = 0;
 
-	PACKET_SIZE packetLength[1] = { sizeof(PACKET_SIZE) + sizeof(float) +  stream.GetLength() };
+	leeder::PACKET_SIZE packetLength[1] = { sizeof(leeder::PACKET_SIZE) + sizeof(float) + stream.GetLength() };
 
-	memcpy(mBuffer, packetLength, sizeof(PACKET_SIZE));
+	memcpy(mBuffer, packetLength, sizeof(leeder::PACKET_SIZE));
 
-	offset += sizeof(PACKET_SIZE);
+	offset += sizeof(leeder::PACKET_SIZE);
 
 	float packetSendTime[1] = { Clock::GetInstance().GetSystemTimeFloat() };
 
@@ -397,20 +430,21 @@ void NetworkManager::SendPacket(std::shared_ptr<Packet> packet)
 
 
 
-void NetworkManager::PutRecvPacket(std::shared_ptr<Packet>&& packet)
+void NetworkManagerClient::PutRecvPacket(std::shared_ptr<Packet>&& packet)
 {
 	mRecvPacketQueue.Push(packet);
 }
 
-std::shared_ptr<Packet> NetworkManager::GetRecvPacket()
+std::shared_ptr<Packet> NetworkManagerClient::GetRecvPacket()
 {
 	return mRecvPacketQueue.Pop();
 }
 
-}
 
-void NetworkManager::AddGameObjectToNetwork(std::shared_ptr<GameObject> obj)
+
+void NetworkManagerClient::AddGameObjectToNetwork(std::shared_ptr<GameObject> obj)
 {
 	mNetworkIDToGameObject[obj->GetNetworkID()] = obj;
+	printf("type : %d \n" , obj->GetType());
 
 }

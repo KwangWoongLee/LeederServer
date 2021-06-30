@@ -15,6 +15,7 @@ public:
 	virtual void Encode(OutputStream& stream) {};
 	virtual void Decode(InputStream& stream) {};
 
+
 private:
 	ePacketType mType;
 
@@ -113,7 +114,7 @@ public:
 	void Decode(InputStream& stream) override;
 
 	std::unordered_map<uint32_t, ObjectInfo>&	GetInfo() { return mNetworkIDToInfo; };
-	void						SetInfo(std::unordered_map<uint32_t, ObjectInfo>& networkIDToInfo) { mNetworkIDToInfo = networkIDToInfo; }
+	void SetInfo(std::unordered_map<uint32_t, ObjectInfo>& networkIDToInfo) { mNetworkIDToInfo = networkIDToInfo; }
 
 
 private:
@@ -143,66 +144,5 @@ private:
 
 
 };
-
-class PK_CS_REQ_PARTICIPATE_CHATTING : public Packet
-{
-public:
-	PK_CS_REQ_PARTICIPATE_CHATTING()
-		:Packet(ePacketType::CS_REQ_PARTICIPATE_CHATTING) {};
-
-	void Encode(OutputStream& stream) override;
-	void Decode(InputStream& stream) override;
-
-	std::string GetID() { return mID; }
-	void SetID(std::string id) { mID = id; }
-
-private:
-	std::string	mID;
-
-};
-
-class PK_CS_REQ_CHATTING_MSG : public Packet
-{
-public:
-	PK_CS_REQ_CHATTING_MSG()
-		:Packet(ePacketType::CS_REQ_CHATTING_MSG) {};
-
-	void Encode(OutputStream& stream) override;
-	void Decode(InputStream& stream) override;
-
-	std::string GetID() { return mID; }
-	void SetID(std::string id) { mID = id; }
-
-	std::string	GetMSG() { return mMSG; }
-	void	SetMSG(std::string msg) { mMSG = msg; }
-
-
-private:
-	std::string	mID;
-	std::string	mMSG;
-
-};
-
-class PK_SC_MSG_NOTIFY_ALL : public Packet
-{
-public:
-	PK_SC_MSG_NOTIFY_ALL()
-		:Packet(ePacketType::SC_MSG_NOTIFY_ALL) {};
-
-	void Encode(OutputStream& stream) override;
-	void Decode(InputStream& stream) override;
-
-	std::string GetID() { return mID; }
-	void SetID(std::string id) { mID = id; }
-
-	std::string	GetMSG() { return mMSG; }
-	void	SetMSG(std::string msg) { mMSG = msg; }
-
-private:
-	std::string	mID;
-	std::string	mMSG;
-
-};
-
 
 };

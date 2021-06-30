@@ -10,9 +10,9 @@ namespace leeder
 		DummyTestProcess();
 
 	private:
-		void	CS_REQ_HELLO(IOCPSession* session, std::shared_ptr<Packet>& packet);
-		void	CS_SEND_INPUTLIST(IOCPSession* session, std::shared_ptr<Packet>& packet);
-		void	CS_REQ_EXIT(IOCPSession* session, std::shared_ptr<Packet>& packet);
+		void	CS_REQ_HELLO(Session* session, std::shared_ptr<Packet>& packet);
+		void	CS_SEND_INPUTLIST(Session* session, std::shared_ptr<Packet>& packet);
+		void	CS_REQ_EXIT(Session* session, std::shared_ptr<Packet>& packet);
 	};
 
 }

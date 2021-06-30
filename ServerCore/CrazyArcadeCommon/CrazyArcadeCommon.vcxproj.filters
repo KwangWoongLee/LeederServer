@@ -6,6 +6,11 @@
       <Filter>PCH</Filter>
     </ClInclude>
     <ClInclude Include="World.h" />
+    <ClInclude Include="Tile.h" />
+    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="Bomb.h" />
+    <ClInclude Include="Boom.h" />
+    <ClInclude Include="Item.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Player.cpp" />
@@ -13,6 +18,11 @@
       <Filter>PCH</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp" />
+    <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="Bomb.cpp" />
+    <ClCompile Include="Boom.cpp" />
+    <ClCompile Include="Item.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="PCH">

@@ -90,7 +90,7 @@ public:
 
 		this->write(size);
 
-		for (auto element : map)
+		for (auto& element : map)
 		{
 			this->write(element.first);
 			this->write(element.second);
@@ -114,7 +114,7 @@ public:
 	}
 
 
-private:
+protected:
 	void		write(const void* data, size_t size);
 
 	template<class T>
@@ -139,16 +139,24 @@ private:
 	template<>
 	void write(ObjectInfo info)
 	{
+		this->write(info.mType);
 		this->write(&info.mState, sizeof(info.mState));
+		this->write(info.mScale);
+		this->write(info.mMoveState);
 
 		switch (info.mState)
 		{
 		case eObjectState::CREATE:
-			this->write(info.mType);
+		{
 			this->write(info.mPos);
+		}
+					break;
 		case eObjectState::ACTION:
+		{
 			this->write(info.mPos);
 
+		}
+		break;
 		default:
 			break;
 		}
@@ -160,6 +168,7 @@ private:
 	{
 		this->write(obj.GetType());
 		this->write(obj.GetPosition());
+		this->write(obj.GetScale());
 	}
 
 
@@ -266,7 +275,7 @@ public:
 		}
 	}
 
-private:
+protected:
 	void		read(void* data, uint32_t size);
 
 
@@ -299,18 +308,25 @@ private:
 	template<>
 	void read(ObjectInfo& info)
 	{
+		this->read(info.mType);
 		this->read(&info.mState, sizeof(info.mState));
+		this->read(info.mScale);
+		this->read(info.mMoveState);
 
 		switch (info.mState)
 		{
 		case eObjectState::CREATE:
-			this->read(info.mType);
+
 			this->read(info.mPos);
 			break;
 
 		case eObjectState::ACTION:
 			this->read(info.mPos);
 			break;
+
+		case eObjectState::DESTROY:
+			break;
+
 
 		default:
 			break;
@@ -323,6 +339,7 @@ private:
 	{
 		this->read(obj.GetType());
 		this->read(obj.GetPosition());
+		this->read(obj.GetScale());
 
 	}
 

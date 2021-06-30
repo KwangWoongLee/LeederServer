@@ -12,7 +12,6 @@
 
 #pragma comment(lib, "SDL2.lib")
 #pragma comment(lib, "SDL2main.lib")
-#pragma comment(lib, "SDL2_image.lib")
 
 #include <SDL.h>
 
@@ -34,13 +33,53 @@
 
 #include "ServerLibrary.h"
 
+using leeder::Singleton;
+using leeder::Thread;
+using leeder::ThreadSafeQueue;
+using leeder::Clock;
+
+using leeder::Session;
+using leeder::IOCPSession;
+
+using leeder::eInputType;
+using leeder::Input;
+
+
+using leeder::eObjectState;
+using leeder::eObjectType;
+using leeder::ObjectInfo;
+
+using leeder::GameObject;
+using leeder::Packet;
+using leeder::ePacketType;
+
+
+using leeder::Package;
+
+using leeder::ContentsProcess;
+
+using leeder::OutputStream;
+using leeder::InputStream;
+
+
+using leeder::XMLDocument;
+using leeder::XMLElement;
+using leeder::BUF_SIZE;
+
+using leeder::loadConfig;
+
 #include "ClientOverlapped.h"
 
 #include "ClientPackage.h"
 
 #include "Client.h"
 
+
 #include "ClientContentsProcess.h"
+
+
+#include "NetworkManager.h"
+
 
 #include "DummyTestClientProcess.h"
 

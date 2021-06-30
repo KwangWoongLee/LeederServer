@@ -9,7 +9,7 @@ namespace leeder
 
 		std::random_device random_device;
 		std::mt19937 generator(random_device());
-		std::uniform_int_distribution<> distribution(0, NAMEARRAY.size() - 1);
+		std::uniform_int_distribution<> distribution(0, (int)NAMEARRAY.size() - 1);
 
 		std::string random_string;
 
@@ -40,7 +40,7 @@ namespace leeder
 		std::mt19937 generator(random_device());
 		std::uniform_real_distribution<> distribution(0, 1);
 
-		float random = distribution(generator);
+		float random = static_cast<float>(distribution(generator));
 
 		return random;
 

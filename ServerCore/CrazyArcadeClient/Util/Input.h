@@ -29,29 +29,37 @@ private:
 class InputFactory : public Singleton<InputFactory>
 {
 public:
+	InputFactory(): mLastInputTime(0.f) {}
+
 	eInputType GetInputType(KeyboardState state)
 	{
+		auto time = Clock::GetInstance().GetSystemTimeFloat();
+
 		if (state.GetKeyValue(SDL_SCANCODE_SPACE))
 		{
-			return eInputType::SPACE;
+			if (time > mLastInputTime + 0.1f)
+			{
+				mLastInputTime = time;
+				return eInputType::SPACE;
+			}
 		}
 
-		else if (state.GetKeyValue(SDL_SCANCODE_A))
+		if (state.GetKeyValue(SDL_SCANCODE_A))
 		{
 			return eInputType::A;
 		}
 
-		else if (state.GetKeyValue(SDL_SCANCODE_S))
+		if (state.GetKeyValue(SDL_SCANCODE_S))
 		{
 			return eInputType::S;
 		}
 
-		else if (state.GetKeyValue(SDL_SCANCODE_D))
+		if (state.GetKeyValue(SDL_SCANCODE_D))
 		{
 			return eInputType::D;
 		}
 
-		else if (state.GetKeyValue(SDL_SCANCODE_W))
+		if (state.GetKeyValue(SDL_SCANCODE_W))
 		{
 			return eInputType::W;
 		}
@@ -62,4 +70,6 @@ public:
 		}
 	}
 
+private:
+	float	mLastInputTime;
 };

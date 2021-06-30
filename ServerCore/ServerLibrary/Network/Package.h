@@ -3,23 +3,22 @@
 
 namespace leeder
 {
-class IOCPSession;
-
+class Session;
 
 class Package
 {
 
 public:
-	Package(IOCPSession* session, std::shared_ptr<Packet>& packet)
+	Package(Session* session, std::shared_ptr<Packet>& packet)
 		: mSession(session)
 		, mPacket(std::move(packet))
 	{};
 
-	IOCPSession* GetSession() { return mSession; }
+	Session* GetSession() { return mSession; }
 	std::shared_ptr<Packet>&	GetPacket() { return mPacket; }
 
 private:
-	IOCPSession* mSession;
+	Session* mSession;
 	std::shared_ptr<Packet>		mPacket;
 
 };

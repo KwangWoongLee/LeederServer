@@ -28,6 +28,8 @@ public:
 	bool	Bind(const char* ip, uint16_t port);
 	bool	Listen(int backLog = SOMAXCONN);
 
+	// for terminal
+
 
 
 private:

@@ -1,17 +1,21 @@
 #pragma once
 #include "stdafx.h"
 
-class SpriteComponent;
+class AnimationComponent;
 
-class PlayerClient : public Player, public std::enable_shared_from_this<PlayerClient>
+class PlayerClient : public Player
 {
 public:
 	PlayerClient();
-	PlayerClient(GameObject obj);
 
-	void Update() override;
+	void HandleDying() override;
+
+	bool IsStop();
+
+	void Update(float deltaTime) override;
 
 private:
-	std::shared_ptr<SpriteComponent>	mSpriteComponent;
+	AnimationComponent* mAnimationComponent;
+
 };
 

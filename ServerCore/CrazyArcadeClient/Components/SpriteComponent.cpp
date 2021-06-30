@@ -3,11 +3,12 @@
 
 
 
-SpriteComponent::SpriteComponent(GameObject* owner)
+SpriteComponent::SpriteComponent(GameObject* owner, int drawOrder)
 	: mOwner(owner)
 	,mTexture(nullptr)
 	, mTextureHeight(0)
 	, mTextureWidth(0)
+	, mDrawOrder(drawOrder)
 {
 	RenderManager::GetInstance().AddComponent(this);
 }
@@ -16,6 +17,7 @@ SpriteComponent::~SpriteComponent()
 {
 	RenderManager::GetInstance().RemoveComponent(this);
 }
+
 
 void SpriteComponent::Draw(SDL_Renderer* renderer)
 {

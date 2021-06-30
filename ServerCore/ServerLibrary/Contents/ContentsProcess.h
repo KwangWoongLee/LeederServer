@@ -4,7 +4,7 @@
 namespace leeder
 {
 
-using func = std::function<void(IOCPSession*, std::shared_ptr<Packet>&)>;
+using func = std::function<void(Session*, std::shared_ptr<Packet>&)>;
 
 
 class ContentsProcess
@@ -29,11 +29,10 @@ protected:
 	
 private:
 	void	RegistDefaultFunction();
-	void	HeartBeatPacketFunction(IOCPSession* session, std::shared_ptr<Packet>& packet);
+	void	HeartBeatPacketFunction(Session* session, std::shared_ptr<Packet>& packet);
 
 
 	ThreadSafeQueue<std::shared_ptr<Package>>	mPackageQueue;
-	//std::vector<std::unique_ptr<Thread>>		mProcessThreadPool;
 	size_t										mThreadCount;
 	std::unordered_map<ePacketType, func>		mProcessFunctionMap;
 

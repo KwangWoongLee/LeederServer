@@ -15,7 +15,7 @@ Session::~Session()
 
 void Session::UpdateHeartBeat()
 {
-	mLastHeartBeat = Clock::GetInstance().GetSystemTick();
+	mLastHeartBeat = Clock::GetInstance().GetSystemTime();
 }
 
 

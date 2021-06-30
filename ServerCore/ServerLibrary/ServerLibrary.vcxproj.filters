@@ -48,12 +48,6 @@
     <ClInclude Include="Util\Type.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Util\tinyxml\tinyxml.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\tinyxml\tinystr.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Util\ThreadSafeQueue.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -123,6 +117,15 @@
     <ClInclude Include="Util\CircularBuffer.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Util\MoveGameObject.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\tinyxml\tinystr.h">
+      <Filter>Util\tinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\tinyxml\tinyxml.h">
+      <Filter>Util\tinyXML</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -141,18 +144,6 @@
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Util\Minidump.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\tinyxml\tinyxmlparser.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\tinyxml\tinyxmlerror.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\tinyxml\tinyxml.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\tinyxml\tinystr.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Util\Thread.cpp">
@@ -199,6 +190,21 @@
     </ClCompile>
     <ClCompile Include="Util\CircularBuffer.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\MoveGameObject.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\tinyxml\tinyxmlparser.cpp">
+      <Filter>Util\tinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\tinyxml\tinystr.cpp">
+      <Filter>Util\tinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\tinyxml\tinyxml.cpp">
+      <Filter>Util\tinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\tinyxml\tinyxmlerror.cpp">
+      <Filter>Util\tinyXML</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

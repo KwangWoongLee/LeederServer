@@ -24,7 +24,10 @@ public:
 		mTimeStamp = Clock::GetInstance().GetSystemTimeFloat();
 	};
 
-	Input() {};
+	Input() 
+		: mTimeStamp(0.f)
+	
+	{};
 	~Input() {};
 
 
